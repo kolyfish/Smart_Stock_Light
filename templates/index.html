@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock-to-Light Premium Config</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --primary-accent: #38bdf8;
+            --success-accent: #22c55e;
+            --warning-accent: #f59e0b;
+            --danger-accent: #ef4444;
+            --text-main: #f8fafc;
+            --text-dim: #94a3b8;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            background-image: radial-gradient(circle at 50% 0%, #1e293b 0%, #0f172a 100%);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 480px;
+        }
+
+        h1 {
+            font-weight: 600;
+            font-size: 1.5rem;
+            text-align: center;
+            margin-bottom: 1rem;
+            background: linear-gradient(to right, #38bdf8, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .market-status {
+            text-align: center;
+            font-size: 0.875rem;
+            margin-bottom: 1.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            background: rgba(255, 255, 255, 0.05);
+            display: inline-block;
+            align-self: center;
+        }
+
+        .market-data-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .data-card {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 1rem;
+            padding: 1rem;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .data-label {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            margin-bottom: 0.25rem;
+        }
+
+        .data-value {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .data-change {
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+        }
+
+        .price-positive {
+            color: var(--danger-accent);
+        }
+
+        /* 台股習慣紅色為漲 */
+        .price-negative {
+            color: var(--success-accent);
+        }
+
+        /* 台股習慣綠色為跌 */
+
+        .current-price-badge {
+            background: rgba(56, 189, 248, 0.1);
+            color: var(--primary-accent);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            margin-left: 8px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1.25rem;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        label {
+            display: block;
+            font-size: 0.875rem;
+            color: var(--text-dim);
+            margin-bottom: 0.5rem;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 0.75rem;
+            color: white;
+            font-size: 1rem;
+            box-sizing: border-box;
+            transition: all 0.2s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary-accent);
+            box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
+        }
+
+        button {
+            width: 100%;
+            padding: 0.875rem;
+            border: none;
+            border-radius: 0.75rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.1s, opacity 0.2s;
+            margin-top: 0.5rem;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #38bdf8 0%, #2563eb 100%);
+            color: white;
+        }
+
+        .btn-success {
+            background: rgba(34, 197, 94, 0.1);
+            color: var(--success-accent);
+            border: 1px solid var(--success-accent);
+        }
+
+        .btn-warning {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning-accent);
+            border: 1px solid var(--warning-accent);
+        }
+
+        .btn-secondary {
+            background: rgba(148, 163, 184, 0.1);
+            color: var(--text-dim);
+            border: 1px solid rgba(148, 163, 184, 0.3);
+        }
+
+        /* Toast notifications */
+        #toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(30, 41, 59, 0.9);
+            padding: 1rem 2rem;
+            border-radius: 9999px;
+            border: 1px solid var(--primary-accent);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        #toast.visible {
+            opacity: 1;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Stock-to-Light Control</h1>
+        <div style="display: flex; justify-content: center;">
+            <div id="market-status" class="market-status">市場狀態載入中...</div>
+        </div>
+
+        <!-- Market Overview Grid -->
+        <div class="market-data-grid">
+            <div class="data-card">
+                <div class="data-label">台股大盤指數</div>
+                <div id="index-val" class="data-value">--</div>
+                <div id="index-chg" class="data-change">--</div>
+            </div>
+            <div class="data-card">
+                <div class="data-label" id="stock-name-label">目前監控個股</div>
+                <div id="stock-val" class="data-value">--</div>
+                <div id="stock-symbol-sub" class="data-change">--</div>
+                <div id="update-time-sub" style="font-size: 0.7rem; opacity: 0.4; margin-top: 4px;">--:--:-- 更新</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">监控設定 <span id="monitor-price-badge" class="current-price-badge">載入中...</span></div>
+            <form id="configForm">
+                <div class="form-group">
+                    <label for="symbol">股票代號 (例: 2330.TW)</label>
+                    <input type="text" id="symbol" value="{{ config.symbol }}" placeholder="2330.TW">
+                </div>
+                <div class="form-group">
+                    <label for="target">目標價格 (低於此價觸發)</label>
+                    <input type="number" step="0.01" id="target" value="{{ config.target_price }}" placeholder="900">
+                </div>
+                <button type="button" class="btn-primary" onclick="saveConfig()">更新智慧監控</button>
+            </form>
+        </div>
+
+        <div class="card">
+            <div class="card-title"><i class="fas fa-vial"></i> 功能演示 (休市/夜間亦可測試)</div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 0.75rem;">
+                <button class="btn-warning" onclick="demoAlert()" style="height: auto; padding: 1rem 0.5rem;">
+                    <i class="fas fa-play-circle"></i> 全功能演示
+                    <div style="font-size: 0.6rem; opacity: 0.7; font-weight: normal;">燈光動態 + 語音說明</div>
+                </button>
+                <button class="btn-success" onclick="runTest()" style="height: auto; padding: 1rem 0.5rem;">
+                    <i class="fas fa-magic"></i> 漸暗與閃爍
+                    <div style="font-size: 0.6rem; opacity: 0.7; font-weight: normal;">顯示操控靈敏度</div>
+                </button>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+                <button class="btn-secondary" onclick="testYellow()">
+                    <i class="fas fa-sun"></i> 亮起黃燈 (常態)
+                </button>
+                <button class="btn-secondary" onclick="turnOff()">
+                    <i class="fas fa-moon"></i> 立即關閉裝置
+                </button>
+            </div>
+            <p style="font-size: 0.75rem; color: var(--text-dim); margin-top: 1rem; text-align: center;">
+                💡 演示模式會繞過市場時間，確保您隨時可向他人展示系統。
+            </p>
+        </div>
+    </div>
+
+    <div id="toast">設定已成功更新</div>
+
+    <script>
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('visible');
+            setTimeout(() => {
+                toast.classList.remove('visible');
+            }, 3000);
+        }
+
+        function updateMarketStatus() {
+            fetch('/api/market_status')
+                .then(res => res.json())
+                .then(data => {
+                    const statusEl = document.getElementById('market-status');
+                    statusEl.textContent = `台股市場：${data.status}`;
+                })
+                .catch(err => console.error('無法更新市場狀態'));
+        }
+
+        function updateMarketData() {
+            fetch('/api/market_data')
+                .then(res => res.json())
+                .then(data => {
+                    // Update Index
+                    if (data.market_index) {
+                        document.getElementById('index-val').textContent = data.market_index.toLocaleString(undefined, { minimumFractionDigits: 2 });
+                        const chgEl = document.getElementById('index-chg');
+                        const chg = data.market_change || 0;
+                        const prefix = chg > 0 ? '+' : '';
+                        chgEl.textContent = `${prefix}${chg.toFixed(2)}`;
+                        chgEl.className = `data-change ${chg >= 0 ? 'price-positive' : 'price-negative'}`;
+                    }
+
+                    // Update Stock
+                    if (data.stock_price) {
+                        const priceText = data.stock_price.toFixed(2);
+                        document.getElementById('stock-val').textContent = priceText;
+                        document.getElementById('stock-name-label').textContent = data.stock_name || "目前監控個股";
+                        document.getElementById('stock-symbol-sub').textContent = data.symbol;
+                        document.getElementById('update-time-sub').textContent = `${data.update_time || '--:--:--'} 更新`;
+                        document.getElementById('monitor-price-badge').textContent = `現價: ${priceText}`;
+                    } else {
+                        document.getElementById('stock-val').textContent = "未取得";
+                        document.getElementById('monitor-price-badge').textContent = "等待數據...";
+                    }
+                })
+                .catch(err => console.error('無法更新市場數據'));
+        }
+
+        // 啟動與定時更新
+        updateMarketStatus();
+        updateMarketData();
+        setInterval(updateMarketStatus, 60000);
+        setInterval(updateMarketData, 15000); // 數據每 15 秒更新一次
+
+        function saveConfig() {
+            const symbol = document.getElementById('symbol').value;
+            const target = document.getElementById('target').value;
+
+            fetch('/api/config', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ symbol: symbol, target_price: target })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    showToast('設定已更新！');
+                    updateMarketData(); // 立即嘗試更新新代碼的價格
+                })
+                .catch(error => {
+                    showToast('更新失敗，請檢查網路');
+                });
+        }
+
+        function testYellow() {
+            fetch('/api/test_yellow', { method: 'POST' })
+                .then(res => res.json())
+                .then(data => showToast('已重置為常態黃燈'));
+        }
+
+        function runTest() {
+            fetch('/api/run_test', { method: 'POST' })
+                .then(res => res.json())
+                .then(data => showToast('測試序列：漸暗與變色中...'));
+        }
+
+        function turnOff() {
+            fetch('/api/turn_off', { method: 'POST' })
+                .then(res => res.json())
+                .then(data => showToast('已發送關燈指令'));
+        }
+
+        function demoAlert() {
+            fetch('/api/demo_alert', { method: 'POST' })
+                .then(res => res.json())
+                .then(data => showToast('全功能示範啟動 (燈光動態+語音)'));
+        }
+    </script>
+</body>
+
+</html>

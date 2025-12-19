@@ -1,0 +1,87 @@
+from flask import Flask, render_template, request, jsonify
+import threading
+
+class WebServer(threading.Thread):
+    def __init__(self, shared_config, tapo_controller, stock_monitor):
+        super().__init__()
+        self.app = Flask(__name__)
+        self.shared_config = shared_config
+        self.tapo = tapo_controller
+        self.monitor = stock_monitor
+        self.daemon = True
+        
+        # 定義路由
+        self.app.add_url_rule('/', 'index', self.index)
+        self.app.add_url_rule('/api/config', 'update_config', self.update_config, methods=['POST'])
+        self.app.add_url_rule('/api/test_green', 'test_green', self.test_green, methods=['POST'])
+        self.app.add_url_rule('/api/test_yellow', 'test_yellow', self.test_yellow, methods=['POST'])
+        self.app.add_url_rule('/api/run_test', 'run_test', self.run_test, methods=['POST'])
+        self.app.add_url_rule('/api/turn_off', 'turn_off', self.turn_off, methods=['POST'])
+        self.app.add_url_rule('/api/market_status', 'market_status', self.market_status, methods=['GET'])
+        self.app.add_url_rule('/api/demo_alert', 'demo_alert', self.demo_alert, methods=['POST'])
+        self.app.add_url_rule('/api/market_data', 'market_data', self.market_data, methods=['GET'])
+
+    def index(self):
+        config = self.shared_config.get_config()
+        return render_template('index.html', config=config)
+
+    def update_config(self):
+        data = request.json
+        symbol = data.get('symbol')
+        target = data.get('target_price')
+        
+        print(f"網頁更新請求: {symbol}, {target}")
+        self.shared_config.update_config(symbol, target)
+        
+        return jsonify({"status": "success", "config": self.shared_config.get_config()})
+    
+    def test_green(self):
+        print("網頁請求: 測試亮綠燈")
+        self.monitor.device_off = False
+        self.tapo.turn_on_green()
+        return jsonify({"status": "success", "message": "綠燈已開啟"})
+
+    def test_yellow(self):
+        print("網頁請求: 測試亮黃燈")
+        self.monitor.device_off = False
+        self.tapo.turn_on_yellow()
+        return jsonify({"status": "success", "message": "黃燈已開啟"})
+
+    def run_test(self):
+        print("網頁請求: 執行漸暗閃爍測試")
+        self.monitor.device_off = False
+        self.tapo.run_test_sequence()
+        return jsonify({"status": "success", "message": "測試序列已啟動"})
+
+    def turn_off(self):
+        print("網頁請求: 關燈")
+        self.monitor.device_off = True # 核心修正：標記為關閉狀態
+        self.tapo.turn_off()
+        return jsonify({"status": "success", "message": "裝置已關閉"})
+
+    def market_status(self):
+        status_text = self.monitor.get_market_status_text()
+        return jsonify({
+            "status": status_text,
+            "is_open": self.monitor.is_market_open()
+        })
+
+    def demo_alert(self):
+        print("網頁請求: 全功能示範")
+        self.monitor.trigger_demo_alert()
+        return jsonify({"status": "success", "message": "演示已啟動"})
+
+    def market_data(self):
+        return jsonify({
+            "market_index": self.monitor.last_market_index,
+            "market_change": self.monitor.last_market_change,
+            "stock_price": self.monitor.last_stock_price,
+            "stock_name": self.monitor.last_stock_name,
+            "update_time": self.monitor.last_update_time,
+            "symbol": self.shared_config.get_config()['symbol']
+        })
+
+    def run(self):
+        # 使用 5001 連接埠以避開 Mac 系統衝突
+        self.app.run(host='0.0.0.0', port=5001, debug=False, use_reloader=False)
+
