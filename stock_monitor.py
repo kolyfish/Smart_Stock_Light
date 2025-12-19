@@ -15,6 +15,8 @@ class StockMonitor(threading.Thread):
         self.daemon = True
         self.last_alert_time = 0
         self.cooldown_seconds = 300  # 5 分鐘
+        self.log_messages = [] # 新增：日誌緩存
+        self.max_logs = 50     # 最多保留 50 條日誌
         
         # 數據緩存
         self.last_stock_price = None
@@ -22,7 +24,9 @@ class StockMonitor(threading.Thread):
         self.last_market_index = None
         self.last_market_change = None
         self.last_update_time = "尚未更新"
-        self.device_off = False  # 新增：追蹤硬體是否被使用者手動關閉
+        self.device_off = False  # 追蹤硬體是否被使用者手動關閉
+        self.alert_mode = None   # 'above' 或 'below'，自動判定
+        self._price_history = [] # 儲存最近幾分鐘的價格，偵測閃崩
         
         # 初始化 TTS 元件
         try:
@@ -90,6 +94,15 @@ class StockMonitor(threading.Thread):
         except Exception as e:
             print(f"原生語音指令執行失敗: {e}")
 
+    def add_log(self, message):
+        """將日誌加入緩存，供 Web 端讀取。"""
+        timestamp = datetime.now().strftime("%H:%M:%S")
+        log_entry = f"[{timestamp}] {message}"
+        print(log_entry) # 同步保存在終端機顯示
+        self.log_messages.append(log_entry)
+        if len(self.log_messages) > self.max_logs:
+            self.log_messages.pop(0)
+
     def trigger_demo_alert(self):
         """執行全功能示範：執行燈光測試序列 (演示開關、漸暗、變色) + 語音說明。"""
         self.device_off = False # 演示時恢復通訊
@@ -113,13 +126,26 @@ class StockMonitor(threading.Thread):
                 config = self.shared_config.get_config()
                 symbol = config['symbol']
                 target = config['target_price']
+                stop_loss = config.get('stop_loss_price', 0.0)
+                
+                # 如果代號或目標價變更，重置警報模式與價格緩存
+                if not hasattr(self, '_last_symbol') or self._last_symbol != symbol:
+                    self.alert_mode = None
+                    self.last_stock_name = "監控中..."
+                    self.last_stock_price = None  # 同時清除舊價格
+                    self._price_history = []      # 清除舊股票的價格歷史，防止誤判閃崩
+                    self._last_symbol = symbol
+                
+                if not hasattr(self, '_last_target') or self._last_target != target:
+                    self.alert_mode = None
+                    self._last_target = target
 
                 # 無論是否休市都更新一次大盤（休市時顯示最後價格）
                 self.fetch_market_index()
 
                 # 如果休市，則降低檢查頻率
                 if not self.is_market_open():
-                    print(f"[{datetime.now().strftime('%H:%M:%S')}] 台股目前休市中。")
+                    self.add_log(f"台股目前休市中。")
                     time.sleep(60)
                     continue
 
@@ -127,55 +153,133 @@ class StockMonitor(threading.Thread):
                 try:
                     ticker = yf.Ticker(symbol)
                     
-                    # 獲取股價
-                    current_price = ticker.fast_info.get('last_price')
-                    if current_price is None:
-                        daily_data = ticker.history(period='1d')
-                        if not daily_data.empty:
-                            current_price = daily_data['Close'].iloc[-1]
-                    
-                    # 獲取股票名稱 (嘗試從 info 獲取，若失敗則維持代號)
+                    # 獲取股價 (優先嘗試 history，通常比 fast_info 穩定)
+                    current_price = None
                     try:
-                        # yfinance info 抓取較慢，我們可以用快一點的方式或快取
-                        if self.last_stock_name == "監控中..." or self.last_stock_name == symbol:
-                            info = ticker.info
-                            self.last_stock_name = info.get('longName') or info.get('shortName') or symbol
-                    except:
-                        self.last_stock_name = symbol
+                        hist = ticker.history(period="1d", interval="1m")
+                        if not hist.empty:
+                            current_price = hist['Close'].iloc[-1]
+                    except Exception as e:
+                        self.add_log(f"History 抓取失敗: {e}")
+
+                    # Fallback 1: fast_info
+                    if current_price is None or current_price == 0:
+                        try:
+                            current_price = ticker.fast_info.get('last_price')
+                        except:
+                            pass
+
+                    # Fallback 2: 再次嘗試 history (較長一點的 period)
+                    if current_price is None or current_price == 0:
+                        hist = ticker.history(period="5d")
+                        if not hist.empty:
+                            current_price = hist['Close'].iloc[-1]
+                    
+                    if current_price is None:
+                        self.add_log(f"無法獲取 {symbol} 股價，稍後重試...")
+                        time.sleep(10)
+                        continue
 
                     self.last_stock_price = current_price
                     self.last_update_time = datetime.now().strftime("%H:%M:%S")
-                except Exception as e:
-                    print(f"抓取 {symbol} 股價時發生網路錯誤: {e}")
-                    current_price = None
 
-                if current_price is not None:
-                    # 如果使用者手動關閉了裝置，且股價未達標，我們就不自動打開它
-                    if self.device_off and current_price > target:
-                        print(f"[{datetime.now().strftime('%H:%M:%S')}] 監控中，但裝置目前為手動關閉狀態。")
-                    else:
-                        print(f"[{datetime.now().strftime('%H:%M:%S')}] {symbol}: {current_price:.2f} | 目標: {target:.2f}")
+                    # 獲取股票名稱 (完全由系統自動抓取)
+                    if self.last_stock_name == "監控中..." or self.last_stock_name == symbol:
+                        try:
+                            info = ticker.info
+                            # 優先取長、短名
+                            fetched_name = info.get('longName') or info.get('shortName') or symbol
+                            if fetched_name != self.last_stock_name:
+                                self.last_stock_name = fetched_name
+                                self.add_log(f"成功識別股票名稱：{self.last_stock_name}")
+                        except:
+                            self.last_stock_name = symbol
 
-                    if current_price <= target:
+                    self.last_stock_price = current_price
+                    self.last_update_time = datetime.now().strftime("%H:%M:%S")
+
+                    # --- 閃崩偵測 (Purple Light) ---
+                    now_ts = time.time()
+                    
+                    # 數據清洗：忽略異常價格（如 0 或變動過於誇張的極端值）
+                    if current_price > 0:
+                        if self.last_stock_price and abs(current_price - self.last_stock_price) / self.last_stock_price > 0.5:
+                            self.add_log(f"⚠️ 偵測到價格劇烈跳變 ({self.last_stock_price} -> {current_price})，暫不記入閃崩歷史。")
+                        else:
+                            self._price_history.append((now_ts, current_price))
+                    
+                    # 只保留最近 5 分鐘的數據
+                    self._price_history = [p for p in self._price_history if now_ts - p[0] <= 300]
+                    
+                    if len(self._price_history) >= 5: # 增加數據量要求，避免單次跳動觸發
+                        # 檢查最近 1 分鐘內的跌幅
+                        one_min_ago = [p for p in self._price_history if now_ts - p[0] <= 60]
+                        if len(one_min_ago) >= 3: # 至少要有 3 個點
+                            price_old = one_min_ago[0][1]
+                            drop_rate = (price_old - current_price) / price_old
+                            if drop_rate >= 0.015: # 閃崩 1.5%
+                                self.add_log(f"⚠️ 偵測到閃崩！一分鐘實質跌幅 {drop_rate*100:.1f}%")
+                                self.tapo.turn_on_purple()
+                                self.speak(f"警告，{self.last_stock_name} 偵測到恐慌性閃崩，目前跌幅百分之 {drop_rate*100:.1f}。")
+                                time.sleep(5) # 稍微暫停避免連續觸發
+
+                    # --- 數據異常診斷 (Red Light part 1) ---
+                    # 如果能跑到這代表抓到資料了
+
+                    # 自動判定警報模式 (第一次抓到價格，或設定變更後)
+                    if self.alert_mode is None:
+                        if current_price < target:
+                            self.alert_mode = 'above' # 目前低於目標，監控「漲破」
+                            self.add_log(f"警報模式：設定為「等待漲破」 {target} (現價 {current_price:.2f})")
+                        else:
+                            self.alert_mode = 'below' # 目前高於目標，監控「跌破」
+                            self.add_log(f"警報模式：設定為「等待跌破」 {target} (現價 {current_price:.2f})")
+
+                    # 檢查警報是否達成
+                    is_alert_hit = False
+                    is_stop_loss_hit = False
+
+                    # --- 停損監控 (Red Light part 2) ---
+                    if stop_loss > 0 and current_price <= stop_loss:
+                        is_stop_loss_hit = True
+
+                    if self.alert_mode == 'above' and current_price >= target:
+                        is_alert_hit = True
+                    elif self.alert_mode == 'below' and current_price <= target:
+                        is_alert_hit = True
+                    
+                    if is_stop_loss_hit:
+                        self.add_log(f"🆘 觸發停損警報: {symbol} 跌破停損價 {stop_loss} ({current_price:.2f})")
+                        self.device_off = False
+                        self.tapo.turn_on_red()
+                        self.speak(f"緊急通知，{self.last_stock_name} 已經跌破停損價 {stop_loss}，目前價格 {current_price:.1f}，請注意風險。")
+                        self.last_alert_time = now_ts # 使用冷卻時間防護
+                    elif is_alert_hit:
                         now = time.time()
                         if now - self.last_alert_time > self.cooldown_seconds:
-                            print(f"!!! 觸發警報: {symbol} 價格 {current_price:.2f} <= {target:.2f} !!!")
-                            # 觸發警告時，強制取消關閉狀態
+                            self.add_log(f"!!! 觸發警報: {symbol} 已達標 ({current_price:.2f}) !!!")
                             self.device_off = False
                             self.tapo.turn_on_green()
-                            alert_msg = f"注意，{symbol}目前價格為{current_price:.1f}，已達到您的目標價。"
+                            
+                            spaced_symbol = " ".join(list(symbol.split(".")[0]))
+                            alert_msg = f"注意，股票代號 {spaced_symbol} {self.last_stock_name} 目前價格為 {current_price:.1f}，已達到您的目標價。"
                             self.speak(alert_msg)
                             self.last_alert_time = now
                     else:
-                        # 如果股價回到目標價以上，且冷卻已過，可以切回紅燈（可選）
-                        # 或者保持綠燈直到冷卻結束
-                        pass
-                
-                # 每 10 分鐘強制重設一次黃燈，確保顏色正確 (常態燈色)
-                # 只有在非手動關閉狀態下才執行
-                if not self.device_off and int(time.time()) % 600 < 10:
-                    self.tapo.turn_on_yellow()
+                        # 未達標時，若沒手動關閉則維持黃燈
+                        if not self.device_off:
+                            self.tapo.turn_on_yellow()
+                            self.add_log(f"{symbol}: {current_price:.2f} (目標 {target} | 監控中)")
+                        else:
+                            self.add_log(f"監控中，但裝置目前為手動關閉。")
 
+                except Exception as e:
+                    self.add_log(f"數據抓取或警報診斷異常: {e}")
+                    # --- 異常診斷 (Red Light part 3) ---
+                    if not self.device_off:
+                        self.tapo.turn_on_red()
+                        self.add_log("系統診斷：無法取得數據，切換為紅燈警示。")
+                
                 time.sleep(10)
 
             except Exception as e:

@@ -4,3 +4,7 @@ qrcode==7.4.2
 Pillow>=10.4.0
 plugp100>=4.0.0
 pyttsx3==2.90
+python-dotenv
+pyobjc>=10.0
+pytest
+pytest-mock

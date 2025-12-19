@@ -44,6 +44,7 @@
             text-align: center;
             margin-bottom: 1rem;
             background: linear-gradient(to right, #38bdf8, #818cf8);
+            background-clip: text;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
@@ -252,8 +253,13 @@
                     <input type="text" id="symbol" value="{{ config.symbol }}" placeholder="2330.TW">
                 </div>
                 <div class="form-group">
-                    <label for="target">目標價格 (低於此價觸發)</label>
+                    <label for="target">🟢 目標進場/獲利價 (智慧綠燈)</label>
                     <input type="number" step="0.01" id="target" value="{{ config.target_price }}" placeholder="900">
+                </div>
+                <div class="form-group">
+                    <label for="stop_loss">🔴 停損/異常警示價 (危險紅燈)</label>
+                    <input type="number" step="0.01" id="stop_loss" value="{{ config.get('stop_loss_price', 0) }}"
+                        placeholder="800">
                 </div>
                 <button type="button" class="btn-primary" onclick="saveConfig()">更新智慧監控</button>
             </form>
@@ -279,9 +285,24 @@
                     <i class="fas fa-moon"></i> 立即關閉裝置
                 </button>
             </div>
+            <button class="btn-success" onclick="testGreen()" style="width: 100%; margin-top: 0.75rem;">
+                <i class="fas fa-check-circle"></i> 一鍵測試亮綠燈
+            </button>
             <p style="font-size: 0.75rem; color: var(--text-dim); margin-top: 1rem; text-align: center;">
                 💡 演示模式會繞過市場時間，確保您隨時可向他人展示系統。
             </p>
+        </div>
+
+        <!-- 系統終端日誌區塊 -->
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-terminal"></i>
+                系統終端日誌 (Terminal)
+            </div>
+            <div id="log-container"
+                style="background: #000; color: #00ff00; font-family: 'Courier New', Courier, monospace; padding: 10px; border-radius: 8px; height: 150px; overflow-y: auto; font-size: 0.85rem; line-height: 1.4;">
+                <div id="log-content">等待日誌中...</div>
+            </div>
         </div>
     </div>
 
@@ -321,16 +342,18 @@
                         chgEl.className = `data-change ${chg >= 0 ? 'price-positive' : 'price-negative'}`;
                     }
 
-                    // Update Stock
+                    // Update Stock Info (Name, Symbol)
+                    document.getElementById('stock-name-label').textContent = data.stock_name || "監控中...";
+                    document.getElementById('stock-symbol-sub').textContent = data.symbol || "--";
+                    document.getElementById('update-time-sub').textContent = `${data.update_time || '--:--:--'} 更新`;
+
+                    // Update Price if available
                     if (data.stock_price) {
                         const priceText = data.stock_price.toFixed(2);
                         document.getElementById('stock-val').textContent = priceText;
-                        document.getElementById('stock-name-label').textContent = data.stock_name || "目前監控個股";
-                        document.getElementById('stock-symbol-sub').textContent = data.symbol;
-                        document.getElementById('update-time-sub').textContent = `${data.update_time || '--:--:--'} 更新`;
                         document.getElementById('monitor-price-badge').textContent = `現價: ${priceText}`;
                     } else {
-                        document.getElementById('stock-val').textContent = "未取得";
+                        document.getElementById('stock-val').textContent = "讀取中...";
                         document.getElementById('monitor-price-badge').textContent = "等待數據...";
                     }
                 })
@@ -340,22 +363,48 @@
         // 啟動與定時更新
         updateMarketStatus();
         updateMarketData();
+        updateLogs(); // 立即更新一次日誌
         setInterval(updateMarketStatus, 60000);
         setInterval(updateMarketData, 15000); // 數據每 15 秒更新一次
+        setInterval(updateLogs, 5000); // 日誌每 5 秒更新一次
+
+        function updateLogs() {
+            fetch('/api/logs')
+                .then(res => res.json())
+                .then(data => {
+                    const content = document.getElementById('log-content');
+                    if (data.logs && data.logs.length > 0) {
+                        content.innerHTML = data.logs.join('<br>');
+                        const container = document.getElementById('log-container');
+                        container.scrollTop = container.scrollHeight;
+                    }
+                })
+                .catch(err => console.error('無法更日誌'));
+        }
+
 
         function saveConfig() {
             const symbol = document.getElementById('symbol').value;
             const target = document.getElementById('target').value;
+            const stopLoss = document.getElementById('stop_loss').value;
 
             fetch('/api/config', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ symbol: symbol, target_price: target })
+                body: JSON.stringify({
+                    symbol: symbol,
+                    target_price: target,
+                    stop_loss_price: stopLoss
+                })
             })
                 .then(response => response.json())
                 .then(data => {
                     showToast('設定已更新！');
-                    updateMarketData(); // 立即嘗試更新新代碼的價格
+                    // 立即更新 UI 顯示為「載入中」，避免顯示舊股票資訊
+                    document.getElementById('stock-val').textContent = "...";
+                    document.getElementById('stock-name-label').textContent = "正在獲取名稱...";
+                    document.getElementById('stock-symbol-sub').textContent = symbol;
+                    updateMarketData(); // 立即嘗試更新數據
                 })
                 .catch(error => {
                     showToast('更新失敗，請檢查網路');
@@ -384,6 +433,36 @@
             fetch('/api/demo_alert', { method: 'POST' })
                 .then(res => res.json())
                 .then(data => showToast('全功能示範啟動 (燈光動態+語音)'));
+        }
+
+        function testGreen() {
+            fetch('/api/test_green', { method: 'POST' })
+                .then(res => res.json())
+                .then(data => showToast('測試亮綠燈已執行'));
+        }
+
+        function checkUpdate() {
+            showToast('正在檢查 GitHub 伺服器...');
+            fetch('/api/check_update')
+                .then(res => res.json())
+                .then(data => {
+                    document.getElementById('update-msg').textContent = data.message;
+                    if (data.has_update) {
+                        document.getElementById('apply-btn').style.display = 'block';
+                    }
+                });
+        }
+
+        function applyUpdate() {
+            showToast('更新中，請稍候...');
+            fetch('/api/apply_update', { method: 'POST' })
+                .then(res => res.json())
+                .then(data => {
+                    showToast(data.message);
+                    if (data.status === 'success') {
+                        setTimeout(() => location.reload(), 3000);
+                    }
+                });
         }
     </script>
 </body>

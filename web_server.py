@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, jsonify
 import threading
+from auto_updater import AutoUpdater
 
 class WebServer(threading.Thread):
     def __init__(self, shared_config, tapo_controller, stock_monitor):
@@ -8,6 +9,7 @@ class WebServer(threading.Thread):
         self.shared_config = shared_config
         self.tapo = tapo_controller
         self.monitor = stock_monitor
+        self.updater = AutoUpdater()
         self.daemon = True
         
         # 定義路由
@@ -20,6 +22,9 @@ class WebServer(threading.Thread):
         self.app.add_url_rule('/api/market_status', 'market_status', self.market_status, methods=['GET'])
         self.app.add_url_rule('/api/demo_alert', 'demo_alert', self.demo_alert, methods=['POST'])
         self.app.add_url_rule('/api/market_data', 'market_data', self.market_data, methods=['GET'])
+        self.app.add_url_rule('/api/logs', 'get_logs', self.get_logs, methods=['GET'])
+        self.app.add_url_rule('/api/check_update', 'check_update', self.check_update, methods=['GET'])
+        self.app.add_url_rule('/api/apply_update', 'apply_update', self.apply_update, methods=['POST'])
 
     def index(self):
         config = self.shared_config.get_config()
@@ -29,9 +34,10 @@ class WebServer(threading.Thread):
         data = request.json
         symbol = data.get('symbol')
         target = data.get('target_price')
+        stop_loss = data.get('stop_loss_price')
         
-        print(f"網頁更新請求: {symbol}, {target}")
-        self.shared_config.update_config(symbol, target)
+        print(f"網頁更新請求: {symbol}, {target}, {stop_loss}")
+        self.shared_config.update_config(symbol, target, stop_loss)
         
         return jsonify({"status": "success", "config": self.shared_config.get_config()})
     
@@ -80,6 +86,19 @@ class WebServer(threading.Thread):
             "update_time": self.monitor.last_update_time,
             "symbol": self.shared_config.get_config()['symbol']
         })
+
+    def get_logs(self):
+        return jsonify({
+            "logs": self.monitor.log_messages
+        })
+
+    def check_update(self):
+        has_update, msg = self.updater.check_for_updates()
+        return jsonify({"has_update": has_update, "message": msg})
+
+    def apply_update(self):
+        success, msg = self.updater.apply_update()
+        return jsonify({"status": "success" if success else "error", "message": msg})
 
     def run(self):
         # 使用 5001 連接埠以避開 Mac 系統衝突
