@@ -36,13 +36,13 @@
 
 2. **執行應用程式**：
    ```bash
-   poetry run python main_gui.py
+   poetry run python smart_stock_light.py
    ```
 
    或者先啟動 Poetry shell：
    ```bash
    poetry shell
-   python main_gui.py
+   python smart_stock_light.py
    ```
 
 ### 注意事項
@@ -78,15 +78,15 @@
 ## 專案結構
 
 ```
-Green_Light_Stock-to-Home_Alert/
+SmartStockLight/
 ├── tapo_controller.py    # 硬體層：Tapo 燈泡控制
 ├── stock_monitor.py       # 邏輯層：股價監控與警報邏輯
-├── main_gui.py           # 展示層：GUI 介面
+├── smart_stock_light.py  # 展示層：GUI 介面
 ├── pyproject.toml        # Poetry 專案設定檔
 ├── poetry.lock           # Poetry 鎖定檔（自動生成）
 ├── requirements.txt      # 依賴套件清單（備用）
 ├── config.json          # 設定檔（自動生成）
-└── # Stock-to-Home Alert (股市亮燈提醒系統) 🟢
+└── # SmartStockLight (股市亮燈提醒系統) 🟢
 
 這是一個專為非工程師設計的股市監控系統。當您關注的股票跌破目標價時，系統會自動透過 **Tapo 智慧插座** 點亮家中綠燈，並發出語音提醒。
 
@@ -149,7 +149,7 @@ Green_Light_Stock-to-Home_Alert/
    - 實作 Debounce 機制（5 分鐘冷卻時間）
    - 整合 TTS 語音播報
 
-3. **Presentation Layer** (`main_gui.py`)
+3. **Presentation Layer** (`smart_stock_light.py`)
    - 使用 tkinter 建構 GUI
    - 管理背景監控 Thread
    - 提供即時日誌顯示

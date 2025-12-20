@@ -1,10 +1,10 @@
 #!/bin/bash
 
-# Stock-to-Home Alert 一鍵安裝與執行腳本
+# SmartStockLight 一鍵安裝與執行腳本
 # 適用於 macOS
 
 echo "------------------------------------------"
-echo "   Stock-to-Home Alert 啟動中..."
+echo "   SmartStockLight 啟動中..."
 echo "------------------------------------------"
 
 # 1. 檢查 Python 是否安裝
@@ -28,7 +28,7 @@ pip install -r requirements.txt
 
 # 4. 啟動主程式
 echo "啟動伺服器與監控系統..."
-python3 main_gui.py
+python3 smart_stock_light.py
 
 # 結束後離開點
 deactivate

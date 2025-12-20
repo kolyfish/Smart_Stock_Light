@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stock-to-Light Premium Config</title>
+    <title>SmartStockLight Premium Config</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
@@ -225,7 +225,7 @@
 
 <body>
     <div class="container">
-        <h1>Stock-to-Light Control</h1>
+        <h1>SmartStockLight Control</h1>
         <div style="display: flex; justify-content: center;">
             <div id="market-status" class="market-status">市場狀態載入中...</div>
         </div>
@@ -238,7 +238,7 @@
                 <div id="index-chg" class="data-change">--</div>
             </div>
             <div class="data-card">
-                <div class="data-label" id="stock-name-label">目前監控個股</div>
+                <div class="data-label" id="stock-name-label">目前監控標的</div>
                 <div id="stock-val" class="data-value">--</div>
                 <div id="stock-symbol-sub" class="data-change">--</div>
                 <div id="update-time-sub" style="font-size: 0.7rem; opacity: 0.4; margin-top: 4px;">--:--:-- 更新</div>
@@ -249,8 +249,8 @@
             <div class="card-title">监控設定 <span id="monitor-price-badge" class="current-price-badge">載入中...</span></div>
             <form id="configForm">
                 <div class="form-group">
-                    <label for="symbol">股票代號 (例: 2330.TW)</label>
-                    <input type="text" id="symbol" value="{{ config.symbol }}" placeholder="2330.TW">
+                    <label for="symbol">監控代號 (例: 2330.TW 或 BTC-USD)</label>
+                    <input type="text" id="symbol" value="{{ config.symbol }}" placeholder="2330.TW / BTC-USD">
                 </div>
                 <div class="form-group">
                     <label for="target">🟢 目標進場/獲利價 (智慧綠燈)</label>
@@ -323,7 +323,7 @@
                 .then(res => res.json())
                 .then(data => {
                     const statusEl = document.getElementById('market-status');
-                    statusEl.textContent = `台股市場：${data.status}`;
+                    statusEl.textContent = `市場狀態：${data.status}`;
                 })
                 .catch(err => console.error('無法更新市場狀態'));
         }

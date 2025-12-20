@@ -37,24 +37,58 @@ class StockMonitor(threading.Thread):
             print(f"TTS 初始化失敗 (將改用系統原生語音): {e}")
             self.engine = None
 
-    def is_market_open(self):
-        """判斷台股是否在交易時間 (週一至週五 09:00 - 13:30)。"""
+    def is_crypto(self, symbol):
+        """判斷是否為虛擬貨幣 (yfinance 中通常帶有 -USD, -BTC 等，或為特定符號)。"""
+        # yfinance 虛擬貨幣通常包含 "-" 且結尾為 USD, BTC, ETH 等
+        crypto_suffixes = ['-USD', '-BTC', '-ETH', '-USDT']
+        return any(suffix in symbol.upper() for suffix in crypto_suffixes) or symbol.upper().endswith('=X')
+
+    def is_market_open(self, symbol=None):
+        """判斷市場是否在交易時間。支援台股、美股與虛擬貨幣。"""
+        if symbol and self.is_crypto(symbol):
+            return True
+            
         now = datetime.now()
-        if now.weekday() >= 5:
-            return False
         
-        current_time = now.time()
-        start_time = dt_time(9, 0)
-        end_time = dt_time(13, 30)
-        
-        return start_time <= current_time <= end_time
+        # 決定市場時區與時間
+        if symbol and ('.TW' in symbol.upper() or '.TWO' in symbol.upper()):
+            # 台股範疇
+            market = "TW"
+            if now.weekday() >= 5: return False
+            current_time = now.time()
+            return dt_time(9, 0) <= current_time <= dt_time(13, 30)
+        else:
+            # 預設為美股範疇 (無後綴 or 其他)
+            market = "US"
+            # 美股開盤概略時間 (台灣時間): 
+            # 冬季: 22:30 - 05:00 (+1)
+            # 夏季: 21:30 - 04:00 (+1)
+            # 為了簡化與保險，我們監測 21:00 - 06:00
+            if now.weekday() == 5: # 週六早上 06:00 前還算週五美股
+                return now.time() <= dt_time(6, 0)
+            if now.weekday() == 6: # 週日全天休息
+                return False
+            if now.weekday() == 0: # 週一早上 21:00 前休息
+                return now.time() >= dt_time(21, 0)
+            
+            # 週一到週五的夜間
+            current_time = now.time()
+            return current_time >= dt_time(21, 0) or current_time <= dt_time(6, 0)
 
     def get_market_status_text(self):
         """取得市場狀態的文字描述。"""
-        if self.is_market_open():
-            return "交易中 🟢"
+        config = self.shared_config.get_config()
+        symbol = config.get('symbol', '2330.TW')
+        
+        is_open = self.is_market_open(symbol)
+        
+        if self.is_crypto(symbol):
+            return "虛擬貨幣 24/7 交易中 🟢"
+            
+        if '.TW' in symbol.upper() or '.TWO' in symbol.upper():
+            return "台股交易中 🟢" if is_open else "台股收盤/未開盤 🔴"
         else:
-            return "已收盤/未開盤 🔴"
+            return "美股交易中 🟢" if is_open else "美股收盤/未開盤 🔴"
 
     def fetch_market_index(self):
         """抓取台股大盤指數 (^TWII)，優先使用 fast_info，失敗則使用 history。"""
@@ -143,9 +177,9 @@ class StockMonitor(threading.Thread):
                 # 無論是否休市都更新一次大盤（休市時顯示最後價格）
                 self.fetch_market_index()
 
-                # 如果休市，則降低檢查頻率
-                if not self.is_market_open():
-                    self.add_log(f"台股目前休市中。")
+                # 如果是台股且休市，則降低檢查頻率
+                if not self.is_crypto(symbol) and not self.is_market_open(symbol):
+                    self.add_log(f"台股目前休市中，監控暫緩。")
                     time.sleep(60)
                     continue
 
@@ -153,30 +187,32 @@ class StockMonitor(threading.Thread):
                 try:
                     ticker = yf.Ticker(symbol)
                     
-                    # 獲取股價 (優先嘗試 history，通常比 fast_info 穩定)
+                    # 獲取股價 - 優先順序調整
                     current_price = None
+                    
+                    # 1. 嘗試快速獲取 (fast_info)
                     try:
-                        hist = ticker.history(period="1d", interval="1m")
-                        if not hist.empty:
-                            current_price = hist['Close'].iloc[-1]
-                    except Exception as e:
-                        self.add_log(f"History 抓取失敗: {e}")
+                        current_price = ticker.fast_info.get('last_price')
+                    except:
+                        pass
 
-                    # Fallback 1: fast_info
+                    # 2. 如果 1 失敗，嘗試 history (1m interval)
                     if current_price is None or current_price == 0:
                         try:
-                            current_price = ticker.fast_info.get('last_price')
-                        except:
-                            pass
+                            hist = ticker.history(period="1d", interval="1m")
+                            if not hist.empty:
+                                current_price = hist['Close'].iloc[-1]
+                        except Exception as e:
+                            self.add_log(f"History 抓取失敗: {e}")
 
-                    # Fallback 2: 再次嘗試 history (較長一點的 period)
+                    # 3. 如果 2 失敗，嘗試 5d history
                     if current_price is None or current_price == 0:
                         hist = ticker.history(period="5d")
                         if not hist.empty:
                             current_price = hist['Close'].iloc[-1]
                     
                     if current_price is None:
-                        self.add_log(f"無法獲取 {symbol} 股價，稍後重試...")
+                        self.add_log(f"無法獲取 {symbol} 股價 (市場可能未開盤或代號錯誤)")
                         time.sleep(10)
                         continue
 
@@ -261,8 +297,16 @@ class StockMonitor(threading.Thread):
                             self.device_off = False
                             self.tapo.turn_on_green()
                             
-                            spaced_symbol = " ".join(list(symbol.split(".")[0]))
-                            alert_msg = f"注意，股票代號 {spaced_symbol} {self.last_stock_name} 目前價格為 {current_price:.1f}，已達到您的目標價。"
+                            # TTS 優化：針對虛擬貨幣改讀法
+                            if self.is_crypto(symbol):
+                                # BTC-USD -> "B T C"
+                                crypto_name = symbol.split("-")[0]
+                                spaced_symbol = " ".join(list(crypto_name))
+                                alert_msg = f"注意，虛擬貨幣 {spaced_symbol} {self.last_stock_name} 目前價格為 {current_price:.2f}，已達到您的目標價。"
+                            else:
+                                spaced_symbol = " ".join(list(symbol.split(".")[0]))
+                                alert_msg = f"注意，股票代號 {spaced_symbol} {self.last_stock_name} 目前價格為 {current_price:.1f}，已達到您的目標價。"
+                                
                             self.speak(alert_msg)
                             self.last_alert_time = now
                     else:

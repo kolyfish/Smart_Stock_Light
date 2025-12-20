@@ -66,10 +66,12 @@ class WebServer(threading.Thread):
         return jsonify({"status": "success", "message": "裝置已關閉"})
 
     def market_status(self):
-        status_text = self.monitor.get_market_status_text()
+        config = self.shared_config.get_config()
+        symbol = config.get('symbol')
+        status_text = self.monitor.get_market_status_text() # get_market_status_text already pulls config internally in my update
         return jsonify({
             "status": status_text,
-            "is_open": self.monitor.is_market_open()
+            "is_open": self.monitor.is_market_open(symbol)
         })
 
     def demo_alert(self):

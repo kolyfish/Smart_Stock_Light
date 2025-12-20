@@ -23,10 +23,10 @@ def get_local_ip():
     except Exception:
         return "127.0.0.1"
 
-class MainApp:
+class SmartStockLight:
     def __init__(self, root):
         self.root = root
-        self.root.title("Stock-to-Light Server")
+        self.root.title("SmartStockLight Server")
         self.root.geometry("400x500")
 
         # Initialize Components
@@ -41,7 +41,7 @@ class MainApp:
         self.server.start()
 
         # GUI Elements
-        self.label_title = ttk.Label(root, text="Stock-to-Light Server Running", font=("Arial", 16))
+        self.label_title = ttk.Label(root, text="SmartStockLight Server Running", font=("Arial", 16))
         self.label_title.pack(pady=20)
 
         self.ip_address = get_local_ip()
@@ -81,5 +81,5 @@ class MainApp:
 
 if __name__ == "__main__":
     root = tk.Tk()
-    app = MainApp(root)
+    app = SmartStockLight(root)
     root.mainloop()
