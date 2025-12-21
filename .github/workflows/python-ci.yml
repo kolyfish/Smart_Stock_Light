@@ -21,7 +21,8 @@ jobs:
       run: |
         python -m venv venv
         source venv/bin/activate
-        python -m pip install --upgrade pip setuptools wheel
+        # 強制忽略系統已安裝的套件，避免 InvalidVersion 錯誤
+        python -m pip install --ignore-installed --upgrade pip setuptools wheel
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
         # Ensure pytest and ruff are installed
         pip install pytest pytest-mock ruff playwright pytest-playwright
