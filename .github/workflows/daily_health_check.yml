@@ -18,6 +18,8 @@ jobs:
 
       - name: Install dependencies
         run: |
+          python -m venv venv
+          source venv/bin/activate
           python -m pip install --upgrade pip setuptools wheel
           pip install -r requirements.txt
           pip install playwright pytest-playwright requests pytest-mock
@@ -27,5 +29,6 @@ jobs:
         env:
           SIMULATION_MODE: "true"
         run: |
+          source venv/bin/activate
           # 啟動 app.py 並在背景執行，測試完成後由腳本殺掉
           python tests/run_e2e_ci.py
