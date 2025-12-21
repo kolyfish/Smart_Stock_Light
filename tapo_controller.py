@@ -75,13 +75,16 @@ class TapoController:
             print(f"[{self.ip_address}] 正在切換顏色為: {color_name}")
             
             await device.turn_on()
+            # 核心修正：切換顏色時顯式重設亮度為 100 (避免從睡眠待命模式恢復時亮度過低)
+            await device.set_brightness(100)
+            
             result = await device.set_hue_saturation(hue, saturation)
             
             if result.is_failure():
                 from plugp100.new.components.light_component import LightComponent
                 await device.get_component(LightComponent).set_hue_saturation(hue, saturation)
                 
-            print(f"[{self.ip_address}] 顏色切換成功 ({color_name})。")
+            print(f"[{self.ip_address}] 顏色切換成功 ({color_name})，亮度已恢復 100%。")
         except Exception as e:
             print(f"[{self.ip_address}] 操控失敗: {e}")
 
@@ -145,6 +148,43 @@ class TapoController:
     def turn_off(self):
         """手動關閉。"""
         asyncio.run(self._turn_off())
+    
+    async def _set_sleep_standby(self):
+        """睡眠待命模式：調暗至 1% 亮度（黃燈），但保持開啟。"""
+        try:
+            device = await connect(self.config)
+            # 手動修正 KlapProtocol 類型問題
+            client = device.client
+            import inspect
+            if inspect.isclass(client.protocol) or client.protocol is None:
+                from plugp100.protocol.klap import klap_handshake_v2
+                from plugp100.protocol.klap.klap_protocol import KlapProtocol
+                protocol = KlapProtocol(
+                    auth_credential=self.credentials,
+                    url=f"http://{self.ip_address}/app",
+                    klap_strategy=klap_handshake_v2()
+                )
+                client._protocol = protocol
+            
+            await device.update()
+            print(f"[{self.ip_address}] 進入睡眠待命模式：調暗至 1% 亮度（黃燈）")
+            
+            # 設為黃色
+            await device.turn_on()
+            result = await device.set_hue_saturation(60, 100)  # 黃色
+            if result.is_failure():
+                from plugp100.new.components.light_component import LightComponent
+                await device.get_component(LightComponent).set_hue_saturation(60, 100)
+            
+            # 調暗至 1%
+            await device.set_brightness(1)
+            print(f"[{self.ip_address}] 睡眠待命模式已啟動（亮度 1%）")
+        except Exception as e:
+            print(f"[{self.ip_address}] 設定睡眠待命模式失敗: {e}")
+    
+    def set_sleep_standby(self):
+        """啟動睡眠待命模式。"""
+        asyncio.run(self._set_sleep_standby())
 
 if __name__ == "__main__":
     controller = TapoController()

@@ -25,6 +25,7 @@ class WebServer(threading.Thread):
         self.app.add_url_rule('/api/logs', 'get_logs', self.get_logs, methods=['GET'])
         self.app.add_url_rule('/api/check_update', 'check_update', self.check_update, methods=['GET'])
         self.app.add_url_rule('/api/apply_update', 'apply_update', self.apply_update, methods=['POST'])
+        self.app.add_url_rule('/api/stop_alarm', 'stop_alarm', self.stop_alarm, methods=['POST'])
 
     def index(self):
         config = self.shared_config.get_config()
@@ -60,10 +61,24 @@ class WebServer(threading.Thread):
         return jsonify({"status": "success", "message": "測試序列已啟動"})
 
     def turn_off(self):
-        print("網頁請求: 關燈")
-        self.monitor.device_off = True # 核心修正：標記為關閉狀態
-        self.tapo.turn_off()
-        return jsonify({"status": "success", "message": "裝置已關閉"})
+        print("網頁請求: 睡眠待命模式")
+        # 不設定 device_off，讓警報可以觸發
+        self.tapo.set_sleep_standby()  # 調暗至 1% 亮度
+        # 語音通知
+        import subprocess
+        try:
+            subprocess.run(["say", "燈光待命亮度零度流明，但發生闃崩燈還是會亮起"])
+        except:
+            pass
+        return jsonify({"status": "success", "message": "睡眠待命模式已啟動"})
+    
+    def stop_alarm(self):
+        print("網頁請求: 停止警報")
+        success = self.monitor.stop_alarm()
+        if success:
+            return jsonify({"status": "success", "message": "警報已停止"})
+        else:
+            return jsonify({"status": "info", "message": "當前沒有活躍的警報"})
 
     def market_status(self):
         config = self.shared_config.get_config()

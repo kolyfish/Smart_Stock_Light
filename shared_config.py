@@ -1,7 +1,7 @@
 import threading
 
 class SharedConfig:
-    def __init__(self, default_symbol="2330.TW", default_target=950.0, default_stop_loss=0.0):
+    def __init__(self, default_symbol="BTC-USD", default_target=88000.0, default_stop_loss=0.0):
         self._symbol = default_symbol
         self._target_price = default_target
         self._stop_loss_price = default_stop_loss

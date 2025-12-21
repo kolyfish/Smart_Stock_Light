@@ -1,5 +1,4 @@
 import yfinance as yf
-import json
 
 def test_fetch():
     symbols = ["2330.TW", "^TWII"]

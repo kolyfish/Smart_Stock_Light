@@ -1,4 +1,3 @@
-import pytest
 from shared_config import SharedConfig
 
 def test_config_initialization():

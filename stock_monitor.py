@@ -1,10 +1,8 @@
 import time
 import threading
 import yfinance as yf
-import os
 import subprocess
 from datetime import datetime, time as dt_time
-from tapo_controller import TapoController
 
 class StockMonitor(threading.Thread):
     def __init__(self, shared_config, tapo_controller):
@@ -27,6 +25,8 @@ class StockMonitor(threading.Thread):
         self.device_off = False  # 追蹤硬體是否被使用者手動關閉
         self.alert_mode = None   # 'above' 或 'below'，自動判定
         self._price_history = [] # 儲存最近幾分鐘的價格，偵測閃崩
+        self.alarm_active = False  # 警報是否正在響起（持續播報中）
+        self.alarm_thread = None   # 警報播報執行緒
         
         # 初始化 TTS 元件
         try:
@@ -138,14 +138,72 @@ class StockMonitor(threading.Thread):
             self.log_messages.pop(0)
 
     def trigger_demo_alert(self):
-        """執行全功能示範：執行燈光測試序列 (演示開關、漸暗、變色) + 語音說明。"""
+        """執行全功能示範：依序展示紅、黃、綠燈 + 語音說明。"""
+        import time
         self.device_off = False # 演示時恢復通訊
-        print("執行全功能演示模式：正在測試燈光動態與語音輸出...")
-        # 1. 執行燈光動態序列 (漸暗 -> 關閉 -> 紅綠黃跳變)
-        self.tapo.run_test_sequence()
-        # 2. 語音同步說明
-        self.speak("系統測試中。燈光已演示漸暗與開關功能，並完成紅、綠、黃三色校準。目前運作正常，準備進入監控模式。")
+        self.add_log("開始執行全功能演示...")
+        
+        try:
+            # 1. 紅燈 - 警示狀態
+            self.add_log("演示：紅燈（警示/停損）")
+            self.tapo.turn_on_red()
+            self.speak("紅燈，代表停損警示或系統異常。")
+            time.sleep(3)
+            
+            # 2. 黃燈 - 監控中
+            self.add_log("演示：黃燈（常態監控）")
+            self.tapo.turn_on_yellow()
+            self.speak("黃燈，代表系統正常監控中。")
+            time.sleep(3)
+            
+            # 3. 綠燈 - 達標提醒
+            self.add_log("演示：綠燈（目標達成）")
+            self.tapo.turn_on_green()
+            self.speak("綠燈，代表股價已達到您設定的目標價格。")
+            time.sleep(3)
+            
+            # 4. 回到黃燈
+            self.add_log("演示完成，恢復監控狀態")
+            self.tapo.turn_on_yellow()
+            self.speak("演示完成，系統已恢復正常監控。")
+            
+        except Exception as e:
+            self.add_log(f"演示過程出錯: {e}")
+        
         return True
+
+    def _continuous_alarm_loop(self, symbol, current_price, target_price):
+        """持續播報警報直到使用者按下停止按鈕"""
+        import time
+        
+        # 準備播報內容
+        if self.is_crypto(symbol):
+            crypto_name = symbol.split("-")[0]
+            spaced_symbol = " ".join(list(crypto_name))
+            alert_msg = f"緊急警報！虛擬貨幣 {spaced_symbol} 目前價格 {current_price:.2f} 美元，已達到您設定的目標價格 {target_price:.2f} 美元。請立即查看。"
+        else:
+            spaced_symbol = " ".join(list(symbol.split(".")[0]))
+            alert_msg = f"緊急警報！股票代號 {spaced_symbol} 目前價格 {current_price:.1f}，已達到您設定的目標價格 {target_price:.1f}。請立即查看。"
+        
+        self.add_log("🔔 開始持續警報播報...")
+        
+        # 持續播報直到停止
+        while self.alarm_active:
+            self.speak(alert_msg)
+            time.sleep(10)  # 每10秒播報一次
+            
+        self.add_log("🔕 警報已停止")
+    
+    def stop_alarm(self):
+        """停止警報播報（像鬧鐘的停止按鈕）"""
+        if self.alarm_active:
+            self.alarm_active = False
+            self.add_log("使用者已停止警報播報")
+            # 恢復黃燈監控狀態
+            if not self.device_off:
+                self.tapo.turn_on_yellow()
+            return True
+        return False
 
     def run(self):
         print("StockMonitor 已啟動。")
@@ -179,7 +237,7 @@ class StockMonitor(threading.Thread):
 
                 # 如果是台股且休市，則降低檢查頻率
                 if not self.is_crypto(symbol) and not self.is_market_open(symbol):
-                    self.add_log(f"台股目前休市中，監控暫緩。")
+                    self.add_log("台股目前休市中，監控暫緩。")
                     time.sleep(60)
                     continue
 
@@ -294,28 +352,23 @@ class StockMonitor(threading.Thread):
                         now = time.time()
                         if now - self.last_alert_time > self.cooldown_seconds:
                             self.add_log(f"!!! 觸發警報: {symbol} 已達標 ({current_price:.2f}) !!!")
-                            self.device_off = False
-                            self.tapo.turn_on_green()
+                            self.tapo.turn_on_green()  # 直接亮綠燈，不管是否在睡眠模式
                             
-                            # TTS 優化：針對虛擬貨幣改讀法
-                            if self.is_crypto(symbol):
-                                # BTC-USD -> "B T C"
-                                crypto_name = symbol.split("-")[0]
-                                spaced_symbol = " ".join(list(crypto_name))
-                                alert_msg = f"注意，虛擬貨幣 {spaced_symbol} {self.last_stock_name} 目前價格為 {current_price:.2f}，已達到您的目標價。"
-                            else:
-                                spaced_symbol = " ".join(list(symbol.split(".")[0]))
-                                alert_msg = f"注意，股票代號 {spaced_symbol} {self.last_stock_name} 目前價格為 {current_price:.1f}，已達到您的目標價。"
-                                
-                            self.speak(alert_msg)
+                            # 啟動持續警報播報
+                            if not self.alarm_active:
+                                self.alarm_active = True
+                                self.alarm_thread = threading.Thread(
+                                    target=self._continuous_alarm_loop,
+                                    args=(symbol, current_price, target),
+                                    daemon=True
+                                )
+                                self.alarm_thread.start()
+                            
                             self.last_alert_time = now
                     else:
-                        # 未達標時，若沒手動關閉則維持黃燈
-                        if not self.device_off:
-                            self.tapo.turn_on_yellow()
-                            self.add_log(f"{symbol}: {current_price:.2f} (目標 {target} | 監控中)")
-                        else:
-                            self.add_log(f"監控中，但裝置目前為手動關閉。")
+                        # 未達標時，維持黃燈
+                        self.tapo.turn_on_yellow()
+                        self.add_log(f"{symbol}: {current_price:.2f} (目標 {target} | 監控中)")
 
                 except Exception as e:
                     self.add_log(f"數據抓取或警報診斷異常: {e}")

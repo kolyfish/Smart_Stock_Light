@@ -226,6 +226,82 @@
 <body>
     <div class="container">
         <h1>SmartStockLight Control</h1>
+
+        <!-- Light Guide Toggle Button -->
+        <div style="text-align: center; margin-bottom: 1rem;">
+            <button onclick="toggleLightGuide()"
+                style="padding: 0.5rem 1.5rem; background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 0.9rem;">
+                <i class="fas fa-lightbulb"></i> 燈光說明指南
+            </button>
+        </div>
+
+        <!-- Collapsible Light Guide -->
+        <div id="lightGuide" style="display: none; margin-bottom: 1.5rem;">
+            <div class="card" style="background: linear-gradient(135deg, rgba(102,126,234,0.1), rgba(118,75,162,0.1));">
+                <div class="card-title"><i class="fas fa-book"></i> 🎨 燈光顏色說明</div>
+
+                <div style="display: grid; gap: 1rem;">
+                    <!-- Yellow Light -->
+                    <div
+                        style="padding: 1rem; background: rgba(255,193,7,0.1); border-left: 4px solid #FFC107; border-radius: 8px;">
+                        <div style="font-weight: bold; color: #FFC107; margin-bottom: 0.5rem;">🟡 黃燈（常態監控）</div>
+                        <div style="font-size: 0.85rem; line-height: 1.6;">
+                            • 系統正常運作中，持續監控股價<br>
+                            • 亮度：100%（正常）或 1%（睡眠待命）<br>
+                            • 股價未達目標時的預設狀態
+                        </div>
+                    </div>
+
+                    <!-- Green Light -->
+                    <div
+                        style="padding: 1rem; background: rgba(76,175,80,0.1); border-left: 4px solid #4CAF50; border-radius: 8px;">
+                        <div style="font-weight: bold; color: #4CAF50; margin-bottom: 0.5rem;">🟢 綠燈（目標達成）</div>
+                        <div style="font-size: 0.85rem; line-height: 1.6;">
+                            • 股價已達到您設定的目標價格！<br>
+                            • 燈光立即轉為綠色（100% 亮度）<br>
+                            • 啟動持續語音播報（每10秒一次）<br>
+                            • 需點擊「停止警報播報」按鈕才會停止
+                        </div>
+                    </div>
+
+                    <!-- Purple Light -->
+                    <div
+                        style="padding: 1rem; background: rgba(156,39,176,0.1); border-left: 4px solid #9C27B0; border-radius: 8px;">
+                        <div style="font-weight: bold; color: #9C27B0; margin-bottom: 0.5rem;">🟣 紫燈（閃崩警報）</div>
+                        <div style="font-size: 0.85rem; line-height: 1.6;">
+                            • 偵測到股價在短時間內急劇下跌<br>
+                            • 觸發條件：1分鐘內跌幅 ≥ 1.5%<br>
+                            • 自動過濾異常數據（單次跳變 > 50%）<br>
+                            • 語音播報實際跌幅百分比
+                        </div>
+                    </div>
+
+                    <!-- Red Light -->
+                    <div
+                        style="padding: 1rem; background: rgba(244,67,54,0.1); border-left: 4px solid #F44336; border-radius: 8px;">
+                        <div style="font-weight: bold; color: #F44336; margin-bottom: 0.5rem;">🔴 紅燈（停損/異常）</div>
+                        <div style="font-size: 0.85rem; line-height: 1.6;">
+                            • 股價跌破停損價，或系統無法取得數據<br>
+                            • 語音播報停損警告<br>
+                            • 提示用戶注意風險
+                        </div>
+                    </div>
+
+                    <!-- Sleep Mode -->
+                    <div
+                        style="padding: 1rem; background: rgba(96,125,139,0.1); border-left: 4px solid #607D8B; border-radius: 8px;">
+                        <div style="font-weight: bold; color: #607D8B; margin-bottom: 0.5rem;">🛏️ 睡眠待命模式</div>
+                        <div style="font-size: 0.85rem; line-height: 1.6;">
+                            • 燈光調暗至 1% 亮度（黃色）<br>
+                            • 幾乎看不見光線，不影響睡眠<br>
+                            • 系統持續監控股價變化<br>
+                            • 觸發警報時燈光會立即調至 100% 亮度
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div style="display: flex; justify-content: center;">
             <div id="market-status" class="market-status">市場狀態載入中...</div>
         </div>
@@ -266,15 +342,11 @@
         </div>
 
         <div class="card">
-            <div class="card-title"><i class="fas fa-vial"></i> 功能演示 (休市/夜間亦可測試)</div>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 0.75rem;">
-                <button class="btn-warning" onclick="demoAlert()" style="height: auto; padding: 1rem 0.5rem;">
+            <div class="card-title"><i class="fas fa-vial"></i> 功能演示</div>
+            <div style="margin-bottom: 0.75rem;">
+                <button class="btn-warning" onclick="demoAlert()" style="width: 100%; height: auto; padding: 1rem;">
                     <i class="fas fa-play-circle"></i> 全功能演示
                     <div style="font-size: 0.6rem; opacity: 0.7; font-weight: normal;">燈光動態 + 語音說明</div>
-                </button>
-                <button class="btn-success" onclick="runTest()" style="height: auto; padding: 1rem 0.5rem;">
-                    <i class="fas fa-magic"></i> 漸暗與閃爍
-                    <div style="font-size: 0.6rem; opacity: 0.7; font-weight: normal;">顯示操控靈敏度</div>
                 </button>
             </div>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
@@ -282,15 +354,19 @@
                     <i class="fas fa-sun"></i> 亮起黃燈 (常態)
                 </button>
                 <button class="btn-secondary" onclick="turnOff()">
-                    <i class="fas fa-moon"></i> 立即關閉裝置
+                    <i class="fas fa-moon"></i> 睡眠待命（0流明）
                 </button>
             </div>
             <button class="btn-success" onclick="testGreen()" style="width: 100%; margin-top: 0.75rem;">
                 <i class="fas fa-check-circle"></i> 一鍵測試亮綠燈
             </button>
-            <p style="font-size: 0.75rem; color: var(--text-dim); margin-top: 1rem; text-align: center;">
-                💡 演示模式會繞過市場時間，確保您隨時可向他人展示系統。
-            </p>
+
+            <!-- 停止警報按鈕（像鬧鐘的停止鍵） -->
+            <button onclick="stopAlarm()"
+                style="width: 100%; margin-top: 0.75rem; padding: 1.2rem; background: linear-gradient(135deg, #ff4444, #cc0000); color: white; border: none; border-radius: 12px; font-size: 1.1rem; font-weight: bold; cursor: pointer; box-shadow: 0 4px 15px rgba(255,68,68,0.4);">
+                <i class="fas fa-bell-slash"></i> 🔕 停止警報播報
+            </button>
+
         </div>
 
         <!-- 系統終端日誌區塊 -->
@@ -439,6 +515,12 @@
             fetch('/api/test_green', { method: 'POST' })
                 .then(res => res.json())
                 .then(data => showToast('測試亮綠燈已執行'));
+        }
+
+        function stopAlarm() {
+            fetch('/api/stop_alarm', { method: 'POST' })
+                .then(res => res.json())
+                .then(data => showToast(data.message));
         }
 
         function checkUpdate() {
