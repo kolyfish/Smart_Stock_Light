@@ -15,10 +15,8 @@ def run_e2e():
     # 這裡假設 ./setup_and_run.sh 中啟動的是 python main_gui.py 或 web_server
     # 實際上可以直接跑一個獨立的測試啟動腳本
     server_process = subprocess.Popen(
-        [sys.executable, "app.py"], # 假設有一個 app.py 整合啟動，或直接指定
-        env=env,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.STDOUT
+        [sys.executable, "app.py"],
+        env=env
     )
     
     # 等待伺服器啟動

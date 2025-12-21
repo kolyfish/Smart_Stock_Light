@@ -222,21 +222,24 @@ class StockMonitor(threading.Thread):
                     time.sleep(60)
                     continue
 
-                # 獲取監控個股數據 (透過 MarketDataAgent)
+                # 獲取監控個股數據
                 try:
-                    market_data = self.data_agent.get_market_data(symbol)
-                    current_price = market_data['price']
                     now_ts = time.time()
-                    
-                    # 如果有模擬數據（用於自動化測試），優先使用
+                    current_price = None
+                    market_data = {}
+
+                    # 如果有模擬數據（用於自動化測試），優先使用並跳過實體抓取
                     if self.mock_current_price is not None:
                         current_price = self.mock_current_price
                         self.add_log(f"系統：正在使用模擬數據測試現價 {current_price:.2f}")
-                        # 將模擬數據也錄入歷史記錄，確保閃崩判定能抓到
                         self.data_agent._clean_data(symbol, current_price)
-                    
+                        market_data = {'name': symbol, 'price': current_price}
+                    else:
+                        market_data = self.data_agent.get_market_data(symbol)
+                        current_price = market_data['price']
+
                     if current_price is None:
-                        self.add_log(f"無法獲取 {symbol} 股價 (市場可能未開盤或代號錯誤)")
+                        self.add_log(f"無法獲取 {symbol} 股價 (市場休市或 API 異常)")
                         time.sleep(10)
                         continue
 

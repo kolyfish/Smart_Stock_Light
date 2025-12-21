@@ -64,8 +64,8 @@ def test_panic_drop_alert(page: Page):
     """測試閃崩偵測是否正常運作"""
     page.goto(BASE_URL)
     
-    # 模擬連續下跌數據 (一分鐘內從 100 跌到 97, 跌幅 3%)
-    prices = [100, 100, 99.5, 99.0, 97.0]
+    # 模擬連續下跌數據 (引入些微波動以免標準差為 0)
+    prices = [100.1, 99.9, 100.2, 99.8, 100.0, 100.1, 90.0]
     for p in prices:
         requests.post(f"{BASE_URL}/api/simulate_data", json={"price": p})
         time.sleep(1.2)

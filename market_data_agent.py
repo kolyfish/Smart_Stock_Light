@@ -206,7 +206,8 @@ class MarketDataAgent:
                     std = statistics.stdev(prices)
                     if std > 0:
                         z_score = (current_price - mean) / std
-                        if z_score < -2.5: # 偏離平均值 2.5 個標準差
+                        print(f"DEBUG FlashCrash: Price={current_price}, Mean={mean:.2f}, Std={std:.2f}, Z={z_score:.2f}, Drop={drop_rate*100:.1f}%")
+                        if z_score < -2.0: 
                             return drop_rate
             
             return None
