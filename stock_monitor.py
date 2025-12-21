@@ -3,6 +3,7 @@ import threading
 import yfinance as yf
 import subprocess
 from datetime import datetime, time as dt_time
+from market_data_agent import MarketDataAgent
 
 class StockMonitor(threading.Thread):
     def __init__(self, shared_config, tapo_controller):
@@ -11,6 +12,8 @@ class StockMonitor(threading.Thread):
         self.tapo = tapo_controller
         self.running = True
         self.daemon = True
+        import os
+        self.simulation_mode = os.getenv("SIMULATION_MODE", "false").lower() == "true"
         self.last_alert_time = 0
         self.cooldown_seconds = 300  # 5 分鐘
         self.log_messages = [] # 新增：日誌緩存
@@ -27,6 +30,8 @@ class StockMonitor(threading.Thread):
         self._price_history = [] # 儲存最近幾分鐘的價格，偵測閃崩
         self.alarm_active = False  # 警報是否正在響起（持續播報中）
         self.alarm_thread = None   # 警報播報執行緒
+        self.mock_current_price = None  # 用於自動化測試模擬數據
+        self.data_agent = MarketDataAgent() # 新增：行情監控代理
         
         # 初始化 TTS 元件
         try:
@@ -38,42 +43,18 @@ class StockMonitor(threading.Thread):
             self.engine = None
 
     def is_crypto(self, symbol):
-        """判斷是否為虛擬貨幣 (yfinance 中通常帶有 -USD, -BTC 等，或為特定符號)。"""
-        # yfinance 虛擬貨幣通常包含 "-" 且結尾為 USD, BTC, ETH 等
-        crypto_suffixes = ['-USD', '-BTC', '-ETH', '-USDT']
-        return any(suffix in symbol.upper() for suffix in crypto_suffixes) or symbol.upper().endswith('=X')
+        """判斷是否為虛擬貨幣。"""
+        return "-USD" in symbol.upper() or "-BTC" in symbol.upper() or symbol.upper().endswith("USDT")
 
     def is_market_open(self, symbol=None):
-        """判斷市場是否在交易時間。支援台股、美股與虛擬貨幣。"""
-        if symbol and self.is_crypto(symbol):
+        """判斷市場是否在交易時間。委派給 MarketDataAgent。模擬模式下恆為真。"""
+        if self.simulation_mode:
             return True
             
-        now = datetime.now()
-        
-        # 決定市場時區與時間
-        if symbol and ('.TW' in symbol.upper() or '.TWO' in symbol.upper()):
-            # 台股範疇
-            market = "TW"
-            if now.weekday() >= 5: return False
-            current_time = now.time()
-            return dt_time(9, 0) <= current_time <= dt_time(13, 30)
-        else:
-            # 預設為美股範疇 (無後綴 or 其他)
-            market = "US"
-            # 美股開盤概略時間 (台灣時間): 
-            # 冬季: 22:30 - 05:00 (+1)
-            # 夏季: 21:30 - 04:00 (+1)
-            # 為了簡化與保險，我們監測 21:00 - 06:00
-            if now.weekday() == 5: # 週六早上 06:00 前還算週五美股
-                return now.time() <= dt_time(6, 0)
-            if now.weekday() == 6: # 週日全天休息
-                return False
-            if now.weekday() == 0: # 週一早上 21:00 前休息
-                return now.time() >= dt_time(21, 0)
-            
-            # 週一到週五的夜間
-            current_time = now.time()
-            return current_time >= dt_time(21, 0) or current_time <= dt_time(6, 0)
+        if not symbol:
+            config = self.shared_config.get_config()
+            symbol = config['symbol']
+        return self.data_agent._select_provider(symbol).is_market_open(symbol)
 
     def get_market_status_text(self):
         """取得市場狀態的文字描述。"""
@@ -210,7 +191,7 @@ class StockMonitor(threading.Thread):
         # 初始狀態：顯示黃色，表示待機/監控中 (使用者要求的常態色)
         try:
             self.tapo.turn_on_yellow()
-        except Exception as e:
+        except Exception as e: # E722 is not applicable here
             print(f"初始設定黃燈失敗: {e}")
 
         while self.running:
@@ -241,33 +222,18 @@ class StockMonitor(threading.Thread):
                     time.sleep(60)
                     continue
 
-                # 抓取監控個股數據
+                # 獲取監控個股數據 (透過 MarketDataAgent)
                 try:
-                    ticker = yf.Ticker(symbol)
+                    market_data = self.data_agent.get_market_data(symbol)
+                    current_price = market_data['price']
+                    now_ts = time.time()
                     
-                    # 獲取股價 - 優先順序調整
-                    current_price = None
-                    
-                    # 1. 嘗試快速獲取 (fast_info)
-                    try:
-                        current_price = ticker.fast_info.get('last_price')
-                    except:
-                        pass
-
-                    # 2. 如果 1 失敗，嘗試 history (1m interval)
-                    if current_price is None or current_price == 0:
-                        try:
-                            hist = ticker.history(period="1d", interval="1m")
-                            if not hist.empty:
-                                current_price = hist['Close'].iloc[-1]
-                        except Exception as e:
-                            self.add_log(f"History 抓取失敗: {e}")
-
-                    # 3. 如果 2 失敗，嘗試 5d history
-                    if current_price is None or current_price == 0:
-                        hist = ticker.history(period="5d")
-                        if not hist.empty:
-                            current_price = hist['Close'].iloc[-1]
+                    # 如果有模擬數據（用於自動化測試），優先使用
+                    if self.mock_current_price is not None:
+                        current_price = self.mock_current_price
+                        self.add_log(f"系統：正在使用模擬數據測試現價 {current_price:.2f}")
+                        # 將模擬數據也錄入歷史記錄，確保閃崩判定能抓到
+                        self.data_agent._clean_data(symbol, current_price)
                     
                     if current_price is None:
                         self.add_log(f"無法獲取 {symbol} 股價 (市場可能未開盤或代號錯誤)")
@@ -276,46 +242,15 @@ class StockMonitor(threading.Thread):
 
                     self.last_stock_price = current_price
                     self.last_update_time = datetime.now().strftime("%H:%M:%S")
-
-                    # 獲取股票名稱 (完全由系統自動抓取)
-                    if self.last_stock_name == "監控中..." or self.last_stock_name == symbol:
-                        try:
-                            info = ticker.info
-                            # 優先取長、短名
-                            fetched_name = info.get('longName') or info.get('shortName') or symbol
-                            if fetched_name != self.last_stock_name:
-                                self.last_stock_name = fetched_name
-                                self.add_log(f"成功識別股票名稱：{self.last_stock_name}")
-                        except:
-                            self.last_stock_name = symbol
-
-                    self.last_stock_price = current_price
-                    self.last_update_time = datetime.now().strftime("%H:%M:%S")
+                    self.last_stock_name = market_data.get('name', symbol)
 
                     # --- 閃崩偵測 (Purple Light) ---
-                    now_ts = time.time()
-                    
-                    # 數據清洗：忽略異常價格（如 0 或變動過於誇張的極端值）
-                    if current_price > 0:
-                        if self.last_stock_price and abs(current_price - self.last_stock_price) / self.last_stock_price > 0.5:
-                            self.add_log(f"⚠️ 偵測到價格劇烈跳變 ({self.last_stock_price} -> {current_price})，暫不記入閃崩歷史。")
-                        else:
-                            self._price_history.append((now_ts, current_price))
-                    
-                    # 只保留最近 5 分鐘的數據
-                    self._price_history = [p for p in self._price_history if now_ts - p[0] <= 300]
-                    
-                    if len(self._price_history) >= 5: # 增加數據量要求，避免單次跳動觸發
-                        # 檢查最近 1 分鐘內的跌幅
-                        one_min_ago = [p for p in self._price_history if now_ts - p[0] <= 60]
-                        if len(one_min_ago) >= 3: # 至少要有 3 個點
-                            price_old = one_min_ago[0][1]
-                            drop_rate = (price_old - current_price) / price_old
-                            if drop_rate >= 0.015: # 閃崩 1.5%
-                                self.add_log(f"⚠️ 偵測到閃崩！一分鐘實質跌幅 {drop_rate*100:.1f}%")
-                                self.tapo.turn_on_purple()
-                                self.speak(f"警告，{self.last_stock_name} 偵測到恐慌性閃崩，目前跌幅百分之 {drop_rate*100:.1f}。")
-                                time.sleep(5) # 稍微暫停避免連續觸發
+                    drop_rate = self.data_agent.detect_flash_crash(symbol, current_price)
+                    if drop_rate:
+                        self.add_log(f"⚠️ 偵測到閃崩！實質跌幅 {drop_rate*100:.1f}%")
+                        self.tapo.turn_on_purple()
+                        self.speak(f"警告，{self.last_stock_name} 偵測到恐慌性閃崩，目前跌幅百分之 {drop_rate*100:.1f}。")
+                        time.sleep(5)
 
                     # --- 數據異常診斷 (Red Light part 1) ---
                     # 如果能跑到這代表抓到資料了
@@ -377,11 +312,13 @@ class StockMonitor(threading.Thread):
                         self.tapo.turn_on_red()
                         self.add_log("系統診斷：無法取得數據，切換為紅燈警示。")
                 
-                time.sleep(10)
+                # 決定下次檢查的時間間隔
+                sleep_time = 1 if self.simulation_mode else 10
+                time.sleep(sleep_time)
 
             except Exception as e:
                 print(f"監控迴圈出錯: {e}")
-                time.sleep(10)
+                time.sleep(1)
 
     def stop(self):
         self.running = False

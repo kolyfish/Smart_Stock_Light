@@ -8,3 +8,6 @@ python-dotenv
 pyobjc>=10.0
 pytest
 pytest-mock
+playwright
+pytest-playwright
+requests

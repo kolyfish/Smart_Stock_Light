@@ -89,7 +89,7 @@ async def main():
         try:
             if "bulb" in locals():
                 await bulb.client.close()
-        except:
+        except Exception:
             pass
 
 

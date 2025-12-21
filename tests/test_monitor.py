@@ -36,7 +36,7 @@ def test_auto_name_fetching_placeholder(mock_deps):
 
 def test_stop_loss_logic(mock_deps):
     config, tapo = mock_deps
-    monitor = StockMonitor(config, tapo)
+    _ = StockMonitor(config, tapo)
     
     stop_loss = 800
     current_price = 790

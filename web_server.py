@@ -26,6 +26,7 @@ class WebServer(threading.Thread):
         self.app.add_url_rule('/api/check_update', 'check_update', self.check_update, methods=['GET'])
         self.app.add_url_rule('/api/apply_update', 'apply_update', self.apply_update, methods=['POST'])
         self.app.add_url_rule('/api/stop_alarm', 'stop_alarm', self.stop_alarm, methods=['POST'])
+        self.app.add_url_rule('/api/simulate_data', 'simulate_data', self.simulate_data, methods=['POST'])
 
     def index(self):
         config = self.shared_config.get_config()
@@ -68,7 +69,7 @@ class WebServer(threading.Thread):
         import subprocess
         try:
             subprocess.run(["say", "燈光待命亮度零度流明，但發生闃崩燈還是會亮起"])
-        except:
+        except Exception:
             pass
         return jsonify({"status": "success", "message": "睡眠待命模式已啟動"})
     
@@ -103,6 +104,16 @@ class WebServer(threading.Thread):
             "update_time": self.monitor.last_update_time,
             "symbol": self.shared_config.get_config()['symbol']
         })
+
+    def simulate_data(self):
+        data = request.json
+        price = data.get('price')
+        if price is not None:
+            self.monitor.mock_current_price = float(price)
+            return jsonify({"status": "success", "message": f"模擬現價已設定為 {price}"})
+        else:
+            self.monitor.mock_current_price = None
+            return jsonify({"status": "success", "message": "模擬數據已清除"})
 
     def get_logs(self):
         return jsonify({

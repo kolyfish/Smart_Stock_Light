@@ -1,0 +1,9 @@
+🚀 Starting SmartStockLight in Headless Mode...
+TTS 初始化失敗 (將改用系統原生語音): name 'objc' is not defined
+StockMonitor 已啟動。
+✅ System is up and running. Press Ctrl+C to stop.
+[模擬模式] 點亮顏色: 黃色
+ * Serving Flask app 'web_server'
+ * Debug mode: off
+Address already in use
+Port 5001 is in use by another program. Either identify and stop that program, or start the server with a different port.

@@ -1,0 +1,963 @@
+------------------------------------------
+   SmartStockLight 啟動中...
+------------------------------------------
+正在安裝/更新必要套件...
+Requirement already satisfied: pip in ./venv/lib/python3.13/site-packages (25.3)
+Requirement already satisfied: Flask==3.0.0 in ./venv/lib/python3.13/site-packages (from -r requirements.txt (line 1)) (3.0.0)
+Requirement already satisfied: yfinance>=0.2.66 in ./venv/lib/python3.13/site-packages (from -r requirements.txt (line 2)) (0.2.66)
+Requirement already satisfied: qrcode==7.4.2 in ./venv/lib/python3.13/site-packages (from -r requirements.txt (line 3)) (7.4.2)
+Requirement already satisfied: Pillow>=10.4.0 in ./venv/lib/python3.13/site-packages (from -r requirements.txt (line 4)) (12.0.0)
+Requirement already satisfied: plugp100>=4.0.0 in ./venv/lib/python3.13/site-packages (from -r requirements.txt (line 5)) (5.1.5)
+Requirement already satisfied: pyttsx3==2.90 in ./venv/lib/python3.13/site-packages (from -r requirements.txt (line 6)) (2.90)
+Requirement already satisfied: python-dotenv in ./venv/lib/python3.13/site-packages (from -r requirements.txt (line 7)) (1.2.1)
+Requirement already satisfied: pyobjc>=10.0 in ./venv/lib/python3.13/site-packages (from -r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pytest in ./venv/lib/python3.13/site-packages (from -r requirements.txt (line 9)) (9.0.2)
+Requirement already satisfied: pytest-mock in ./venv/lib/python3.13/site-packages (from -r requirements.txt (line 10)) (3.15.1)
+Requirement already satisfied: Werkzeug>=3.0.0 in ./venv/lib/python3.13/site-packages (from Flask==3.0.0->-r requirements.txt (line 1)) (3.1.4)
+Requirement already satisfied: Jinja2>=3.1.2 in ./venv/lib/python3.13/site-packages (from Flask==3.0.0->-r requirements.txt (line 1)) (3.1.6)
+Requirement already satisfied: itsdangerous>=2.1.2 in ./venv/lib/python3.13/site-packages (from Flask==3.0.0->-r requirements.txt (line 1)) (2.2.0)
+Requirement already satisfied: click>=8.1.3 in ./venv/lib/python3.13/site-packages (from Flask==3.0.0->-r requirements.txt (line 1)) (8.3.1)
+Requirement already satisfied: blinker>=1.6.2 in ./venv/lib/python3.13/site-packages (from Flask==3.0.0->-r requirements.txt (line 1)) (1.9.0)
+Requirement already satisfied: typing-extensions in ./venv/lib/python3.13/site-packages (from qrcode==7.4.2->-r requirements.txt (line 3)) (4.15.0)
+Requirement already satisfied: pypng in ./venv/lib/python3.13/site-packages (from qrcode==7.4.2->-r requirements.txt (line 3)) (0.20220715.0)
+Requirement already satisfied: pandas>=1.3.0 in ./venv/lib/python3.13/site-packages (from yfinance>=0.2.66->-r requirements.txt (line 2)) (2.3.3)
+Requirement already satisfied: numpy>=1.16.5 in ./venv/lib/python3.13/site-packages (from yfinance>=0.2.66->-r requirements.txt (line 2)) (2.3.5)
+Requirement already satisfied: requests>=2.31 in ./venv/lib/python3.13/site-packages (from yfinance>=0.2.66->-r requirements.txt (line 2)) (2.32.5)
+Requirement already satisfied: multitasking>=0.0.7 in ./venv/lib/python3.13/site-packages (from yfinance>=0.2.66->-r requirements.txt (line 2)) (0.0.12)
+Requirement already satisfied: platformdirs>=2.0.0 in ./venv/lib/python3.13/site-packages (from yfinance>=0.2.66->-r requirements.txt (line 2)) (4.5.1)
+Requirement already satisfied: pytz>=2022.5 in ./venv/lib/python3.13/site-packages (from yfinance>=0.2.66->-r requirements.txt (line 2)) (2025.2)
+Requirement already satisfied: frozendict>=2.3.4 in ./venv/lib/python3.13/site-packages (from yfinance>=0.2.66->-r requirements.txt (line 2)) (2.4.7)
+Requirement already satisfied: peewee>=3.16.2 in ./venv/lib/python3.13/site-packages (from yfinance>=0.2.66->-r requirements.txt (line 2)) (3.18.3)
+Requirement already satisfied: beautifulsoup4>=4.11.1 in ./venv/lib/python3.13/site-packages (from yfinance>=0.2.66->-r requirements.txt (line 2)) (4.14.3)
+Requirement already satisfied: curl_cffi>=0.7 in ./venv/lib/python3.13/site-packages (from yfinance>=0.2.66->-r requirements.txt (line 2)) (0.14.0)
+Requirement already satisfied: protobuf>=3.19.0 in ./venv/lib/python3.13/site-packages (from yfinance>=0.2.66->-r requirements.txt (line 2)) (6.33.2)
+Requirement already satisfied: websockets>=13.0 in ./venv/lib/python3.13/site-packages (from yfinance>=0.2.66->-r requirements.txt (line 2)) (15.0.1)
+Requirement already satisfied: certifi>=2021.5.30 in ./venv/lib/python3.13/site-packages (from plugp100>=4.0.0->-r requirements.txt (line 5)) (2025.11.12)
+Requirement already satisfied: jsons>=1.6.3 in ./venv/lib/python3.13/site-packages (from plugp100>=4.0.0->-r requirements.txt (line 5)) (1.6.3)
+Requirement already satisfied: aiohttp>=3.8.1 in ./venv/lib/python3.13/site-packages (from plugp100>=4.0.0->-r requirements.txt (line 5)) (3.13.2)
+Requirement already satisfied: semantic-version==2.10.0 in ./venv/lib/python3.13/site-packages (from plugp100>=4.0.0->-r requirements.txt (line 5)) (2.10.0)
+Requirement already satisfied: cryptography>=38.0.3 in ./venv/lib/python3.13/site-packages (from plugp100>=4.0.0->-r requirements.txt (line 5)) (46.0.3)
+Requirement already satisfied: scapy>=2.5.0 in ./venv/lib/python3.13/site-packages (from plugp100>=4.0.0->-r requirements.txt (line 5)) (2.6.1)
+Requirement already satisfied: urllib3<3,>=2.5 in ./venv/lib/python3.13/site-packages (from plugp100>=4.0.0->-r requirements.txt (line 5)) (2.6.2)
+Requirement already satisfied: pyobjc-core==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-libdispatch==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-libxpc==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-Accessibility==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-AdServices==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-AdSupport==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-AppTrackingTransparency==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-AudioVideoBridging==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-AuthenticationServices==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-AutomaticAssessmentConfiguration==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-AVKit==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-AVFoundation==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-AVRouting==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-Accounts==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-AddressBook==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-AppleScriptKit==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-AppleScriptObjC==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-ApplicationServices==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-Automator==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-BackgroundAssets==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-BrowserEngineKit==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-BusinessChat==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-CFNetwork==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-CalendarStore==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-CallKit==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-Carbon==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-Cinematic==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-ClassKit==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-CloudKit==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-Cocoa==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-Collaboration==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-ColorSync==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-Contacts==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-ContactsUI==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-CoreAudio==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-CoreAudioKit==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-CoreBluetooth==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-CoreData==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-CoreHaptics==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-CoreLocation==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-CoreMedia==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-CoreMediaIO==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-CoreMIDI==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-CoreML==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-CoreMotion==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-CoreServices==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-CoreSpotlight==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-CoreText==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-CoreWLAN==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-CryptoTokenKit==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-DataDetection==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-DeviceCheck==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-DeviceDiscoveryExtension==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-DictionaryServices==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-DiscRecording==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-DiscRecordingUI==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-DiskArbitration==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-DVDPlayback==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-EventKit==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-ExceptionHandling==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-ExecutionPolicy==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-ExternalAccessory==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-ExtensionKit==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-FileProvider==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-FileProviderUI==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-FSEvents==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-FinderSync==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-GameCenter==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-GameController==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-HealthKit==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-InputMethodKit==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-ImageCaptureCore==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-Intents==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-IntentsUI==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-InstallerPlugins==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-InstantMessage==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-IOBluetooth==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-IOBluetoothUI==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-IOSurface==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-KernelManagement==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-LatentSemanticMapping==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-LaunchServices==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-LinkPresentation==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-LocalAuthentication==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-LocalAuthenticationEmbeddedUI==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-MailKit==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-MapKit==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-MediaAccessibility==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-MediaExtension==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-MediaLibrary==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-MediaPlayer==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-MediaToolbox==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-Metal==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-MetalFX==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-MetalKit==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-MetalPerformanceShaders==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-MetalPerformanceShadersGraph==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-MetricKit==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-MLCompute==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-ModelIO==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-MultipeerConnectivity==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-NaturalLanguage==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-NetFS==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-Network==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-NetworkExtension==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-NotificationCenter==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-OpenDirectory==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-OSAKit==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-OSLog==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-PassKit==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-PencilKit==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-PHASE==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-Photos==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-PhotosUI==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-PreferencePanes==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-PushKit==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-Quartz==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-QuickLookThumbnailing==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-ReplayKit==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-SafetyKit==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-SafariServices==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-ScreenSaver==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-ScreenTime==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-ScriptingBridge==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-Security==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-SecurityFoundation==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-SecurityInterface==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-SearchKit==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-ServiceManagement==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-ShazamKit==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-Social==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-Speech==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-SpriteKit==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-StoreKit==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-SyncServices==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-SystemConfiguration==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-WebKit==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-GameKit==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-GameplayKit==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-SceneKit==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-SensitiveContentAnalysis==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-SharedWithYouCore==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-SharedWithYou==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-SoundAnalysis==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-ScreenCaptureKit==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-Symbols==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-SystemExtensions==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-ThreadNetwork==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-UniformTypeIdentifiers==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-UserNotifications==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-UserNotificationsUI==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-VideoSubscriberAccount==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-VideoToolbox==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-Virtualization==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-Vision==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: pyobjc-framework-iTunesLibrary==12.1 in ./venv/lib/python3.13/site-packages (from pyobjc>=10.0->-r requirements.txt (line 8)) (12.1)
+Requirement already satisfied: iniconfig>=1.0.1 in ./venv/lib/python3.13/site-packages (from pytest->-r requirements.txt (line 9)) (2.3.0)
+Requirement already satisfied: packaging>=22 in ./venv/lib/python3.13/site-packages (from pytest->-r requirements.txt (line 9)) (25.0)
+Requirement already satisfied: pluggy<2,>=1.5 in ./venv/lib/python3.13/site-packages (from pytest->-r requirements.txt (line 9)) (1.6.0)
+Requirement already satisfied: pygments>=2.7.2 in ./venv/lib/python3.13/site-packages (from pytest->-r requirements.txt (line 9)) (2.19.2)
+Requirement already satisfied: aiohappyeyeballs>=2.5.0 in ./venv/lib/python3.13/site-packages (from aiohttp>=3.8.1->plugp100>=4.0.0->-r requirements.txt (line 5)) (2.6.1)
+Requirement already satisfied: aiosignal>=1.4.0 in ./venv/lib/python3.13/site-packages (from aiohttp>=3.8.1->plugp100>=4.0.0->-r requirements.txt (line 5)) (1.4.0)
+Requirement already satisfied: attrs>=17.3.0 in ./venv/lib/python3.13/site-packages (from aiohttp>=3.8.1->plugp100>=4.0.0->-r requirements.txt (line 5)) (25.4.0)
+Requirement already satisfied: frozenlist>=1.1.1 in ./venv/lib/python3.13/site-packages (from aiohttp>=3.8.1->plugp100>=4.0.0->-r requirements.txt (line 5)) (1.8.0)
+Requirement already satisfied: multidict<7.0,>=4.5 in ./venv/lib/python3.13/site-packages (from aiohttp>=3.8.1->plugp100>=4.0.0->-r requirements.txt (line 5)) (6.7.0)
+Requirement already satisfied: propcache>=0.2.0 in ./venv/lib/python3.13/site-packages (from aiohttp>=3.8.1->plugp100>=4.0.0->-r requirements.txt (line 5)) (0.4.1)
+Requirement already satisfied: yarl<2.0,>=1.17.0 in ./venv/lib/python3.13/site-packages (from aiohttp>=3.8.1->plugp100>=4.0.0->-r requirements.txt (line 5)) (1.22.0)
+Requirement already satisfied: idna>=2.0 in ./venv/lib/python3.13/site-packages (from yarl<2.0,>=1.17.0->aiohttp>=3.8.1->plugp100>=4.0.0->-r requirements.txt (line 5)) (3.11)
+Requirement already satisfied: soupsieve>=1.6.1 in ./venv/lib/python3.13/site-packages (from beautifulsoup4>=4.11.1->yfinance>=0.2.66->-r requirements.txt (line 2)) (2.8)
+Requirement already satisfied: cffi>=2.0.0 in ./venv/lib/python3.13/site-packages (from cryptography>=38.0.3->plugp100>=4.0.0->-r requirements.txt (line 5)) (2.0.0)
+Requirement already satisfied: pycparser in ./venv/lib/python3.13/site-packages (from cffi>=2.0.0->cryptography>=38.0.3->plugp100>=4.0.0->-r requirements.txt (line 5)) (2.23)
+Requirement already satisfied: MarkupSafe>=2.0 in ./venv/lib/python3.13/site-packages (from Jinja2>=3.1.2->Flask==3.0.0->-r requirements.txt (line 1)) (3.0.3)
+Requirement already satisfied: typish>=1.9.2 in ./venv/lib/python3.13/site-packages (from jsons>=1.6.3->plugp100>=4.0.0->-r requirements.txt (line 5)) (1.9.3)
+Requirement already satisfied: python-dateutil>=2.8.2 in ./venv/lib/python3.13/site-packages (from pandas>=1.3.0->yfinance>=0.2.66->-r requirements.txt (line 2)) (2.9.0.post0)
+Requirement already satisfied: tzdata>=2022.7 in ./venv/lib/python3.13/site-packages (from pandas>=1.3.0->yfinance>=0.2.66->-r requirements.txt (line 2)) (2025.3)
+Requirement already satisfied: six>=1.5 in ./venv/lib/python3.13/site-packages (from python-dateutil>=2.8.2->pandas>=1.3.0->yfinance>=0.2.66->-r requirements.txt (line 2)) (1.17.0)
+Requirement already satisfied: charset_normalizer<4,>=2 in ./venv/lib/python3.13/site-packages (from requests>=2.31->yfinance>=0.2.66->-r requirements.txt (line 2)) (3.4.4)
+啟動伺服器與監控系統...
+TTS 初始化失敗 (將改用系統原生語音): name 'objc' is not defined
+StockMonitor 已啟動。
+ * Serving Flask app 'web_server'
+ * Debug mode: off
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5001
+ * Running on http://192.168.100.164:5001
+[33mPress CTRL+C to quit[0m
+2025-12-21 22:40:04.032 Python[38117:1437755] +[IMKClient subclass]: chose IMKClient_Modern
+2025-12-21 22:40:04.033 Python[38117:1437755] +[IMKInputSession subclass]: chose IMKInputSession_Modern
+Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x119f4fed0>
+Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x1640bb350>, 25312.632934666)])']
+connector: <aiohttp.connector.TCPConnector object at 0x164108050>
+Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x16410bb10>
+Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x164158830>, 25313.675655791)])']
+connector: <aiohttp.connector.TCPConnector object at 0x16410bc50>
+127.0.0.1 - - [21/Dec/2025 22:40:08] "HEAD / HTTP/1.1" 200 -
+Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x16410ae90>
+Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x164159250>, 25324.127929916)])']
+connector: <aiohttp.connector.TCPConnector object at 0x16410bed0>
+Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x16410b890>
+Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x164158b30>, 25334.410330083)])']
+connector: <aiohttp.connector.TCPConnector object at 0x16410b750>
+Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x1641ac2d0>
+Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x164194b30>, 25344.987324291)])']
+connector: <aiohttp.connector.TCPConnector object at 0x1641ac410>
+Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x1641aca50>
+Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x1641945f0>, 25355.317780666)])']
+connector: <aiohttp.connector.TCPConnector object at 0x1641acb90>
+Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x1641ad090>
+Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x164195cd0>, 25365.907668291)])']
+connector: <aiohttp.connector.TCPConnector object at 0x1641ad450>
+Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x16410b390>
+Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x164197650>, 25376.411755333)])']
+connector: <aiohttp.connector.TCPConnector object at 0x16410b750>
+Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x164108690>
+Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x164194110>, 25386.993737875)])']
+connector: <aiohttp.connector.TCPConnector object at 0x16410b4d0>
+Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x16410a350>
+Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x164158050>, 25397.410604875)])']
+connector: <aiohttp.connector.TCPConnector object at 0x1641ad450>
+Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x1641acb90>
+Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x1641580b0>, 25407.9518805)])']
+connector: <aiohttp.connector.TCPConnector object at 0x1641ac690>
+Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x1641ac050>
+Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x16415a510>, 25418.5223195)])']
+connector: <aiohttp.connector.TCPConnector object at 0x1641ac410>
+Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x1641adbd0>
+Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x16415be30>, 25429.04796925)])']
+connector: <aiohttp.connector.TCPConnector object at 0x1641ad810>
+Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x16410bed0>
+Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x164159a30>, 25439.491080041)])']
+connector: <aiohttp.connector.TCPConnector object at 0x164109bd0>
+Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x16410b750>
+Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x1641967b0>, 25449.948581666)])']
+connector: <aiohttp.connector.TCPConnector object at 0x16410b250>
+Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x1641ac050>
+Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x164195730>, 25460.308620916)])']
+connector: <aiohttp.connector.TCPConnector object at 0x1641ac910>
+Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x1641ac550>
+Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x164197290>, 25470.826522458)])']
+connector: <aiohttp.connector.TCPConnector object at 0x1641aca50>
+Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x1641ae0d0>
+Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x1641f1430>, 25481.2705765)])']
+connector: <aiohttp.connector.TCPConnector object at 0x1641add10>
+Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x164108190>
+Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x1641972f0>, 25492.024271)])']
+connector: <aiohttp.connector.TCPConnector object at 0x164108050>
+Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x16410ae90>
+Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x1641978f0>, 25502.480065208)])']
+connector: <aiohttp.connector.TCPConnector object at 0x16410a350>
+Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x16410a710>
+Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x16415a990>, 25513.015470958)])']
+connector: <aiohttp.connector.TCPConnector object at 0x16410b890>
+Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x16410bc50>
+Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x164159b50>, 25523.460779166)])']
+connector: <aiohttp.connector.TCPConnector object at 0x16410b9d0>
+127.0.0.1 - - [21/Dec/2025 22:43:42] "[33mPOST /api/simulate_data HTTP/1.1[0m" 404 -
+127.0.0.1 - - [21/Dec/2025 22:43:42] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:43:42] "GET /api/market_status HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:43:42] "GET /api/market_data HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:43:42] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:43:42] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:43:42] "GET /api/market_status HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:43:42] "GET /api/market_data HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:43:42] "GET /api/logs HTTP/1.1" 200 -
+Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x164108550>
+Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x16415a7b0>, 25531.593951041)])']
+connector: <aiohttp.connector.TCPConnector object at 0x1641ae0d0>
+Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x1641accd0>
+Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x16415bcb0>, 25533.99825575)])']
+connector: <aiohttp.connector.TCPConnector object at 0x1641acb90>
+127.0.0.1 - - [21/Dec/2025 22:43:47] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:43:47] "POST /api/config HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:43:47] "GET /api/market_data HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:43:48] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:43:48] "GET /api/market_status HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:43:48] "GET /api/market_data HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:43:48] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:43:48] "POST /api/config HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:43:48] "GET /api/market_data HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:43:50] "[33mPOST /api/simulate_data HTTP/1.1[0m" 404 -
+Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x1641ad6d0>
+Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x164196690>, 25539.790993083)])']
+connector: <aiohttp.connector.TCPConnector object at 0x1641ac550>
+127.0.0.1 - - [21/Dec/2025 22:43:53] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:43:53] "[33mPOST /api/simulate_data HTTP/1.1[0m" 404 -
+127.0.0.1 - - [21/Dec/2025 22:43:58] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:43:58] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:43:58] "GET /api/market_status HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:43:58] "GET /api/market_data HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:43:58] "GET /api/logs HTTP/1.1" 200 -
+Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x164109f90>
+Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x164194c50>, 25547.516406166)])']
+connector: <aiohttp.connector.TCPConnector object at 0x16410afd0>
+127.0.0.1 - - [21/Dec/2025 22:44:03] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:44:03] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:44:03] "GET /api/market_status HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:44:03] "GET /api/market_data HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:44:03] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:44:03] "[33mPOST /api/simulate_data HTTP/1.1[0m" 404 -
+127.0.0.1 - - [21/Dec/2025 22:44:05] "[33mPOST /api/simulate_data HTTP/1.1[0m" 404 -
+127.0.0.1 - - [21/Dec/2025 22:44:06] "[33mPOST /api/simulate_data HTTP/1.1[0m" 404 -
+Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x16410ad50>
+Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x164196270>, 25556.22937075)])']
+connector: <aiohttp.connector.TCPConnector object at 0x16410bd90>
+127.0.0.1 - - [21/Dec/2025 22:44:08] "[33mPOST /api/simulate_data HTTP/1.1[0m" 404 -
+127.0.0.1 - - [21/Dec/2025 22:44:08] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:44:09] "[33mPOST /api/simulate_data HTTP/1.1[0m" 404 -
+127.0.0.1 - - [21/Dec/2025 22:44:12] "POST /api/demo_alert HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:44:13] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:44:16] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:44:16] "GET /api/market_status HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:44:16] "GET /api/market_data HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:44:16] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:44:21] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:44:21] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:44:21] "GET /api/market_status HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:44:21] "GET /api/market_data HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:44:21] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:44:21] "POST /api/config HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:44:21] "[33mPOST /api/simulate_data HTTP/1.1[0m" 404 -
+127.0.0.1 - - [21/Dec/2025 22:44:21] "GET /api/market_data HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:44:26] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:44:26] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:44:26] "GET /api/market_status HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:44:26] "GET /api/market_data HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:44:26] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:44:31] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:44:31] "[33mPOST /api/simulate_data HTTP/1.1[0m" 404 -
+127.0.0.1 - - [21/Dec/2025 22:45:12] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:45:12] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:45:13] "GET /api/market_status HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:45:13] "GET /api/market_data HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:45:13] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:45:13] "GET /api/market_status HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:45:13] "GET /api/market_data HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:45:13] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:45:13] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+127.0.0.1 - - [21/Dec/2025 22:45:13] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+127.0.0.1 - - [21/Dec/2025 22:45:18] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:45:19] "[33mPOST /api/simulate_data HTTP/1.1[0m" 404 -
+127.0.0.1 - - [21/Dec/2025 22:45:19] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:45:19] "GET /api/market_status HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:45:19] "GET /api/market_data HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:45:19] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:45:19] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:45:19] "GET /api/market_status HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:45:19] "GET /api/market_data HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:45:19] "GET /api/logs HTTP/1.1" 200 -
+Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x16410b890>
+Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x1641971d0>, 25628.637438083)])']
+connector: <aiohttp.connector.TCPConnector object at 0x16410ac10>
+127.0.0.1 - - [21/Dec/2025 22:45:21] "POST /api/config HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:45:21] "GET /api/market_data HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:45:21] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:45:21] "GET /api/market_status HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:45:21] "GET /api/market_data HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:45:21] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:45:21] "POST /api/config HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:45:21] "GET /api/market_data HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:45:23] "[33mPOST /api/simulate_data HTTP/1.1[0m" 404 -
+127.0.0.1 - - [21/Dec/2025 22:45:23] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:45:26] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:45:26] "[33mPOST /api/simulate_data HTTP/1.1[0m" 404 -
+127.0.0.1 - - [21/Dec/2025 22:45:28] "GET /api/market_data HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:45:28] "GET /api/logs HTTP/1.1" 200 -
+Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x16410a210>
+Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x164196c90>, 25637.129372166)])']
+connector: <aiohttp.connector.TCPConnector object at 0x16410aad0>
+127.0.0.1 - - [21/Dec/2025 22:45:31] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:45:31] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:45:31] "GET /api/market_status HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:45:31] "GET /api/market_data HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:45:31] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:45:33] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:45:36] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:45:36] "GET / HTTP/1.1" 200 -
+Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x16410b390>
+Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x164195c70>, 25645.010181583)])']
+connector: <aiohttp.connector.TCPConnector object at 0x16410b610>
+127.0.0.1 - - [21/Dec/2025 22:45:36] "GET /api/market_data HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:45:36] "GET /api/market_status HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:45:36] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:45:37] "[33mPOST /api/simulate_data HTTP/1.1[0m" 404 -
+127.0.0.1 - - [21/Dec/2025 22:45:38] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:45:38] "[33mPOST /api/simulate_data HTTP/1.1[0m" 404 -
+127.0.0.1 - - [21/Dec/2025 22:45:40] "[33mPOST /api/simulate_data HTTP/1.1[0m" 404 -
+127.0.0.1 - - [21/Dec/2025 22:45:41] "[33mPOST /api/simulate_data HTTP/1.1[0m" 404 -
+127.0.0.1 - - [21/Dec/2025 22:45:41] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:45:43] "GET /api/market_data HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:45:43] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:45:43] "[33mPOST /api/simulate_data HTTP/1.1[0m" 404 -
+Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x164109f90>
+Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x164196b70>, 25654.081721166)])']
+connector: <aiohttp.connector.TCPConnector object at 0x164109e50>
+127.0.0.1 - - [21/Dec/2025 22:45:46] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:45:48] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:45:49] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:45:49] "GET /api/market_status HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:45:49] "GET /api/market_data HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:45:49] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:45:50] "POST /api/demo_alert HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:45:53] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:45:54] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:45:54] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:45:54] "GET /api/market_status HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:45:54] "GET /api/market_data HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:45:54] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:45:54] "POST /api/config HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:45:54] "[33mPOST /api/simulate_data HTTP/1.1[0m" 404 -
+127.0.0.1 - - [21/Dec/2025 22:45:54] "GET /api/market_data HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:45:58] "GET /api/market_data HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:45:58] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:45:59] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:45:59] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:45:59] "GET /api/market_status HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:45:59] "GET /api/market_data HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:45:59] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:46:03] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:46:04] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:46:04] "[33mPOST /api/simulate_data HTTP/1.1[0m" 404 -
+127.0.0.1 - - [21/Dec/2025 22:46:08] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:46:13] "GET /api/market_status HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:46:13] "GET /api/market_data HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:46:13] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:46:18] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:46:23] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:46:28] "GET /api/market_data HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:46:28] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:46:33] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:46:38] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:46:43] "GET /api/market_data HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:46:43] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:46:48] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:46:53] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:46:53] "[33mPOST /api/simulate_data HTTP/1.1[0m" 404 -
+127.0.0.1 - - [21/Dec/2025 22:46:53] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:46:53] "GET /api/market_status HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:46:53] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:46:53] "GET /api/market_data HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:46:53] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:46:53] "GET /api/market_status HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:46:53] "GET /api/market_data HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:46:53] "GET /api/logs HTTP/1.1" 200 -
+Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x16410bed0>
+Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x164196330>, 25722.4350755)])']
+connector: <aiohttp.connector.TCPConnector object at 0x164109310>
+127.0.0.1 - - [21/Dec/2025 22:46:54] "POST /api/config HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:46:54] "GET /api/market_data HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:46:55] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:46:55] "GET /api/market_status HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:46:55] "GET /api/market_data HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:46:55] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:46:55] "POST /api/config HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:46:55] "GET /api/market_data HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:46:57] "[33mPOST /api/simulate_data HTTP/1.1[0m" 404 -
+127.0.0.1 - - [21/Dec/2025 22:46:58] "GET /api/market_data HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:46:58] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:47:00] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:47:00] "[33mPOST /api/simulate_data HTTP/1.1[0m" 404 -
+Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x16410a990>
+Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x164196150>, 25730.731998875)])']
+connector: <aiohttp.connector.TCPConnector object at 0x16410ad50>
+127.0.0.1 - - [21/Dec/2025 22:47:03] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:47:05] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:47:08] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:47:10] "GET /api/market_data HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:47:10] "GET /api/logs HTTP/1.1" 200 -
+Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x164109f90>
+Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x1641956d0>, 25738.478151666)])']
+connector: <aiohttp.connector.TCPConnector object at 0x16410a490>
+127.0.0.1 - - [21/Dec/2025 22:47:13] "GET /api/market_status HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:47:13] "GET /api/market_data HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:47:13] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:47:15] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:47:15] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:47:15] "GET /api/market_status HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:47:15] "GET /api/market_data HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:47:15] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:47:15] "[33mPOST /api/simulate_data HTTP/1.1[0m" 404 -
+127.0.0.1 - - [21/Dec/2025 22:47:16] "[33mPOST /api/simulate_data HTTP/1.1[0m" 404 -
+127.0.0.1 - - [21/Dec/2025 22:47:18] "[33mPOST /api/simulate_data HTTP/1.1[0m" 404 -
+127.0.0.1 - - [21/Dec/2025 22:47:18] "GET /api/logs HTTP/1.1" 200 -
+Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x16410a210>
+Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x1641974d0>, 25747.21030275)])']
+connector: <aiohttp.connector.TCPConnector object at 0x16410b750>
+127.0.0.1 - - [21/Dec/2025 22:47:19] "[33mPOST /api/simulate_data HTTP/1.1[0m" 404 -
+127.0.0.1 - - [21/Dec/2025 22:47:20] "[33mPOST /api/simulate_data HTTP/1.1[0m" 404 -
+127.0.0.1 - - [21/Dec/2025 22:47:20] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:47:23] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:47:23] "POST /api/demo_alert HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:47:25] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:47:28] "GET /api/market_data HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:47:28] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:47:30] "GET /api/market_data HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:47:30] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:47:33] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:47:35] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:47:36] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:47:36] "GET /api/market_status HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:47:36] "GET /api/market_data HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:47:36] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:47:36] "POST /api/config HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:47:36] "[33mPOST /api/simulate_data HTTP/1.1[0m" 404 -
+127.0.0.1 - - [21/Dec/2025 22:47:36] "GET /api/market_data HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:47:38] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:47:41] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:47:43] "GET /api/market_data HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:47:43] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:47:46] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:47:48] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:47:51] "GET /api/market_data HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:47:51] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:47:51] "[33mPOST /api/simulate_data HTTP/1.1[0m" 404 -
+127.0.0.1 - - [21/Dec/2025 22:47:53] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:47:58] "GET /api/market_data HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:47:58] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:48:03] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:48:08] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:48:13] "GET /api/market_status HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:48:13] "GET /api/market_data HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:48:13] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:48:17] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:48:22] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:48:27] "GET /api/market_data HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:48:27] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:48:32] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:48:37] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:48:42] "GET /api/market_data HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:48:42] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:48:47] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:48:52] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:48:55] "[33mPOST /api/simulate_data HTTP/1.1[0m" 404 -
+127.0.0.1 - - [21/Dec/2025 22:48:56] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:48:56] "GET /api/market_status HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:48:56] "GET /api/market_data HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:48:56] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:48:56] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:48:56] "GET /api/market_status HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:48:56] "GET /api/market_data HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:48:56] "GET /api/logs HTTP/1.1" 200 -
+Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x16410aad0>
+Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x1641955b0>, 25845.345104333)])']
+connector: <aiohttp.connector.TCPConnector object at 0x16410a990>
+127.0.0.1 - - [21/Dec/2025 22:48:57] "POST /api/config HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:48:57] "GET /api/market_data HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:48:57] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:48:57] "GET /api/market_status HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:48:57] "GET /api/market_data HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:48:57] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:48:57] "GET /api/market_data HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:48:57] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:48:58] "POST /api/config HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:48:58] "GET /api/market_data HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:49:00] "[33mPOST /api/simulate_data HTTP/1.1[0m" 404 -
+127.0.0.1 - - [21/Dec/2025 22:49:02] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:49:02] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:49:03] "[33mPOST /api/simulate_data HTTP/1.1[0m" 404 -
+Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x164109f90>
+Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x1641945f0>, 25853.54227575)])']
+connector: <aiohttp.connector.TCPConnector object at 0x1641087d0>
+127.0.0.1 - - [21/Dec/2025 22:49:07] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:49:07] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:49:12] "GET /api/market_data HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:49:12] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:49:12] "GET /api/market_status HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:49:12] "GET /api/market_data HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:49:12] "GET /api/logs HTTP/1.1" 200 -
+Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x16410b750>
+Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x164194cb0>, 25861.265960916)])']
+connector: <aiohttp.connector.TCPConnector object at 0x16410a490>
+127.0.0.1 - - [21/Dec/2025 22:49:17] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:49:17] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:49:18] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:49:18] "GET /api/market_status HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:49:18] "GET /api/market_data HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:49:18] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:49:18] "[33mPOST /api/simulate_data HTTP/1.1[0m" 404 -
+127.0.0.1 - - [21/Dec/2025 22:49:19] "[33mPOST /api/simulate_data HTTP/1.1[0m" 404 -
+127.0.0.1 - - [21/Dec/2025 22:49:20] "[33mPOST /api/simulate_data HTTP/1.1[0m" 404 -
+Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x164109310>
+Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x1641949b0>, 25869.986111208)])']
+connector: <aiohttp.connector.TCPConnector object at 0x164108690>
+127.0.0.1 - - [21/Dec/2025 22:49:21] "[33mPOST /api/simulate_data HTTP/1.1[0m" 404 -
+127.0.0.1 - - [21/Dec/2025 22:49:22] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:49:23] "[33mPOST /api/simulate_data HTTP/1.1[0m" 404 -
+127.0.0.1 - - [21/Dec/2025 22:49:23] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:49:26] "POST /api/demo_alert HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:49:27] "GET /api/market_data HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:49:27] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:49:28] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:49:32] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:49:33] "GET /api/market_data HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:49:33] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:49:37] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:49:38] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:49:39] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:49:39] "GET /api/market_status HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:49:39] "GET /api/market_data HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:49:39] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:49:39] "POST /api/config HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:49:39] "[33mPOST /api/simulate_data HTTP/1.1[0m" 404 -
+127.0.0.1 - - [21/Dec/2025 22:49:39] "GET /api/market_data HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:49:42] "GET /api/market_data HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:49:42] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:49:44] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:49:47] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:49:49] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:49:52] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:49:54] "GET /api/market_data HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:49:54] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:49:54] "[33mPOST /api/simulate_data HTTP/1.1[0m" 404 -
+127.0.0.1 - - [21/Dec/2025 22:49:57] "GET /api/market_data HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:49:57] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:50:02] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:50:07] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:50:12] "GET /api/market_status HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:50:12] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:50:12] "GET /api/market_data HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:50:17] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:50:22] "[33mPOST /api/simulate_data HTTP/1.1[0m" 404 -
+127.0.0.1 - - [21/Dec/2025 22:50:22] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:50:23] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:50:23] "GET /api/market_status HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:50:23] "GET /api/market_data HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:50:23] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:50:23] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:50:23] "GET /api/market_status HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:50:23] "GET /api/market_data HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:50:23] "GET /api/logs HTTP/1.1" 200 -
+Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x164108690>
+Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x1641977d0>, 25932.383419458)])']
+connector: <aiohttp.connector.TCPConnector object at 0x164109310>
+[192.168.100.150] 正在切換顏色為: 黃色
+[192.168.100.150] 顏色切換成功 (黃色)，亮度已恢復 100%。
+[22:40:05] 成功識別股票名稱：Bitcoin USD
+[22:40:05] 警報模式：設定為「等待漲破」 88000.0 (現價 87979.11)
+[192.168.100.150] 正在切換顏色為: 黃色
+[192.168.100.150] 顏色切換成功 (黃色)，亮度已恢復 100%。
+[22:40:05] BTC-USD: 87979.11 (目標 88000.0 | 監控中)
+[192.168.100.150] 正在切換顏色為: 黃色
+[192.168.100.150] 顏色切換成功 (黃色)，亮度已恢復 100%。
+[22:40:15] BTC-USD: 87979.11 (目標 88000.0 | 監控中)
+[192.168.100.150] 正在切換顏色為: 黃色
+[192.168.100.150] 顏色切換成功 (黃色)，亮度已恢復 100%。
+[22:40:26] BTC-USD: 87979.11 (目標 88000.0 | 監控中)
+[192.168.100.150] 正在切換顏色為: 黃色
+[192.168.100.150] 顏色切換成功 (黃色)，亮度已恢復 100%。
+[22:40:36] BTC-USD: 87979.11 (目標 88000.0 | 監控中)
+[192.168.100.150] 正在切換顏色為: 黃色
+[192.168.100.150] 顏色切換成功 (黃色)，亮度已恢復 100%。
+[22:40:47] BTC-USD: 87979.11 (目標 88000.0 | 監控中)
+[192.168.100.150] 正在切換顏色為: 黃色
+[192.168.100.150] 顏色切換成功 (黃色)，亮度已恢復 100%。
+[22:40:57] BTC-USD: 87845.75 (目標 88000.0 | 監控中)
+[192.168.100.150] 正在切換顏色為: 黃色
+[192.168.100.150] 顏色切換成功 (黃色)，亮度已恢復 100%。
+[22:41:08] BTC-USD: 87845.75 (目標 88000.0 | 監控中)
+[192.168.100.150] 正在切換顏色為: 黃色
+[192.168.100.150] 顏色切換成功 (黃色)，亮度已恢復 100%。
+[22:41:18] BTC-USD: 87845.75 (目標 88000.0 | 監控中)
+[192.168.100.150] 正在切換顏色為: 黃色
+[192.168.100.150] 顏色切換成功 (黃色)，亮度已恢復 100%。
+[22:41:29] BTC-USD: 87845.75 (目標 88000.0 | 監控中)
+[192.168.100.150] 正在切換顏色為: 黃色
+[192.168.100.150] 顏色切換成功 (黃色)，亮度已恢復 100%。
+[22:41:39] BTC-USD: 87845.75 (目標 88000.0 | 監控中)
+[192.168.100.150] 正在切換顏色為: 黃色
+[192.168.100.150] 顏色切換成功 (黃色)，亮度已恢復 100%。
+[22:41:50] BTC-USD: 87845.75 (目標 88000.0 | 監控中)
+[192.168.100.150] 正在切換顏色為: 黃色
+[192.168.100.150] 顏色切換成功 (黃色)，亮度已恢復 100%。
+[22:42:00] BTC-USD: 87872.45 (目標 88000.0 | 監控中)
+[192.168.100.150] 正在切換顏色為: 黃色
+[192.168.100.150] 顏色切換成功 (黃色)，亮度已恢復 100%。
+[22:42:11] BTC-USD: 87872.45 (目標 88000.0 | 監控中)
+[192.168.100.150] 正在切換顏色為: 黃色
+[192.168.100.150] 顏色切換成功 (黃色)，亮度已恢復 100%。
+[22:42:21] BTC-USD: 87872.45 (目標 88000.0 | 監控中)
+[192.168.100.150] 正在切換顏色為: 黃色
+[192.168.100.150] 顏色切換成功 (黃色)，亮度已恢復 100%。
+[22:42:32] BTC-USD: 87872.45 (目標 88000.0 | 監控中)
+[192.168.100.150] 正在切換顏色為: 黃色
+[192.168.100.150] 顏色切換成功 (黃色)，亮度已恢復 100%。
+[22:42:42] BTC-USD: 87872.45 (目標 88000.0 | 監控中)
+[192.168.100.150] 正在切換顏色為: 黃色
+[192.168.100.150] 顏色切換成功 (黃色)，亮度已恢復 100%。
+[22:42:53] BTC-USD: 87872.45 (目標 88000.0 | 監控中)
+[192.168.100.150] 正在切換顏色為: 黃色
+[192.168.100.150] 顏色切換成功 (黃色)，亮度已恢復 100%。
+[22:43:03] BTC-USD: 87904.93 (目標 88000.0 | 監控中)
+[192.168.100.150] 正在切換顏色為: 黃色
+[192.168.100.150] 顏色切換成功 (黃色)，亮度已恢復 100%。
+[22:43:14] BTC-USD: 87904.93 (目標 88000.0 | 監控中)
+[192.168.100.150] 正在切換顏色為: 黃色
+[192.168.100.150] 顏色切換成功 (黃色)，亮度已恢復 100%。
+[22:43:24] BTC-USD: 87904.93 (目標 88000.0 | 監控中)
+[192.168.100.150] 正在切換顏色為: 黃色
+[192.168.100.150] 顏色切換成功 (黃色)，亮度已恢復 100%。
+[22:43:35] BTC-USD: 87904.93 (目標 88000.0 | 監控中)
+網頁請求: 全功能示範
+[22:43:43] 開始執行全功能演示...
+[22:43:43] 演示：紅燈（警示/停損）
+[192.168.100.150] 正在切換顏色為: 紅色
+[192.168.100.150] 顏色切換成功 (紅色)，亮度已恢復 100%。
+[192.168.100.150] 正在切換顏色為: 黃色
+[192.168.100.150] 顏色切換成功 (黃色)，亮度已恢復 100%。
+[22:43:45] BTC-USD: 87904.93 (目標 88000.0 | 監控中)
+網頁更新請求: 2330.TW, 999, 0.0
+網頁更新請求: 2330.TW, 500, 0.0
+[22:43:51] 演示：黃燈（常態監控）
+[192.168.100.150] 正在切換顏色為: 黃色
+[192.168.100.150] 顏色切換成功 (黃色)，亮度已恢復 100%。
+[22:43:55] 台股目前休市中，監控暫緩。
+[22:43:58] 演示：綠燈（目標達成）
+[192.168.100.150] 正在切換顏色為: 綠色
+[192.168.100.150] 顏色切換成功 (綠色)，亮度已恢復 100%。
+[22:44:07] 演示完成，恢復監控狀態
+[192.168.100.150] 正在切換顏色為: 黃色
+[192.168.100.150] 顏色切換成功 (黃色)，亮度已恢復 100%。
+網頁更新請求: 2330.TW, 500.0, 100
+[22:44:55] 台股目前休市中，監控暫緩。
+網頁請求: 全功能示範
+[22:45:20] 開始執行全功能演示...
+[22:45:20] 演示：紅燈（警示/停損）
+[192.168.100.150] 正在切換顏色為: 紅色
+[192.168.100.150] 顏色切換成功 (紅色)，亮度已恢復 100%。
+網頁更新請求: 2330.TW, 999, 100.0
+網頁更新請求: 2330.TW, 500, 100.0
+[22:45:28] 演示：黃燈（常態監控）
+[192.168.100.150] 正在切換顏色為: 黃色
+[192.168.100.150] 顏色切換成功 (黃色)，亮度已恢復 100%。
+[22:45:36] 演示：綠燈（目標達成）
+[192.168.100.150] 正在切換顏色為: 綠色
+[192.168.100.150] 顏色切換成功 (綠色)，亮度已恢復 100%。
+[22:45:45] 演示完成，恢復監控狀態
+[192.168.100.150] 正在切換顏色為: 黃色
+[192.168.100.150] 顏色切換成功 (黃色)，亮度已恢復 100%。
+網頁更新請求: 2330.TW, 500.0, 100
+[22:45:56] 台股目前休市中，監控暫緩。
+網頁請求: 全功能示範
+[22:46:53] 開始執行全功能演示...
+[22:46:53] 演示：紅燈（警示/停損）
+[192.168.100.150] 正在切換顏色為: 紅色
+[192.168.100.150] 顏色切換成功 (紅色)，亮度已恢復 100%。
+網頁更新請求: 2330.TW, 999, 100.0
+網頁更新請求: 2330.TW, 500, 100.0
+[22:46:56] 台股目前休市中，監控暫緩。
+[22:47:02] 演示：黃燈（常態監控）
+[192.168.100.150] 正在切換顏色為: 黃色
+[192.168.100.150] 顏色切換成功 (黃色)，亮度已恢復 100%。
+[22:47:09] 演示：綠燈（目標達成）
+[192.168.100.150] 正在切換顏色為: 綠色
+[192.168.100.150] 顏色切換成功 (綠色)，亮度已恢復 100%。
+[22:47:18] 演示完成，恢復監控狀態
+[192.168.100.150] 正在切換顏色為: 黃色
+[192.168.100.150] 顏色切換成功 (黃色)，亮度已恢復 100%。
+網頁更新請求: 2330.TW, 500.0, 100
+[22:47:56] 台股目前休市中，監控暫緩。
+[22:48:56] 台股目前休市中，監控暫緩。
+網頁請求: 全功能示範
+[22:48:56] 開始執行全功能演示...
+[22:48:56] 演示：紅燈（警示/停損）
+[192.168.100.150] 正在切換顏色為: 紅色
+[192.168.100.150] 顏色切換成功 (紅色)，亮度已恢復 100%。
+網頁更新請求: 2330.TW, 999, 100.0
+網頁更新請求: 2330.TW, 500, 100.0
+[22:49:04] 演示：黃燈（常態監控）
+[192.168.100.150] 正在切換顏色為: 黃色
+[192.168.100.150] 顏色切換成功 (黃色)，亮度已恢復 100%。
+[22:49:12] 演示：綠燈（目標達成）
+[192.168.100.150] 正在切換顏色為: 綠色
+[192.168.100.150] 顏色切換成功 (綠色)，亮度已恢復 100%。
+[22:49:21] 演示完成，恢復監控狀態
+[192.168.100.150] 正在切換顏色為: 黃色
+[192.168.100.150] 顏色切換成功 (黃色)，亮度已恢復 100%。
+網頁更新請求: 2330.TW, 500.0, 100
+[22:49:56] 台股目前休市中，監控暫緩。
+網頁請求: 全功能示範
+[22:50:23] 開始執行全功能演示...
+[22:50:23] 演示：紅燈（警示/停損）
+[192.168.100.150] 正在切換顏色為: 紅色
+[192.168.100.150] 顏色切換成功 (紅色)，亮度已恢復 100%。
+網頁更新請求: 2330.TW, 999, 100.0127.0.0.1 - - [21/Dec/2025 22:50:24] "POST /api/config HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:50:24] "GET /api/market_data HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:50:24] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:50:24] "GET /api/market_status HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:50:24] "GET /api/market_data HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:50:24] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:50:25] "POST /api/config HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:50:25] "GET /api/market_data HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:50:27] "[33mPOST /api/simulate_data HTTP/1.1[0m" 404 -
+127.0.0.1 - - [21/Dec/2025 22:50:29] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:50:30] "[33mPOST /api/simulate_data HTTP/1.1[0m" 404 -
+Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x164109f90>
+Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x164196330>, 25939.881426583)])']
+connector: <aiohttp.connector.TCPConnector object at 0x16410a490>
+127.0.0.1 - - [21/Dec/2025 22:50:34] "GET /api/logs HTTP/1.1" 200 -
+Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x164109590>
+Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x164194b30>, 25947.705506833)])']
+connector: <aiohttp.connector.TCPConnector object at 0x16410bd90>
+127.0.0.1 - - [21/Dec/2025 22:50:39] "GET /api/market_data HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:50:39] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:50:44] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:50:45] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:50:45] "GET /api/market_status HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:50:45] "GET /api/market_data HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:50:45] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:50:45] "[33mPOST /api/simulate_data HTTP/1.1[0m" 404 -
+127.0.0.1 - - [21/Dec/2025 22:50:46] "[33mPOST /api/simulate_data HTTP/1.1[0m" 404 -
+127.0.0.1 - - [21/Dec/2025 22:50:47] "[33mPOST /api/simulate_data HTTP/1.1[0m" 404 -
+Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x16410b390>
+Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x1641960f0>, 25956.320716125)])']
+connector: <aiohttp.connector.TCPConnector object at 0x164109e50>
+127.0.0.1 - - [21/Dec/2025 22:50:48] "[33mPOST /api/simulate_data HTTP/1.1[0m" 404 -
+127.0.0.1 - - [21/Dec/2025 22:50:50] "[33mPOST /api/simulate_data HTTP/1.1[0m" 404 -
+127.0.0.1 - - [21/Dec/2025 22:50:50] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:50:52] "POST /api/demo_alert HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:50:55] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:51:00] "GET /api/market_data HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:51:00] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:51:05] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:51:06] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:51:06] "GET /api/market_status HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:51:06] "GET /api/market_data HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:51:06] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:51:06] "POST /api/config HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:51:06] "[33mPOST /api/simulate_data HTTP/1.1[0m" 404 -
+127.0.0.1 - - [21/Dec/2025 22:51:06] "GET /api/market_data HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:51:11] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:51:16] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:51:21] "GET /api/market_data HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:51:21] "GET /api/logs HTTP/1.1" 200 -
+127.0.0.1 - - [21/Dec/2025 22:51:21] "[33mPOST /api/simulate_data HTTP/1.1[0m" 404 -
+127.0.0.1 - - [21/Dec/2025 22:51:35] "GET /api/market_data HTTP/1.1" 200 -
+./setup_and_run.sh: line 31: 38117 Killed: 9               python3 smart_stock_light.py

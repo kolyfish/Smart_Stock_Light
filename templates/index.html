@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
             --bg-color: #0f172a;
@@ -228,10 +229,14 @@
         <h1>SmartStockLight Control</h1>
 
         <!-- Light Guide Toggle Button -->
-        <div style="text-align: center; margin-bottom: 1rem;">
+        <div style="display: flex; justify-content: center; gap: 10px; margin-bottom: 1rem;">
             <button onclick="toggleLightGuide()"
-                style="padding: 0.5rem 1.5rem; background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 0.9rem;">
-                <i class="fas fa-lightbulb"></i> 燈光說明指南
+                style="width: auto; padding: 0.5rem 1rem; background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 0.9rem;">
+                <i class="fas fa-lightbulb"></i> 燈光指南
+            </button>
+            <button onclick="toggleProductManual()"
+                style="width: auto; padding: 0.5rem 1rem; background: linear-gradient(135deg, #38bdf8, #2563eb); color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 0.9rem;">
+                <i class="fas fa-book-open"></i> 產品說明書
             </button>
         </div>
 
@@ -298,6 +303,31 @@
                             • 觸發警報時燈光會立即調至 100% 亮度
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Collapsible Product Manual -->
+        <div id="productManual" style="display: none; margin-bottom: 1.5rem;">
+            <div class="card" style="background: rgba(56, 189, 248, 0.05); border-color: var(--primary-accent);">
+                <div class="card-title" style="color: var(--primary-accent);"><i class="fas fa-info-circle"></i> 🟢
+                    Stock-to-Home Alert 產品手冊</div>
+                <div style="font-size: 0.9rem; line-height: 1.6; color: var(--text-main);">
+                    <p>這是一款實體警報系統。當股價達標時，Tapo 智慧燈泡會變綠並發出語音提醒。</p>
+                    <h4 style="color: var(--primary-accent); margin-top: 1rem;">🚀 核心功能</h4>
+                    <ul style="padding-left: 1.2rem;">
+                        <li>即時同步台股與個股數據</li>
+                        <li>自動判定漲跌警報方向</li>
+                        <li>🟡 黃燈監控 | 🟢 綠燈達標 | 🟣 紫燈閃崩 | 🔴 紅燈異常</li>
+                        <li>語音完整報讀股票代號與現價</li>
+                    </ul>
+                    <h4 style="color: var(--primary-accent); margin-top: 1rem;">📱 操作指南</h4>
+                    <ol style="padding-left: 1.2rem;">
+                        <li><b>設定代號</b>：輸入如 <code>2330.TW</code> 或 <code>BTC-USD</code></li>
+                        <li><b>設定目標</b>：輸入您的預期進場或獲利價</li>
+                        <li><b>更新監控</b>：點擊按鈕後系統即刻啟動</li>
+                        <li><b>睡眠模式</b>：夜間點擊「睡眠待命」，燈光會變暗但監控持續</li>
+                    </ol>
                 </div>
             </div>
         </div>
@@ -385,6 +415,26 @@
     <div id="toast">設定已成功更新</div>
 
     <script>
+        function toggleLightGuide() {
+            const guide = document.getElementById('lightGuide');
+            if (guide.style.display === 'none') {
+                guide.style.display = 'block';
+                guide.scrollIntoView({ behavior: 'smooth' });
+            } else {
+                guide.style.display = 'none';
+            }
+        }
+
+        function toggleProductManual() {
+            const manual = document.getElementById('productManual');
+            if (manual.style.display === 'none') {
+                manual.style.display = 'block';
+                manual.scrollIntoView({ behavior: 'smooth' });
+            } else {
+                manual.style.display = 'none';
+            }
+        }
+
         function showToast(message) {
             const toast = document.getElementById('toast');
             toast.textContent = message;

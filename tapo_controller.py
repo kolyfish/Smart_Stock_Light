@@ -16,6 +16,8 @@ class TapoController:
             credentials=self.credentials,
             device_type="SMART.TAPOBULB"
         )
+        import os
+        self.simulation_mode = os.getenv("SIMULATION_MODE", "false").lower() == "true"
         # 不再快取 self.device，因為每次 asyncio.run 都會建立新 loop
         # 快取 device 會導致 aiohttp ClientSession Tied 到已關閉的 loop
 
@@ -45,6 +47,10 @@ class TapoController:
 
     async def _set_brightness(self, level: int):
         """設定燈泡亮度 (1-100)。"""
+        if self.simulation_mode:
+            print(f"[模擬模式] 設定亮度為: {level}")
+            return
+            
         try:
             device = await connect(self.config)
             await device.set_brightness(level)
@@ -53,6 +59,12 @@ class TapoController:
 
     async def _set_color_hs(self, hue: int, saturation: int):
         """設定彩色燈泡顏色 (色相/飽和度)。"""
+        if self.simulation_mode:
+            color_map = {120: "綠色", 60: "黃色", 0: "紅色", 280: "紫色"}
+            color_name = color_map.get(hue, f"未知 Hue:{hue}")
+            print(f"[模擬模式] 點亮顏色: {color_name}")
+            return
+
         try:
             device = await connect(self.config)
             # 手動修正 KlapProtocol 類型問題
