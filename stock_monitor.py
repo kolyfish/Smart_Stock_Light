@@ -2,7 +2,7 @@ import time
 import threading
 import yfinance as yf
 import subprocess
-from datetime import datetime, time as dt_time
+from datetime import datetime
 from market_data_agent import MarketDataAgent
 
 class StockMonitor(threading.Thread):

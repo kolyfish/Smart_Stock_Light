@@ -1,6 +1,4 @@
-from market_data_agent import MarketDataAgent
 import time
-import statistics
 
 # 模擬 StockMonitor 的部分行為
 class MockTapo:

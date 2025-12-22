@@ -55,14 +55,18 @@ class YFinanceProvider(MarketDataProvider):
     def is_market_open(self, symbol):
         now = datetime.datetime.now()
         if '.TW' in symbol.upper() or '.TWO' in symbol.upper():
-            if now.weekday() >= 5: return False
+            if now.weekday() >= 5:
+                return False
             current_time = now.time()
             return datetime.time(9, 0) <= current_time <= datetime.time(13, 30)
         else:
             # 美股概略
-            if now.weekday() == 5: return now.time() <= datetime.time(6, 0)
-            if now.weekday() == 6: return False
-            if now.weekday() == 0: return now.time() >= datetime.time(21, 0)
+            if now.weekday() == 5:
+                return now.time() <= datetime.time(6, 0)
+            if now.weekday() == 6:
+                return False
+            if now.weekday() == 0:
+                return now.time() >= datetime.time(21, 0)
             current_time = now.time()
             return current_time >= datetime.time(21, 0) or current_time <= datetime.time(6, 0)
 
