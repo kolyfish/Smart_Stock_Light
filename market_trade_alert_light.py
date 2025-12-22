@@ -77,7 +77,12 @@ class SmartStockLight:
         self.root.destroy()
         sys.exit(0)
 
+from license_manager import check_license
+
 if __name__ == "__main__":
+    if not check_license():
+        sys.exit(1)
+        
     root = tk.Tk()
     app = SmartStockLight(root)
     root.mainloop()
