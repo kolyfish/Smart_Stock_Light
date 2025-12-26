@@ -18,7 +18,7 @@ def ensure_server_is_clean():
 def test_ui_elements_visibility(page: Page):
     """測試網頁核心元素是否正常顯示"""
     page.goto(BASE_URL)
-    expect(page.locator("text=监控設定")).to_be_visible()
+    expect(page.locator("text=監控設定")).to_be_visible()
     expect(page.locator("text=台股大盤")).to_be_visible()
     expect(page.locator("#symbol")).to_be_visible()
     expect(page.locator("#target")).to_be_visible()
@@ -28,17 +28,17 @@ def test_buttons_clickability(page: Page):
     page.goto(BASE_URL)
     
     # 測試「全功能演示」
-    page.click("text=全功能演示")
+    page.click("text=完整演示")
     # 雖然無法偵測實體燈光，但可以偵測日誌是否更新
     time.sleep(1)
-    expect(page.locator("#log-content")).to_contain_text("演示")
+    expect(page.locator("#log-container")).to_contain_text("演示")
 
     # 測試「更新智慧監控」腳本
     page.fill("#symbol", "2330.TW")
     page.fill("#target", "999")
-    page.click("text=更新智慧監控")
-    expect(page.locator("#toast")).to_be_visible()
-    expect(page.locator("#toast")).to_contain_text("設定已更新")
+    page.click("text=更新監控設定")
+    expect(page.locator(".toast")).to_be_visible()
+    expect(page.locator(".toast")).to_contain_text("設定已更新")
 
 def test_target_price_alert(page: Page):
     """測試到達目標價格時，日誌是否出現警報 (利用模擬數據)"""
@@ -47,7 +47,7 @@ def test_target_price_alert(page: Page):
     # 設定目標價為 500
     page.fill("#symbol", "2330.TW")
     page.fill("#target", "500")
-    page.click("text=更新智慧監控")
+    page.click("text=更新監控設定")
     time.sleep(2)
 
     # 模擬現價 600 (高於目標) -> 進入監控跌破
@@ -58,7 +58,7 @@ def test_target_price_alert(page: Page):
     requests.post(f"{BASE_URL}/api/simulate_data", json={"price": 450})
     
     # 檢查日誌內容 (等待最多 15 秒以涵蓋前端 polling)
-    expect(page.locator("#log-content")).to_contain_text("觸發警報", timeout=15000)
+    expect(page.locator("#log-container")).to_contain_text("觸發警報", timeout=15000)
 
 def test_panic_drop_alert(page: Page):
     """測試閃崩偵測是否正常運作"""
@@ -70,7 +70,7 @@ def test_panic_drop_alert(page: Page):
         requests.post(f"{BASE_URL}/api/simulate_data", json={"price": p})
         time.sleep(1.2)
         
-    expect(page.locator("#log-content")).to_contain_text("偵測到閃崩", timeout=15000)
+    expect(page.locator("#log-container")).to_contain_text("偵測到閃崩", timeout=15000)
 
 def test_stop_loss_alert(page: Page):
     """測試停損警報"""
@@ -78,9 +78,9 @@ def test_stop_loss_alert(page: Page):
     
     page.fill("#symbol", "2330.TW")
     page.fill("#stop_loss", "100")
-    page.click("text=更新智慧監控")
+    page.click("text=更新監控設定")
     
     # 模擬現價跌破停損線
     requests.post(f"{BASE_URL}/api/simulate_data", json={"price": 95})
     
-    expect(page.locator("#log-content")).to_contain_text("觸發停損警報", timeout=15000)
+    expect(page.locator("#log-container")).to_contain_text("觸發停損警報", timeout=15000)

@@ -4,7 +4,7 @@ import requests
 import yfinance as yf
 import statistics
 import threading
-from abc import ABC, abstractmethod
+from abc import ABC, abstractmethod  
 
 class MarketDataProvider(ABC):
     @abstractmethod
@@ -69,7 +69,7 @@ class YFinanceProvider(MarketDataProvider):
                 return now.time() >= datetime.time(21, 0)
             current_time = now.time()
             return current_time >= datetime.time(21, 0) or current_time <= datetime.time(6, 0)
-
+ 
 class BinanceProvider(MarketDataProvider):
     def __init__(self):
         self.current_price = None

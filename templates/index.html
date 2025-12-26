@@ -494,8 +494,28 @@
                 </div>
 
                 <div id="manual" class="info-panel">
-                    <p style="font-size: 0.9rem; color: var(--text-dim);">
-                        輸入股票代號（如 2330.TW）與目標價。系統會自動根據日夜間調整監控亮度。
+                    <h4 style="margin: 0 0 1rem 0; color: var(--text-dim);">💡 產品功能與操作說明</h4>
+                    <p style="font-size: 0.9rem; color: var(--text-dim); line-height: 1.6;">
+                        <strong>1. 監控設定：</strong><br>
+                        輸入股票代號（如 <code>2330.TW</code>, <code>NVDA</code>, <code>BTC-USD</code>）。<br>
+                        系統支援：台股/美股 (每10秒更新)、虛擬貨幣 (每秒更新)。
+                    </p>
+                    <p style="font-size: 0.9rem; color: var(--text-dim); line-height: 1.6;">
+                        <strong>2. 🟢 目標獲利價 (Target)：</strong><br>
+                        設定您想出場的價格。達標時燈光變綠，提醒獲利了結。
+                    </p>
+                    <p style="font-size: 0.9rem; color: var(--text-dim); line-height: 1.6;">
+                        <strong>3. 🔴 停損警示價 (Stop Loss)：</strong><br>
+                        設定您的風險底線。跌破時燈光變紅並發出警報，提醒盡快停損。
+                    </p>
+                    <p style="font-size: 0.9rem; color: var(--text-dim); line-height: 1.6;">
+                        <strong>4. 🟣 閃崩警報 (Flash Crash)：</strong><br>
+                        當系統偵測到 1 分鐘內急跌超過 2% (台美股) 或 2.5% (虛擬貨幣) 時，會強制觸發紫色警報與語音通知。
+                    </p>
+                    <p style="font-size: 0.9rem; color: var(--text-dim); line-height: 1.6;">
+                        <strong>5. 🌙 睡眠模式：</strong><br>
+                        點擊下方「睡眠模式」按鈕，燈光將調至 1% 亮度，不影響睡眠。<br>
+                        一旦觸發上述任何警報，燈光會<strong>強制全亮</strong>並發出聲音，確保您不會錯過行情。
                     </p>
                 </div>
 
@@ -547,6 +567,9 @@
                     </button>
                     <button class="btn btn-ghost" onclick="testGreen()">
                         <i class="fas fa-check-circle"></i> 測試綠燈
+                    </button>
+                    <button class="btn btn-ghost" onclick="testPurple()" style="color: #a855f7;">
+                        <i class="fas fa-bolt"></i> 測試紫燈
                     </button>
                     <button class="btn btn-ghost" onclick="demoAlert()" style="color: var(--warning);">
                         <i class="fas fa-play"></i> 完整演示
@@ -691,6 +714,7 @@
 
         function testYellow() { apiCall('test_yellow').then(() => showToast('黃燈測試信號發送')); }
         function testGreen() { apiCall('test_green').then(() => showToast('綠燈測試信號發送')); }
+        function testPurple() { apiCall('test_purple').then(() => showToast('紫燈閃崩模擬發送')); }
         function turnOff() { apiCall('turn_off').then(() => showToast('進入睡眠待命模式')); }
         function demoAlert() { apiCall('demo_alert').then(() => showToast('啟動全功能演示')); }
         function stopAlarm() { apiCall('stop_alarm').then(res => showToast(res.message)); }

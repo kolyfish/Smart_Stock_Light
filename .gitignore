@@ -6,3 +6,6 @@ venv/
 .idea/
 .vscode/
 tests/.pytest_cache/
+dist/
+build/
+*.spec

@@ -1,7 +1,8 @@
 #!/bin/bash
 
 # 取得腳本所在目錄並切換進去 (確保雙擊執行時路徑正確)
-cd "$(dirname "$0")"
+# 由於腳本被移動到了 scripts/ 資料夾，因此需要往上一層切換到專案根目錄
+cd "$(dirname "$0")/.."
 
 echo "=========================================="
 echo "   MarketTradeAlertLight 自動安裝與啟動"
@@ -39,10 +40,10 @@ echo "⬇️  正在檢查與安裝套件 (這可能會花一點時間)..."
 source venv/bin/activate
 
 # 升級 pip
-pip install --upgrade pip > install_log.txt 2>&1
+pip install --upgrade pip > logs/install_log.txt 2>&1
 
 # 安裝套件並記錄日誌
-if pip install -r requirements.txt >> install_log.txt 2>&1; then
+if pip install -r requirements.txt >> logs/install_log.txt 2>&1; then
     echo "✅ 套件安裝完成！環境配置成功。"
 else
     echo "❌ 套件安裝失敗！"

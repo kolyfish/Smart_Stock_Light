@@ -24,6 +24,7 @@ class TapoController:
         # 線程鎖：防止多個線程同時嘗試控制裝置 (Race Condition)
         import threading
         self._lock = threading.Lock()
+        self.is_sleeping = False # 追蹤睡眠模式狀態
 
     async def _get_connected_device(self):
         """建立並返回已連線的裝置實體。"""
@@ -91,14 +92,18 @@ class TapoController:
             print(f"[{self.ip_address}] 正在切換顏色為: {color_name}")
             
             await device.turn_on()
-            # 核心修正：切換顏色時顯式重設亮度為 100 (避免從睡眠待命模式恢復時亮度過低)
-            await device.set_brightness(100)
             
+            # 優化順序：先切換顏色，再調高亮度，避免出現「亮黃色閃爍」並確保顏色正確
             result = await device.set_hue_saturation(hue, saturation)
-            
             if result.is_failure():
                 from plugp100.new.components.light_component import LightComponent
                 await device.get_component(LightComponent).set_hue_saturation(hue, saturation)
+            
+            # 給予一點緩衝時間讓顏色生效
+            await asyncio.sleep(0.05)
+            
+            # 最後才將亮度全開
+            await device.set_brightness(100)
                 
             print(f"[{self.ip_address}] 顏色切換成功 ({color_name})，亮度已恢復 100%。")
         except Exception as e:
@@ -135,6 +140,7 @@ class TapoController:
         """觸發警報：轉為綠色。"""
         if self._lock.acquire(blocking=False):
             try:
+                self.is_sleeping = False # 警報強制喚醒
                 asyncio.run(self._set_color_hs(120, 100))
             finally:
                 self._lock.release()
@@ -145,6 +151,7 @@ class TapoController:
         """監控中：轉為紅色。"""
         if self._lock.acquire(blocking=False):
             try:
+                self.is_sleeping = False # 警報強制喚醒
                 asyncio.run(self._set_color_hs(0, 100))
             finally:
                 self._lock.release()
@@ -153,6 +160,10 @@ class TapoController:
 
     def turn_on_yellow(self):
         """常態/待機：轉為黃色。"""
+        # 如果處於睡眠模式，則忽略常態黃燈指令，保持暗光狀態
+        if self.is_sleeping:
+            return
+
         if self._lock.acquire(blocking=False):
             try:
                 asyncio.run(self._set_color_hs(60, 100))
@@ -165,6 +176,7 @@ class TapoController:
         """閃崩警報：轉為紫色。"""
         if self._lock.acquire(blocking=False):
             try:
+                self.is_sleeping = False # 警報強制喚醒
                 asyncio.run(self._set_color_hs(280, 100))
             finally:
                 self._lock.release()
@@ -190,6 +202,7 @@ class TapoController:
     def turn_off(self):
         """手動關閉。"""
         with self._lock:
+            self.is_sleeping = False # 關閉後重置狀態
             asyncio.run(self._turn_off())
     
     async def _set_sleep_standby(self):
@@ -210,6 +223,8 @@ class TapoController:
                 client._protocol = protocol
             
             await device.update()
+            
+            self.is_sleeping = True # 標記為睡眠狀態
             print(f"[{self.ip_address}] 進入睡眠待命模式：調暗至 1% 亮度（黃燈）")
             
             # 設為黃色

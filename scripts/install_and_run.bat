@@ -1,6 +1,6 @@
 @echo off
 chcp 65001 > nul
-cd /d "%~dp0"
+cd /d "%~dp0.."
 
 echo ==========================================
 echo    MarketTradeAlertLight Auto-Installer
@@ -26,8 +26,8 @@ if not exist "venv" (
 :: 3. Install Dependencies
 echo [INFO] Installing/Updating dependencies...
 call venv\Scripts\activate.bat
-python -m pip install --upgrade pip > install_log.txt 2>&1
-pip install -r requirements.txt >> install_log.txt 2>&1
+python -m pip install --upgrade pip > logs\install_log.txt 2>&1
+pip install -r requirements.txt >> logs\install_log.txt 2>&1
 
 if %errorlevel% neq 0 (
     echo [ERROR] Installation failed!

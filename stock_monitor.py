@@ -16,6 +16,7 @@ class StockMonitor(threading.Thread):
         self.simulation_mode = os.getenv("SIMULATION_MODE", "false").lower() == "true"
         self.last_alert_time = 0
         self.cooldown_seconds = 300  # 5 分鐘
+        self.test_mode_until = 0     # 新增：測試模式暫停時間戳記
         self.log_messages = [] # 新增：日誌緩存
         self.max_logs = 50     # 最多保留 50 條日誌
         
@@ -153,7 +154,7 @@ class StockMonitor(threading.Thread):
         
         return True
 
-    def _continuous_alarm_loop(self, symbol, current_price, target_price):
+    def _continuous_alarm_loop(self, symbol, current_price, target_price, is_stop_loss=False):
         """持續播報警報直到使用者按下停止按鈕"""
         import time
         
@@ -161,10 +162,16 @@ class StockMonitor(threading.Thread):
         if self.is_crypto(symbol):
             crypto_name = symbol.split("-")[0]
             spaced_symbol = " ".join(list(crypto_name))
-            alert_msg = f"緊急警報！虛擬貨幣 {spaced_symbol} 目前價格 {current_price:.2f} 美元，已達到您設定的目標價格 {target_price:.2f} 美元。請立即查看。"
+            if is_stop_loss:
+                alert_msg = f"緊急警報！虛擬貨幣 {spaced_symbol} 目前價格 {current_price:.2f} 美元，已跌破停損價 {target_price:.2f} 美元。請立即停損。"
+            else:
+                alert_msg = f"緊急警報！虛擬貨幣 {spaced_symbol} 目前價格 {current_price:.2f} 美元，已達到您設定的目標價格 {target_price:.2f} 美元。請立即查看。"
         else:
             spaced_symbol = " ".join(list(symbol.split(".")[0]))
-            alert_msg = f"緊急警報！股票代號 {spaced_symbol} 目前價格 {current_price:.1f}，已達到您設定的目標價格 {target_price:.1f}。請立即查看。"
+            if is_stop_loss:
+                alert_msg = f"緊急警報！股票代號 {spaced_symbol} 目前價格 {current_price:.1f}，已跌破停損價 {target_price:.1f}。請立即停損。"
+            else:
+                alert_msg = f"緊急警報！股票代號 {spaced_symbol} 目前價格 {current_price:.1f}，已達到您設定的目標價格 {target_price:.1f}。請立即查看。"
         
         self.add_log("🔔 開始持續警報播報...")
         
@@ -174,7 +181,7 @@ class StockMonitor(threading.Thread):
             time.sleep(10)  # 每10秒播報一次
             
         self.add_log("🔕 警報已停止")
-    
+
     def stop_alarm(self):
         """停止警報播報（像鬧鐘的停止按鈕）"""
         if self.alarm_active:
@@ -243,6 +250,14 @@ class StockMonitor(threading.Thread):
                         time.sleep(10)
                         continue
 
+                    # 如果測試模式啟用中，則暫停自動燈號控制
+                    if self.test_mode_until > time.time():
+                        # 僅更新數據，不操作 Tapo
+                        self.last_stock_price = current_price
+                        self.last_update_time = datetime.now().strftime("%H:%M:%S")
+                        time.sleep(1)
+                        continue
+
                     self.last_stock_price = current_price
                     self.last_update_time = datetime.now().strftime("%H:%M:%S")
                     self.last_stock_name = market_data.get('name', symbol)
@@ -251,6 +266,7 @@ class StockMonitor(threading.Thread):
                     drop_rate = self.data_agent.detect_flash_crash(symbol, current_price)
                     if drop_rate:
                         self.add_log(f"⚠️ 偵測到閃崩！實質跌幅 {drop_rate*100:.1f}%")
+                        self.device_off = False # 強制喚醒
                         self.tapo.turn_on_purple()
                         self.speak(f"警告，{self.last_stock_name} 偵測到恐慌性閃崩，目前跌幅百分之 {drop_rate*100:.1f}。")
                         time.sleep(5)
@@ -262,10 +278,10 @@ class StockMonitor(threading.Thread):
                     if self.alert_mode is None:
                         if current_price < target:
                             self.alert_mode = 'above' # 目前低於目標，監控「漲破」
-                            self.add_log(f"警報模式：設定為「等待漲破」 {target} (現價 {current_price:.2f})")
+                            self.add_log(f"警報模式：設定為「等待觸價」 {target} (現價 {current_price:.2f})")
                         else:
                             self.alert_mode = 'below' # 目前高於目標，監控「跌破」
-                            self.add_log(f"警報模式：設定為「等待跌破」 {target} (現價 {current_price:.2f})")
+                            self.add_log(f"警報模式：設定為「等待觸價」 {target} (現價 {current_price:.2f})")
 
                     # 檢查警報是否達成
                     is_alert_hit = False
@@ -281,15 +297,30 @@ class StockMonitor(threading.Thread):
                         is_alert_hit = True
                     
                     if is_stop_loss_hit:
-                        self.add_log(f"🆘 觸發停損警報: {symbol} 跌破停損價 {stop_loss} ({current_price:.2f})")
-                        self.device_off = False
-                        self.tapo.turn_on_red()
-                        self.speak(f"緊急通知，{self.last_stock_name} 已經跌破停損價 {stop_loss}，目前價格 {current_price:.1f}，請注意風險。")
-                        self.last_alert_time = now_ts # 使用冷卻時間防護
+                        now = time.time()
+                        # 停損也共用冷卻時間，避免無限連環爆
+                        if now - self.last_alert_time > self.cooldown_seconds:
+                            self.add_log(f"🆘 觸發停損警報: {symbol} 跌破停損價 {stop_loss} ({current_price:.2f})")
+                            self.device_off = False
+                            self.tapo.turn_on_red()
+                            
+                            # 啟動持續警報播報 (帶入 is_stop_loss=True)
+                            if not self.alarm_active:
+                                self.alarm_active = True
+                                self.alarm_thread = threading.Thread(
+                                    target=self._continuous_alarm_loop,
+                                    args=(symbol, current_price, stop_loss, True),
+                                    daemon=True
+                                )
+                                self.alarm_thread.start()
+
+                            self.last_alert_time = now # 更新冷卻時間
+                            
                     elif is_alert_hit:
                         now = time.time()
                         if now - self.last_alert_time > self.cooldown_seconds:
                             self.add_log(f"!!! 觸發警報: {symbol} 已達標 ({current_price:.2f}) !!!")
+                            self.device_off = False # 強制喚醒
                             self.tapo.turn_on_green()  # 直接亮綠燈，不管是否在睡眠模式
                             
                             # 啟動持續警報播報
@@ -297,16 +328,30 @@ class StockMonitor(threading.Thread):
                                 self.alarm_active = True
                                 self.alarm_thread = threading.Thread(
                                     target=self._continuous_alarm_loop,
-                                    args=(symbol, current_price, target),
+                                    args=(symbol, current_price, target, False),
                                     daemon=True
                                 )
                                 self.alarm_thread.start()
                             
                             self.last_alert_time = now
                     else:
-                        # 未達標時，維持黃燈
-                        self.tapo.turn_on_yellow()
-                        self.add_log(f"{symbol}: {current_price:.2f} (目標 {target} | 監控中)")
+                        # 未達標時，若裝置未關閉（非睡眠模式）且無持續警報中，才維持黃燈
+                        if not self.device_off and not self.alarm_active:
+                            self.tapo.turn_on_yellow()
+                        # 降低日誌頻率：只有當價格變動，或每隔 20 次迴圈 (約 10秒) 才顯示一次
+                        if not hasattr(self, '_log_counter'): self._log_counter = 0
+                        self._log_counter += 1
+                        
+                        should_log = False
+                        if self._log_counter >= 20:
+                            should_log = True
+                            self._log_counter = 0
+                        elif self.last_stock_price != current_price:
+                            should_log = True
+                            self._log_counter = 0 # 重置計數
+
+                        if should_log:
+                            self.add_log(f"{symbol}: {current_price:.2f} (目標 {target} | 監控中)")
 
                 except Exception as e:
                     self.add_log(f"數據抓取或警報診斷異常: {e}")

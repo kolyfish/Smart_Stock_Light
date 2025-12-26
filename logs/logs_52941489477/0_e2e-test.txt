@@ -1,0 +1,1010 @@
+﻿2025-12-24T00:15:21.7517527Z Current runner version: '2.330.0'
+2025-12-24T00:15:21.7540632Z ##[group]Runner Image Provisioner
+2025-12-24T00:15:21.7541414Z Hosted Compute Agent
+2025-12-24T00:15:21.7542074Z Version: 20251211.462
+2025-12-24T00:15:21.7542634Z Commit: 6cbad8c2bb55d58165063d031ccabf57e2d2db61
+2025-12-24T00:15:21.7543297Z Build Date: 2025-12-11T16:28:49Z
+2025-12-24T00:15:21.7543961Z Worker ID: {31700ee7-04fd-4fda-a73d-3a2e456a8d11}
+2025-12-24T00:15:21.7544865Z ##[endgroup]
+2025-12-24T00:15:21.7545343Z ##[group]Operating System
+2025-12-24T00:15:21.7545955Z Ubuntu
+2025-12-24T00:15:21.7546422Z 24.04.3
+2025-12-24T00:15:21.7546830Z LTS
+2025-12-24T00:15:21.7547317Z ##[endgroup]
+2025-12-24T00:15:21.7547795Z ##[group]Runner Image
+2025-12-24T00:15:21.7548323Z Image: ubuntu-24.04
+2025-12-24T00:15:21.7549014Z Version: 20251215.174.1
+2025-12-24T00:15:21.7550075Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20251215.174/images/ubuntu/Ubuntu2404-Readme.md
+2025-12-24T00:15:21.7551544Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20251215.174
+2025-12-24T00:15:21.7552598Z ##[endgroup]
+2025-12-24T00:15:21.7553601Z ##[group]GITHUB_TOKEN Permissions
+2025-12-24T00:15:21.7556233Z Contents: read
+2025-12-24T00:15:21.7556780Z Metadata: read
+2025-12-24T00:15:21.7557216Z Packages: read
+2025-12-24T00:15:21.7557808Z ##[endgroup]
+2025-12-24T00:15:21.7560092Z Secret source: Actions
+2025-12-24T00:15:21.7560927Z Prepare workflow directory
+2025-12-24T00:15:21.7879332Z Prepare all required actions
+2025-12-24T00:15:21.7921571Z Getting action download info
+2025-12-24T00:15:22.2244567Z Download action repository 'actions/checkout@v4' (SHA:34e114876b0b11c390a56381ad16ebd13914f8d5)
+2025-12-24T00:15:22.3308299Z Download action repository 'actions/setup-python@v5' (SHA:a26af69be951a213d495a4c3e4e4022e16d87065)
+2025-12-24T00:15:22.5341724Z Complete job name: e2e-test
+2025-12-24T00:15:22.6013044Z ##[group]Run actions/checkout@v4
+2025-12-24T00:15:22.6013845Z with:
+2025-12-24T00:15:22.6014477Z   repository: kolyfish/Smart_Stock_Light
+2025-12-24T00:15:22.6015161Z   token: ***
+2025-12-24T00:15:22.6015531Z   ssh-strict: true
+2025-12-24T00:15:22.6015913Z   ssh-user: git
+2025-12-24T00:15:22.6016297Z   persist-credentials: true
+2025-12-24T00:15:22.6016731Z   clean: true
+2025-12-24T00:15:22.6017125Z   sparse-checkout-cone-mode: true
+2025-12-24T00:15:22.6017590Z   fetch-depth: 1
+2025-12-24T00:15:22.6017965Z   fetch-tags: false
+2025-12-24T00:15:22.6018352Z   show-progress: true
+2025-12-24T00:15:22.6018735Z   lfs: false
+2025-12-24T00:15:22.6019080Z   submodules: false
+2025-12-24T00:15:22.6019463Z   set-safe-directory: true
+2025-12-24T00:15:22.6020132Z ##[endgroup]
+2025-12-24T00:15:22.7072722Z Syncing repository: kolyfish/Smart_Stock_Light
+2025-12-24T00:15:22.7074679Z ##[group]Getting Git version info
+2025-12-24T00:15:22.7075525Z Working directory is '/home/runner/work/Smart_Stock_Light/Smart_Stock_Light'
+2025-12-24T00:15:22.7076526Z [command]/usr/bin/git version
+2025-12-24T00:15:22.7156902Z git version 2.52.0
+2025-12-24T00:15:22.7182357Z ##[endgroup]
+2025-12-24T00:15:22.7196121Z Temporarily overriding HOME='/home/runner/work/_temp/02dc8dfa-38b1-4f7f-93a3-a9c17a2472dc' before making global git config changes
+2025-12-24T00:15:22.7197490Z Adding repository directory to the temporary git global config as a safe directory
+2025-12-24T00:15:22.7209520Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Smart_Stock_Light/Smart_Stock_Light
+2025-12-24T00:15:22.7255080Z Deleting the contents of '/home/runner/work/Smart_Stock_Light/Smart_Stock_Light'
+2025-12-24T00:15:22.7258846Z ##[group]Initializing the repository
+2025-12-24T00:15:22.7264067Z [command]/usr/bin/git init /home/runner/work/Smart_Stock_Light/Smart_Stock_Light
+2025-12-24T00:15:22.7363318Z hint: Using 'master' as the name for the initial branch. This default branch name
+2025-12-24T00:15:22.7364768Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2025-12-24T00:15:22.7365662Z hint: to use in all of your new repositories, which will suppress this warning,
+2025-12-24T00:15:22.7366575Z hint: call:
+2025-12-24T00:15:22.7366925Z hint:
+2025-12-24T00:15:22.7367372Z hint: 	git config --global init.defaultBranch <name>
+2025-12-24T00:15:22.7368089Z hint:
+2025-12-24T00:15:22.7368944Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2025-12-24T00:15:22.7369907Z hint: 'development'. The just-created branch can be renamed via this command:
+2025-12-24T00:15:22.7370562Z hint:
+2025-12-24T00:15:22.7370925Z hint: 	git branch -m <name>
+2025-12-24T00:15:22.7371343Z hint:
+2025-12-24T00:15:22.7371920Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2025-12-24T00:15:22.7372928Z Initialized empty Git repository in /home/runner/work/Smart_Stock_Light/Smart_Stock_Light/.git/
+2025-12-24T00:15:22.7380178Z [command]/usr/bin/git remote add origin https://github.com/kolyfish/Smart_Stock_Light
+2025-12-24T00:15:22.7411383Z ##[endgroup]
+2025-12-24T00:15:22.7412065Z ##[group]Disabling automatic garbage collection
+2025-12-24T00:15:22.7415603Z [command]/usr/bin/git config --local gc.auto 0
+2025-12-24T00:15:22.7442113Z ##[endgroup]
+2025-12-24T00:15:22.7442743Z ##[group]Setting up auth
+2025-12-24T00:15:22.7449222Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2025-12-24T00:15:22.7477720Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2025-12-24T00:15:22.7808652Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-12-24T00:15:22.7836486Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2025-12-24T00:15:22.8048893Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2025-12-24T00:15:22.8079160Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2025-12-24T00:15:22.8321491Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2025-12-24T00:15:22.8357525Z ##[endgroup]
+2025-12-24T00:15:22.8358730Z ##[group]Fetching the repository
+2025-12-24T00:15:22.8366490Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +365e3a94293d84f9251274e938aed007395a889f:refs/remotes/origin/main
+2025-12-24T00:15:23.2634939Z From https://github.com/kolyfish/Smart_Stock_Light
+2025-12-24T00:15:23.2636126Z  * [new ref]         365e3a94293d84f9251274e938aed007395a889f -> origin/main
+2025-12-24T00:15:23.2670057Z ##[endgroup]
+2025-12-24T00:15:23.2673578Z ##[group]Determining the checkout info
+2025-12-24T00:15:23.2675302Z ##[endgroup]
+2025-12-24T00:15:23.2679641Z [command]/usr/bin/git sparse-checkout disable
+2025-12-24T00:15:23.2719925Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2025-12-24T00:15:23.2747357Z ##[group]Checking out the ref
+2025-12-24T00:15:23.2750920Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+2025-12-24T00:15:23.2874504Z Switched to a new branch 'main'
+2025-12-24T00:15:23.2876507Z branch 'main' set up to track 'origin/main'.
+2025-12-24T00:15:23.2913544Z ##[endgroup]
+2025-12-24T00:15:23.2916759Z [command]/usr/bin/git log -1 --format=%H
+2025-12-24T00:15:23.2938584Z 365e3a94293d84f9251274e938aed007395a889f
+2025-12-24T00:15:23.3230821Z ##[group]Run actions/setup-python@v5
+2025-12-24T00:15:23.3231888Z with:
+2025-12-24T00:15:23.3232598Z   python-version: 3.10
+2025-12-24T00:15:23.3233445Z   check-latest: false
+2025-12-24T00:15:23.3234677Z   token: ***
+2025-12-24T00:15:23.3235461Z   update-environment: true
+2025-12-24T00:15:23.3236374Z   allow-prereleases: false
+2025-12-24T00:15:23.3237273Z   freethreaded: false
+2025-12-24T00:15:23.3238074Z ##[endgroup]
+2025-12-24T00:15:23.4886661Z ##[group]Installed versions
+2025-12-24T00:15:23.5011545Z Successfully set up CPython (3.10.19)
+2025-12-24T00:15:23.5013871Z ##[endgroup]
+2025-12-24T00:15:23.5159210Z ##[group]Run python -m venv venv
+2025-12-24T00:15:23.5160426Z [36;1mpython -m venv venv[0m
+2025-12-24T00:15:23.5161507Z [36;1msource venv/bin/activate[0m
+2025-12-24T00:15:23.5162705Z [36;1m# 跳過 pip 升級，直接安裝依賴，避免觸發 azure 套件解析錯誤[0m
+2025-12-24T00:15:23.5163995Z [36;1mpip install -r requirements.txt[0m
+2025-12-24T00:15:23.5165948Z [36;1mpip install playwright pytest-playwright requests pytest-mock[0m
+2025-12-24T00:15:23.5167642Z [36;1mplaywright install chromium[0m
+2025-12-24T00:15:23.5217013Z shell: /usr/bin/bash -e {0}
+2025-12-24T00:15:23.5218041Z env:
+2025-12-24T00:15:23.5219090Z   pythonLocation: /opt/hostedtoolcache/Python/3.10.19/x64
+2025-12-24T00:15:23.5220902Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.10.19/x64/lib/pkgconfig
+2025-12-24T00:15:23.5222690Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.10.19/x64
+2025-12-24T00:15:23.5224468Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.10.19/x64
+2025-12-24T00:15:23.5226102Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.10.19/x64
+2025-12-24T00:15:23.5227729Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.10.19/x64/lib
+2025-12-24T00:15:23.5229079Z ##[endgroup]
+2025-12-24T00:15:28.1032105Z Ignoring pyobjc: markers 'sys_platform == "darwin"' don't match your environment
+2025-12-24T00:15:28.1759862Z Collecting Flask==3.0.0
+2025-12-24T00:15:28.2082537Z   Downloading flask-3.0.0-py3-none-any.whl (99 kB)
+2025-12-24T00:15:28.2245362Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 99.7/99.7 kB 6.5 MB/s eta 0:00:00
+2025-12-24T00:15:28.2718623Z Collecting yfinance>=0.2.66
+2025-12-24T00:15:28.2753935Z   Downloading yfinance-1.0-py2.py3-none-any.whl (127 kB)
+2025-12-24T00:15:28.2802169Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 127.1/127.1 kB 47.4 MB/s eta 0:00:00
+2025-12-24T00:15:28.3000401Z Collecting qrcode==7.4.2
+2025-12-24T00:15:28.3042605Z   Downloading qrcode-7.4.2-py3-none-any.whl (46 kB)
+2025-12-24T00:15:28.3080195Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 46.2/46.2 kB 22.2 MB/s eta 0:00:00
+2025-12-24T00:15:28.7166019Z Collecting Pillow>=10.4.0
+2025-12-24T00:15:28.7207269Z   Downloading pillow-12.0.0-cp310-cp310-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (7.0 MB)
+2025-12-24T00:15:28.7848613Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 7.0/7.0 MB 129.1 MB/s eta 0:00:00
+2025-12-24T00:15:28.9015931Z Collecting plugp100>=4.0.0
+2025-12-24T00:15:28.9079364Z   Downloading plugp100-5.1.5-py3-none-any.whl (103 kB)
+2025-12-24T00:15:28.9126521Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 103.2/103.2 kB 41.8 MB/s eta 0:00:00
+2025-12-24T00:15:28.9322677Z Collecting pyttsx3==2.90
+2025-12-24T00:15:28.9368496Z   Downloading pyttsx3-2.90-py3-none-any.whl (39 kB)
+2025-12-24T00:15:28.9706524Z Collecting python-dotenv
+2025-12-24T00:15:28.9745026Z   Downloading python_dotenv-1.2.1-py3-none-any.whl (21 kB)
+2025-12-24T00:15:29.0598517Z Collecting pytest
+2025-12-24T00:15:29.0637942Z   Downloading pytest-9.0.2-py3-none-any.whl (374 kB)
+2025-12-24T00:15:29.0710975Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 374.8/374.8 kB 75.4 MB/s eta 0:00:00
+2025-12-24T00:15:29.1092787Z Collecting pytest-mock
+2025-12-24T00:15:29.1137427Z   Downloading pytest_mock-3.15.1-py3-none-any.whl (10 kB)
+2025-12-24T00:15:29.2003032Z Collecting playwright
+2025-12-24T00:15:29.2041367Z   Downloading playwright-1.57.0-py3-none-manylinux1_x86_64.whl (46.0 MB)
+2025-12-24T00:15:29.5248313Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 46.0/46.0 MB 67.1 MB/s eta 0:00:00
+2025-12-24T00:15:29.5945483Z Collecting pytest-playwright
+2025-12-24T00:15:29.6028909Z   Downloading pytest_playwright-0.7.2-py3-none-any.whl (16 kB)
+2025-12-24T00:15:29.6540483Z Collecting requests
+2025-12-24T00:15:29.6578808Z   Downloading requests-2.32.5-py3-none-any.whl (64 kB)
+2025-12-24T00:15:29.6618092Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 64.7/64.7 kB 30.9 MB/s eta 0:00:00
+2025-12-24T00:15:29.6941511Z Collecting websocket-client>=1.6.0
+2025-12-24T00:15:29.6976289Z   Downloading websocket_client-1.9.0-py3-none-any.whl (82 kB)
+2025-12-24T00:15:29.7015311Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 82.6/82.6 kB 39.0 MB/s eta 0:00:00
+2025-12-24T00:15:29.7513489Z Collecting Werkzeug>=3.0.0
+2025-12-24T00:15:29.7552577Z   Downloading werkzeug-3.1.4-py3-none-any.whl (224 kB)
+2025-12-24T00:15:29.7601784Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 225.0/225.0 kB 76.4 MB/s eta 0:00:00
+2025-12-24T00:15:29.7782293Z Collecting itsdangerous>=2.1.2
+2025-12-24T00:15:29.7816608Z   Downloading itsdangerous-2.2.0-py3-none-any.whl (16 kB)
+2025-12-24T00:15:29.8000153Z Collecting blinker>=1.6.2
+2025-12-24T00:15:29.8044282Z   Downloading blinker-1.9.0-py3-none-any.whl (8.5 kB)
+2025-12-24T00:15:29.8367836Z Collecting click>=8.1.3
+2025-12-24T00:15:29.8413261Z   Downloading click-8.3.1-py3-none-any.whl (108 kB)
+2025-12-24T00:15:29.8455863Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 108.3/108.3 kB 47.8 MB/s eta 0:00:00
+2025-12-24T00:15:29.8716652Z Collecting Jinja2>=3.1.2
+2025-12-24T00:15:29.8755436Z   Downloading jinja2-3.1.6-py3-none-any.whl (134 kB)
+2025-12-24T00:15:29.8799580Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 134.9/134.9 kB 56.7 MB/s eta 0:00:00
+2025-12-24T00:15:29.9402311Z Collecting typing-extensions
+2025-12-24T00:15:29.9438321Z   Downloading typing_extensions-4.15.0-py3-none-any.whl (44 kB)
+2025-12-24T00:15:29.9475948Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 44.6/44.6 kB 20.6 MB/s eta 0:00:00
+2025-12-24T00:15:29.9624695Z Collecting pypng
+2025-12-24T00:15:29.9658024Z   Downloading pypng-0.20220715.0-py3-none-any.whl (58 kB)
+2025-12-24T00:15:29.9693836Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 58.1/58.1 kB 29.6 MB/s eta 0:00:00
+2025-12-24T00:15:30.3699993Z Collecting protobuf>=3.19.0
+2025-12-24T00:15:30.3740780Z   Downloading protobuf-6.33.2-cp39-abi3-manylinux2014_x86_64.whl (323 kB)
+2025-12-24T00:15:30.3801475Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 323.3/323.3 kB 86.8 MB/s eta 0:00:00
+2025-12-24T00:15:30.4406385Z Collecting pytz>=2022.5
+2025-12-24T00:15:30.4444419Z   Downloading pytz-2025.2-py2.py3-none-any.whl (509 kB)
+2025-12-24T00:15:30.4513391Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 509.2/509.2 kB 109.8 MB/s eta 0:00:00
+2025-12-24T00:15:30.6768398Z Collecting websockets>=13.0
+2025-12-24T00:15:30.6818396Z   Downloading websockets-15.0.1-cp310-cp310-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl (181 kB)
+2025-12-24T00:15:30.6869773Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 181.6/181.6 kB 62.3 MB/s eta 0:00:00
+2025-12-24T00:15:30.7179229Z Collecting peewee>=3.16.2
+2025-12-24T00:15:30.7219580Z   Downloading peewee-3.18.3.tar.gz (3.0 MB)
+2025-12-24T00:15:30.7480523Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.0/3.0 MB 138.0 MB/s eta 0:00:00
+2025-12-24T00:15:30.9048851Z   Installing build dependencies: started
+2025-12-24T00:15:32.7195695Z   Installing build dependencies: finished with status 'done'
+2025-12-24T00:15:32.7202998Z   Getting requirements to build wheel: started
+2025-12-24T00:15:33.0594995Z   Getting requirements to build wheel: finished with status 'done'
+2025-12-24T00:15:33.0604991Z   Preparing metadata (pyproject.toml): started
+2025-12-24T00:15:33.2753752Z   Preparing metadata (pyproject.toml): finished with status 'done'
+2025-12-24T00:15:33.3062604Z Collecting beautifulsoup4>=4.11.1
+2025-12-24T00:15:33.3104481Z   Downloading beautifulsoup4-4.14.3-py3-none-any.whl (107 kB)
+2025-12-24T00:15:33.3154541Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 107.7/107.7 kB 35.8 MB/s eta 0:00:00
+2025-12-24T00:15:33.3509127Z Collecting platformdirs>=2.0.0
+2025-12-24T00:15:33.3543693Z   Downloading platformdirs-4.5.1-py3-none-any.whl (18 kB)
+2025-12-24T00:15:33.3710865Z Collecting multitasking>=0.0.7
+2025-12-24T00:15:33.3745566Z   Downloading multitasking-0.0.12.tar.gz (19 kB)
+2025-12-24T00:15:33.3814793Z   Preparing metadata (setup.py): started
+2025-12-24T00:15:33.5306174Z   Preparing metadata (setup.py): finished with status 'done'
+2025-12-24T00:15:33.8269600Z Collecting pandas>=1.3.0
+2025-12-24T00:15:33.8348256Z   Downloading pandas-2.3.3-cp310-cp310-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl (12.8 MB)
+2025-12-24T00:15:33.9156140Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 12.8/12.8 MB 152.8 MB/s eta 0:00:00
+2025-12-24T00:15:34.0500592Z Collecting curl_cffi<0.14,>=0.7
+2025-12-24T00:15:34.0541103Z   Downloading curl_cffi-0.13.0-cp39-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (8.3 MB)
+2025-12-24T00:15:34.1185490Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 8.3/8.3 MB 137.9 MB/s eta 0:00:00
+2025-12-24T00:15:34.5983663Z Collecting numpy>=1.16.5
+2025-12-24T00:15:34.6023984Z   Downloading numpy-2.2.6-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (16.8 MB)
+2025-12-24T00:15:34.7162670Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 16.8/16.8 MB 133.1 MB/s eta 0:00:00
+2025-12-24T00:15:34.8402459Z Collecting frozendict>=2.3.4
+2025-12-24T00:15:34.8449895Z   Downloading frozendict-2.4.7-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (120 kB)
+2025-12-24T00:15:34.8497606Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 120.2/120.2 kB 45.8 MB/s eta 0:00:00
+2025-12-24T00:15:34.8996229Z Collecting semantic-version==2.10.0
+2025-12-24T00:15:34.9031478Z   Downloading semantic_version-2.10.0-py2.py3-none-any.whl (15 kB)
+2025-12-24T00:15:34.9248145Z Collecting scapy>=2.5.0
+2025-12-24T00:15:34.9318711Z   Downloading scapy-2.6.1-py3-none-any.whl (2.4 MB)
+2025-12-24T00:15:34.9505901Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.4/2.4 MB 149.3 MB/s eta 0:00:00
+2025-12-24T00:15:36.2563254Z Collecting aiohttp>=3.8.1
+2025-12-24T00:15:36.2613875Z   Downloading aiohttp-3.13.2-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (1.7 MB)
+2025-12-24T00:15:36.2755059Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.7/1.7 MB 140.1 MB/s eta 0:00:00
+2025-12-24T00:15:36.3344577Z Collecting urllib3<3,>=2.5
+2025-12-24T00:15:36.3381377Z   Downloading urllib3-2.6.2-py3-none-any.whl (131 kB)
+2025-12-24T00:15:36.3427031Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 131.2/131.2 kB 53.3 MB/s eta 0:00:00
+2025-12-24T00:15:36.8387855Z Collecting cryptography>=38.0.3
+2025-12-24T00:15:36.8429554Z   Downloading cryptography-46.0.3-cp38-abi3-manylinux_2_34_x86_64.whl (4.5 MB)
+2025-12-24T00:15:36.8732102Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.5/4.5 MB 158.5 MB/s eta 0:00:00
+2025-12-24T00:15:36.9031452Z Collecting jsons>=1.6.3
+2025-12-24T00:15:36.9072814Z   Downloading jsons-1.6.3-py3-none-any.whl (60 kB)
+2025-12-24T00:15:36.9110914Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 60.7/60.7 kB 28.4 MB/s eta 0:00:00
+2025-12-24T00:15:36.9433944Z Collecting certifi>=2021.5.30
+2025-12-24T00:15:36.9471225Z   Downloading certifi-2025.11.12-py3-none-any.whl (159 kB)
+2025-12-24T00:15:36.9518368Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 159.4/159.4 kB 61.1 MB/s eta 0:00:00
+2025-12-24T00:15:37.0093262Z Collecting pluggy<2,>=1.5
+2025-12-24T00:15:37.0129301Z   Downloading pluggy-1.6.0-py3-none-any.whl (20 kB)
+2025-12-24T00:15:37.0467436Z Collecting tomli>=1
+2025-12-24T00:15:37.0511303Z   Downloading tomli-2.3.0-py3-none-any.whl (14 kB)
+2025-12-24T00:15:37.0887241Z Collecting pygments>=2.7.2
+2025-12-24T00:15:37.0923455Z   Downloading pygments-2.19.2-py3-none-any.whl (1.2 MB)
+2025-12-24T00:15:37.1063436Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.2/1.2 MB 103.4 MB/s eta 0:00:00
+2025-12-24T00:15:37.1423473Z Collecting packaging>=22
+2025-12-24T00:15:37.1460872Z   Downloading packaging-25.0-py3-none-any.whl (66 kB)
+2025-12-24T00:15:37.1500572Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 66.5/66.5 kB 30.6 MB/s eta 0:00:00
+2025-12-24T00:15:37.1648908Z Collecting iniconfig>=1.0.1
+2025-12-24T00:15:37.1685545Z   Downloading iniconfig-2.3.0-py3-none-any.whl (7.5 kB)
+2025-12-24T00:15:37.1918334Z Collecting exceptiongroup>=1
+2025-12-24T00:15:37.1953138Z   Downloading exceptiongroup-1.3.1-py3-none-any.whl (16 kB)
+2025-12-24T00:15:37.5205953Z Collecting greenlet<4.0.0,>=3.1.1
+2025-12-24T00:15:37.5246467Z   Downloading greenlet-3.3.0-cp310-cp310-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl (586 kB)
+2025-12-24T00:15:37.5320631Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 586.9/586.9 kB 114.2 MB/s eta 0:00:00
+2025-12-24T00:15:37.5572794Z Collecting pyee<14,>=13
+2025-12-24T00:15:37.5607926Z   Downloading pyee-13.0.0-py3-none-any.whl (15 kB)
+2025-12-24T00:15:37.6107257Z Collecting python-slugify<9.0.0,>=6.0.0
+2025-12-24T00:15:37.6148129Z   Downloading python_slugify-8.0.4-py2.py3-none-any.whl (10 kB)
+2025-12-24T00:15:37.6313561Z Collecting pytest-base-url<3.0.0,>=1.0.0
+2025-12-24T00:15:37.6389348Z   Downloading pytest_base_url-2.1.0-py3-none-any.whl (5.3 kB)
+2025-12-24T00:15:37.6759492Z Collecting idna<4,>=2.5
+2025-12-24T00:15:37.6793783Z   Downloading idna-3.11-py3-none-any.whl (71 kB)
+2025-12-24T00:15:37.6834023Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 71.0/71.0 kB 31.0 MB/s eta 0:00:00
+2025-12-24T00:15:37.8937593Z Collecting charset_normalizer<4,>=2
+2025-12-24T00:15:37.9015064Z   Downloading charset_normalizer-3.4.4-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (153 kB)
+2025-12-24T00:15:37.9046477Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 153.6/153.6 kB 48.5 MB/s eta 0:00:00
+2025-12-24T00:15:37.9521581Z Collecting attrs>=17.3.0
+2025-12-24T00:15:37.9560778Z   Downloading attrs-25.4.0-py3-none-any.whl (67 kB)
+2025-12-24T00:15:37.9599000Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 67.6/67.6 kB 32.6 MB/s eta 0:00:00
+2025-12-24T00:15:37.9798148Z Collecting async-timeout<6.0,>=4.0
+2025-12-24T00:15:37.9838250Z   Downloading async_timeout-5.0.1-py3-none-any.whl (6.2 kB)
+2025-12-24T00:15:38.0013809Z Collecting aiosignal>=1.4.0
+2025-12-24T00:15:38.0049710Z   Downloading aiosignal-1.4.0-py3-none-any.whl (7.5 kB)
+2025-12-24T00:15:38.7202026Z Collecting yarl<2.0,>=1.17.0
+2025-12-24T00:15:38.7243935Z   Downloading yarl-1.22.0-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (346 kB)
+2025-12-24T00:15:38.7303420Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 347.0/347.0 kB 92.3 MB/s eta 0:00:00
+2025-12-24T00:15:38.7624367Z Collecting aiohappyeyeballs>=2.5.0
+2025-12-24T00:15:38.7791323Z   Downloading aiohappyeyeballs-2.6.1-py3-none-any.whl (15 kB)
+2025-12-24T00:15:38.9464829Z Collecting frozenlist>=1.1.1
+2025-12-24T00:15:38.9502367Z   Downloading frozenlist-1.8.0-cp310-cp310-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (219 kB)
+2025-12-24T00:15:38.9554894Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 219.5/219.5 kB 69.1 MB/s eta 0:00:00
+2025-12-24T00:15:39.0881744Z Collecting propcache>=0.2.0
+2025-12-24T00:15:39.0934053Z   Downloading propcache-0.4.1-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (196 kB)
+2025-12-24T00:15:39.0983855Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 196.9/196.9 kB 70.5 MB/s eta 0:00:00
+2025-12-24T00:15:39.6986965Z Collecting multidict<7.0,>=4.5
+2025-12-24T00:15:39.7032180Z   Downloading multidict-6.7.0-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (241 kB)
+2025-12-24T00:15:39.7086949Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 241.7/241.7 kB 72.6 MB/s eta 0:00:00
+2025-12-24T00:15:39.7503051Z Collecting soupsieve>=1.6.1
+2025-12-24T00:15:39.7539637Z   Downloading soupsieve-2.8.1-py3-none-any.whl (36 kB)
+2025-12-24T00:15:40.1288078Z Collecting cffi>=2.0.0
+2025-12-24T00:15:40.1332655Z   Downloading cffi-2.0.0-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (216 kB)
+2025-12-24T00:15:40.1387401Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 216.5/216.5 kB 69.3 MB/s eta 0:00:00
+2025-12-24T00:15:40.3442732Z Collecting MarkupSafe>=2.0
+2025-12-24T00:15:40.3484290Z   Downloading markupsafe-3.0.3-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (20 kB)
+2025-12-24T00:15:40.3752445Z Collecting typish>=1.9.2
+2025-12-24T00:15:40.3796751Z   Downloading typish-1.9.3-py3-none-any.whl (45 kB)
+2025-12-24T00:15:40.3832812Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 45.1/45.1 kB 22.5 MB/s eta 0:00:00
+2025-12-24T00:15:40.5008381Z Collecting python-dateutil>=2.8.2
+2025-12-24T00:15:40.5045316Z   Downloading python_dateutil-2.9.0.post0-py2.py3-none-any.whl (229 kB)
+2025-12-24T00:15:40.5096693Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 229.9/229.9 kB 75.3 MB/s eta 0:00:00
+2025-12-24T00:15:40.5337524Z Collecting tzdata>=2022.7
+2025-12-24T00:15:40.5375241Z   Downloading tzdata-2025.3-py2.py3-none-any.whl (348 kB)
+2025-12-24T00:15:40.5432739Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 348.5/348.5 kB 95.7 MB/s eta 0:00:00
+2025-12-24T00:15:40.6642207Z Collecting text-unidecode>=1.3
+2025-12-24T00:15:40.6688573Z   Downloading text_unidecode-1.3-py2.py3-none-any.whl (78 kB)
+2025-12-24T00:15:40.6725723Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 78.2/78.2 kB 37.5 MB/s eta 0:00:00
+2025-12-24T00:15:40.7716553Z Collecting pycparser
+2025-12-24T00:15:40.7752354Z   Downloading pycparser-2.23-py3-none-any.whl (118 kB)
+2025-12-24T00:15:40.7796255Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 118.1/118.1 kB 49.7 MB/s eta 0:00:00
+2025-12-24T00:15:40.8374876Z Collecting six>=1.5
+2025-12-24T00:15:40.8412946Z   Downloading six-1.17.0-py2.py3-none-any.whl (11 kB)
+2025-12-24T00:15:40.9132765Z Building wheels for collected packages: peewee
+2025-12-24T00:15:40.9141870Z   Building wheel for peewee (pyproject.toml): started
+2025-12-24T00:15:52.3778697Z   Building wheel for peewee (pyproject.toml): finished with status 'done'
+2025-12-24T00:15:52.3792613Z   Created wheel for peewee: filename=peewee-3.18.3-cp310-cp310-linux_x86_64.whl size=988830 sha256=db4d285f7a18a31970d57ef401d31a1f6b4efb64950aca0d37c038635fed58f9
+2025-12-24T00:15:52.3794370Z   Stored in directory: /home/runner/.cache/pip/wheels/3d/96/39/80c50cbf6bd446cdca9dac7d78a1a0d3a1f313859500529f8d
+2025-12-24T00:15:52.3812452Z Successfully built peewee
+2025-12-24T00:15:52.7951390Z Installing collected packages: typish, text-unidecode, pytz, pyttsx3, pypng, peewee, multitasking, websockets, websocket-client, urllib3, tzdata, typing-extensions, tomli, soupsieve, six, semantic-version, scapy, python-slugify, python-dotenv, pygments, pycparser, protobuf, propcache, pluggy, platformdirs, Pillow, packaging, numpy, MarkupSafe, jsons, itsdangerous, iniconfig, idna, greenlet, frozenlist, frozendict, click, charset_normalizer, certifi, blinker, attrs, async-timeout, aiohappyeyeballs, Werkzeug, requests, qrcode, python-dateutil, pyee, multidict, Jinja2, exceptiongroup, cffi, beautifulsoup4, aiosignal, yarl, pytest, playwright, pandas, Flask, curl_cffi, cryptography, yfinance, pytest-mock, pytest-base-url, aiohttp, pytest-playwright, plugp100
+2025-12-24T00:15:53.1184414Z   DEPRECATION: multitasking is being installed using the legacy 'setup.py install' method, because it does not have a 'pyproject.toml' and the 'wheel' package is not installed. pip 23.1 will enforce this behaviour change. A possible replacement is to enable the '--use-pep517' option. Discussion can be found at https://github.com/pypa/pip/issues/8559
+2025-12-24T00:15:53.1186962Z   Running setup.py install for multitasking: started
+2025-12-24T00:15:53.3107990Z   Running setup.py install for multitasking: finished with status 'done'
+2025-12-24T00:16:03.9923827Z Successfully installed Flask-3.0.0 Jinja2-3.1.6 MarkupSafe-3.0.3 Pillow-12.0.0 Werkzeug-3.1.4 aiohappyeyeballs-2.6.1 aiohttp-3.13.2 aiosignal-1.4.0 async-timeout-5.0.1 attrs-25.4.0 beautifulsoup4-4.14.3 blinker-1.9.0 certifi-2025.11.12 cffi-2.0.0 charset_normalizer-3.4.4 click-8.3.1 cryptography-46.0.3 curl_cffi-0.13.0 exceptiongroup-1.3.1 frozendict-2.4.7 frozenlist-1.8.0 greenlet-3.3.0 idna-3.11 iniconfig-2.3.0 itsdangerous-2.2.0 jsons-1.6.3 multidict-6.7.0 multitasking-0.0.12 numpy-2.2.6 packaging-25.0 pandas-2.3.3 peewee-3.18.3 platformdirs-4.5.1 playwright-1.57.0 pluggy-1.6.0 plugp100-5.1.5 propcache-0.4.1 protobuf-6.33.2 pycparser-2.23 pyee-13.0.0 pygments-2.19.2 pypng-0.20220715.0 pytest-9.0.2 pytest-base-url-2.1.0 pytest-mock-3.15.1 pytest-playwright-0.7.2 python-dateutil-2.9.0.post0 python-dotenv-1.2.1 python-slugify-8.0.4 pyttsx3-2.90 pytz-2025.2 qrcode-7.4.2 requests-2.32.5 scapy-2.6.1 semantic-version-2.10.0 six-1.17.0 soupsieve-2.8.1 text-unidecode-1.3 tomli-2.3.0 typing-extensions-4.15.0 typish-1.9.3 tzdata-2025.3 urllib3-2.6.2 websocket-client-1.9.0 websockets-15.0.1 yarl-1.22.0 yfinance-1.0
+2025-12-24T00:16:04.0569196Z 
+2025-12-24T00:16:04.0569881Z [notice] A new release of pip is available: 23.0.1 -> 25.3
+2025-12-24T00:16:04.0570878Z [notice] To update, run: pip install --upgrade pip
+2025-12-24T00:16:04.9432101Z Requirement already satisfied: playwright in ./venv/lib/python3.10/site-packages (1.57.0)
+2025-12-24T00:16:04.9435842Z Requirement already satisfied: pytest-playwright in ./venv/lib/python3.10/site-packages (0.7.2)
+2025-12-24T00:16:04.9439398Z Requirement already satisfied: requests in ./venv/lib/python3.10/site-packages (2.32.5)
+2025-12-24T00:16:04.9442924Z Requirement already satisfied: pytest-mock in ./venv/lib/python3.10/site-packages (3.15.1)
+2025-12-24T00:16:04.9470927Z Requirement already satisfied: pyee<14,>=13 in ./venv/lib/python3.10/site-packages (from playwright) (13.0.0)
+2025-12-24T00:16:04.9478693Z Requirement already satisfied: greenlet<4.0.0,>=3.1.1 in ./venv/lib/python3.10/site-packages (from playwright) (3.3.0)
+2025-12-24T00:16:04.9527363Z Requirement already satisfied: python-slugify<9.0.0,>=6.0.0 in ./venv/lib/python3.10/site-packages (from pytest-playwright) (8.0.4)
+2025-12-24T00:16:04.9534748Z Requirement already satisfied: pytest-base-url<3.0.0,>=1.0.0 in ./venv/lib/python3.10/site-packages (from pytest-playwright) (2.1.0)
+2025-12-24T00:16:04.9540821Z Requirement already satisfied: pytest<10.0.0,>=6.2.4 in ./venv/lib/python3.10/site-packages (from pytest-playwright) (9.0.2)
+2025-12-24T00:16:04.9602492Z Requirement already satisfied: charset_normalizer<4,>=2 in ./venv/lib/python3.10/site-packages (from requests) (3.4.4)
+2025-12-24T00:16:04.9610251Z Requirement already satisfied: urllib3<3,>=1.21.1 in ./venv/lib/python3.10/site-packages (from requests) (2.6.2)
+2025-12-24T00:16:04.9616258Z Requirement already satisfied: certifi>=2017.4.17 in ./venv/lib/python3.10/site-packages (from requests) (2025.11.12)
+2025-12-24T00:16:04.9622174Z Requirement already satisfied: idna<4,>=2.5 in ./venv/lib/python3.10/site-packages (from requests) (3.11)
+2025-12-24T00:16:04.9910790Z Requirement already satisfied: typing-extensions in ./venv/lib/python3.10/site-packages (from pyee<14,>=13->playwright) (4.15.0)
+2025-12-24T00:16:05.0031321Z Requirement already satisfied: pluggy<2,>=1.5 in ./venv/lib/python3.10/site-packages (from pytest<10.0.0,>=6.2.4->pytest-playwright) (1.6.0)
+2025-12-24T00:16:05.0039590Z Requirement already satisfied: packaging>=22 in ./venv/lib/python3.10/site-packages (from pytest<10.0.0,>=6.2.4->pytest-playwright) (25.0)
+2025-12-24T00:16:05.0050108Z Requirement already satisfied: tomli>=1 in ./venv/lib/python3.10/site-packages (from pytest<10.0.0,>=6.2.4->pytest-playwright) (2.3.0)
+2025-12-24T00:16:05.0056193Z Requirement already satisfied: iniconfig>=1.0.1 in ./venv/lib/python3.10/site-packages (from pytest<10.0.0,>=6.2.4->pytest-playwright) (2.3.0)
+2025-12-24T00:16:05.0063948Z Requirement already satisfied: pygments>=2.7.2 in ./venv/lib/python3.10/site-packages (from pytest<10.0.0,>=6.2.4->pytest-playwright) (2.19.2)
+2025-12-24T00:16:05.0074434Z Requirement already satisfied: exceptiongroup>=1 in ./venv/lib/python3.10/site-packages (from pytest<10.0.0,>=6.2.4->pytest-playwright) (1.3.1)
+2025-12-24T00:16:05.0163492Z Requirement already satisfied: text-unidecode>=1.3 in ./venv/lib/python3.10/site-packages (from python-slugify<9.0.0,>=6.0.0->pytest-playwright) (1.3)
+2025-12-24T00:16:05.3951229Z 
+2025-12-24T00:16:05.3951731Z [notice] A new release of pip is available: 23.0.1 -> 25.3
+2025-12-24T00:16:05.3952129Z [notice] To update, run: pip install --upgrade pip
+2025-12-24T00:16:05.7609704Z Downloading Chromium 143.0.7499.4 (playwright build v1200) from https://cdn.playwright.dev/dbazure/download/playwright/builds/chromium/1200/chromium-linux.zip
+2025-12-24T00:16:05.8568492Z (node:2350) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2025-12-24T00:16:05.8570117Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2025-12-24T00:16:05.9551087Z |                                                                                |   0% of 164.7 MiB
+2025-12-24T00:16:06.1620953Z |■■■■■■■■                                                                        |  10% of 164.7 MiB
+2025-12-24T00:16:06.3498588Z |■■■■■■■■■■■■■■■■                                                                |  20% of 164.7 MiB
+2025-12-24T00:16:06.5221392Z |■■■■■■■■■■■■■■■■■■■■■■■■                                                        |  30% of 164.7 MiB
+2025-12-24T00:16:06.6717993Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                                |  40% of 164.7 MiB
+2025-12-24T00:16:06.8251702Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                        |  50% of 164.7 MiB
+2025-12-24T00:16:06.9719121Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                |  60% of 164.7 MiB
+2025-12-24T00:16:07.1326961Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                        |  70% of 164.7 MiB
+2025-12-24T00:16:07.2948669Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                |  80% of 164.7 MiB
+2025-12-24T00:16:07.4274438Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■        |  90% of 164.7 MiB
+2025-12-24T00:16:07.6059210Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■| 100% of 164.7 MiB
+2025-12-24T00:16:09.9677969Z Chromium 143.0.7499.4 (playwright build v1200) downloaded to /home/runner/.cache/ms-playwright/chromium-1200
+2025-12-24T00:16:09.9681814Z Downloading FFMPEG playwright build v1011 from https://cdn.playwright.dev/dbazure/download/playwright/builds/ffmpeg/1011/ffmpeg-linux.zip
+2025-12-24T00:16:10.0638432Z (node:2362) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2025-12-24T00:16:10.0640180Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2025-12-24T00:16:10.2743098Z |                                                                                |   0% of 2.3 MiB
+2025-12-24T00:16:10.2932711Z |■■■■■■■■                                                                        |  10% of 2.3 MiB
+2025-12-24T00:16:10.3021709Z |■■■■■■■■■■■■■■■■                                                                |  20% of 2.3 MiB
+2025-12-24T00:16:10.3075841Z |■■■■■■■■■■■■■■■■■■■■■■■■                                                        |  30% of 2.3 MiB
+2025-12-24T00:16:10.3118790Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                                |  40% of 2.3 MiB
+2025-12-24T00:16:10.3144776Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                        |  50% of 2.3 MiB
+2025-12-24T00:16:10.3213481Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                |  60% of 2.3 MiB
+2025-12-24T00:16:10.3290200Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                        |  70% of 2.3 MiB
+2025-12-24T00:16:10.3312104Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                |  80% of 2.3 MiB
+2025-12-24T00:16:10.3333896Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■        |  90% of 2.3 MiB
+2025-12-24T00:16:10.3342940Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■| 100% of 2.3 MiB
+2025-12-24T00:16:10.3878594Z FFMPEG playwright build v1011 downloaded to /home/runner/.cache/ms-playwright/ffmpeg-1011
+2025-12-24T00:16:10.3882154Z Downloading Chromium Headless Shell 143.0.7499.4 (playwright build v1200) from https://cdn.playwright.dev/dbazure/download/playwright/builds/chromium/1200/chromium-headless-shell-linux.zip
+2025-12-24T00:16:10.4861371Z (node:2373) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2025-12-24T00:16:10.4863675Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2025-12-24T00:16:10.5831471Z |                                                                                |   0% of 109.7 MiB
+2025-12-24T00:16:10.7191086Z |■■■■■■■■                                                                        |  10% of 109.7 MiB
+2025-12-24T00:16:10.8174043Z |■■■■■■■■■■■■■■■■                                                                |  20% of 109.7 MiB
+2025-12-24T00:16:10.9337135Z |■■■■■■■■■■■■■■■■■■■■■■■■                                                        |  30% of 109.7 MiB
+2025-12-24T00:16:11.0331632Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                                |  40% of 109.7 MiB
+2025-12-24T00:16:11.1234604Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                        |  50% of 109.7 MiB
+2025-12-24T00:16:11.2208695Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                |  60% of 109.7 MiB
+2025-12-24T00:16:11.3283811Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                        |  70% of 109.7 MiB
+2025-12-24T00:16:11.4199869Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                |  80% of 109.7 MiB
+2025-12-24T00:16:11.5180394Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■        |  90% of 109.7 MiB
+2025-12-24T00:16:11.6117378Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■| 100% of 109.7 MiB
+2025-12-24T00:16:13.3668037Z Chromium Headless Shell 143.0.7499.4 (playwright build v1200) downloaded to /home/runner/.cache/ms-playwright/chromium_headless_shell-1200
+2025-12-24T00:16:13.3867618Z ##[group]Run source venv/bin/activate
+2025-12-24T00:16:13.3867938Z [36;1msource venv/bin/activate[0m
+2025-12-24T00:16:13.3868185Z [36;1m# 啟動 app.py 並在背景執行，測試完成後由腳本殺掉[0m
+2025-12-24T00:16:13.3868632Z [36;1mpython tests/run_e2e_ci.py[0m
+2025-12-24T00:16:13.3902382Z shell: /usr/bin/bash -e {0}
+2025-12-24T00:16:13.3902608Z env:
+2025-12-24T00:16:13.3902845Z   pythonLocation: /opt/hostedtoolcache/Python/3.10.19/x64
+2025-12-24T00:16:13.3903255Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.10.19/x64/lib/pkgconfig
+2025-12-24T00:16:13.3903642Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.10.19/x64
+2025-12-24T00:16:13.3903975Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.10.19/x64
+2025-12-24T00:16:13.3904420Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.10.19/x64
+2025-12-24T00:16:13.3904753Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.10.19/x64/lib
+2025-12-24T00:16:13.3905045Z   SIMULATION_MODE: true
+2025-12-24T00:16:13.3905232Z ##[endgroup]
+2025-12-24T00:16:14.4591451Z 🚀 Starting SmartStockLight in Headless Mode...
+2025-12-24T00:16:14.4592416Z TTS 初始化失敗 (將改用系統原生語音): libespeak.so.1: cannot open shared object file: No such file or directory
+2025-12-24T00:16:14.4593139Z StockMonitor 已啟動。
+2025-12-24T00:16:14.4593528Z [模擬模式] 點亮顏色: 黃色
+2025-12-24T00:16:14.4593993Z ✅ System is up and running. Press Ctrl+C to stop.
+2025-12-24T00:16:14.4594642Z  * Serving Flask app 'web_server'
+2025-12-24T00:16:14.4595009Z  * Debug mode: off
+2025-12-24T00:16:14.4607917Z [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+2025-12-24T00:16:14.4608823Z  * Running on all addresses (0.0.0.0)
+2025-12-24T00:16:14.4609271Z  * Running on http://127.0.0.1:5001
+2025-12-24T00:16:14.4609681Z  * Running on http://10.1.0.60:5001
+2025-12-24T00:16:14.4610133Z [33mPress CTRL+C to quit[0m
+2025-12-24T00:16:24.7585284Z 127.0.0.1 - - [24/Dec/2025 00:16:24] "POST /api/simulate_data HTTP/1.1" 200 -
+2025-12-24T00:16:24.8043268Z 127.0.0.1 - - [24/Dec/2025 00:16:24] "GET / HTTP/1.1" 200 -
+2025-12-24T00:16:24.8940862Z 127.0.0.1 - - [24/Dec/2025 00:16:24] "GET /api/market_status HTTP/1.1" 200 -
+2025-12-24T00:16:24.8947290Z 127.0.0.1 - - [24/Dec/2025 00:16:24] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:16:24.8956080Z 127.0.0.1 - - [24/Dec/2025 00:16:24] "GET /api/logs HTTP/1.1" 200 -
+2025-12-24T00:16:25.8935356Z 127.0.0.1 - - [24/Dec/2025 00:16:25] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:16:26.8938769Z 127.0.0.1 - - [24/Dec/2025 00:16:26] "GET /api/logs HTTP/1.1" 200 -
+2025-12-24T00:16:26.8945630Z 127.0.0.1 - - [24/Dec/2025 00:16:26] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:16:27.8936714Z 127.0.0.1 - - [24/Dec/2025 00:16:27] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:16:28.8938899Z 127.0.0.1 - - [24/Dec/2025 00:16:28] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:16:28.8944990Z 127.0.0.1 - - [24/Dec/2025 00:16:28] "GET /api/logs HTTP/1.1" 200 -
+2025-12-24T00:16:29.8935439Z 127.0.0.1 - - [24/Dec/2025 00:16:29] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:16:30.0791193Z 127.0.0.1 - - [24/Dec/2025 00:16:30] "GET / HTTP/1.1" 200 -
+2025-12-24T00:16:30.1381926Z 127.0.0.1 - - [24/Dec/2025 00:16:30] "GET /api/market_status HTTP/1.1" 200 -
+2025-12-24T00:16:30.1390301Z 127.0.0.1 - - [24/Dec/2025 00:16:30] "GET /api/logs HTTP/1.1" 200 -
+2025-12-24T00:16:30.1397600Z 127.0.0.1 - - [24/Dec/2025 00:16:30] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:16:31.1376952Z 127.0.0.1 - - [24/Dec/2025 00:16:31] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:16:32.1379085Z 127.0.0.1 - - [24/Dec/2025 00:16:32] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:16:32.1385853Z 127.0.0.1 - - [24/Dec/2025 00:16:32] "GET /api/logs HTTP/1.1" 200 -
+2025-12-24T00:16:33.1377257Z 127.0.0.1 - - [24/Dec/2025 00:16:33] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:16:34.1381134Z 127.0.0.1 - - [24/Dec/2025 00:16:34] "GET /api/logs HTTP/1.1" 200 -
+2025-12-24T00:16:34.1387222Z 127.0.0.1 - - [24/Dec/2025 00:16:34] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:16:35.1376256Z 127.0.0.1 - - [24/Dec/2025 00:16:35] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:16:36.1377843Z 127.0.0.1 - - [24/Dec/2025 00:16:36] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:16:36.1387293Z 127.0.0.1 - - [24/Dec/2025 00:16:36] "GET /api/logs HTTP/1.1" 200 -
+2025-12-24T00:16:37.1376099Z 127.0.0.1 - - [24/Dec/2025 00:16:37] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:16:38.1378724Z 127.0.0.1 - - [24/Dec/2025 00:16:38] "GET /api/logs HTTP/1.1" 200 -
+2025-12-24T00:16:38.1384532Z 127.0.0.1 - - [24/Dec/2025 00:16:38] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:16:39.1377267Z 127.0.0.1 - - [24/Dec/2025 00:16:39] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:16:40.1378856Z 127.0.0.1 - - [24/Dec/2025 00:16:40] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:16:40.1384327Z 127.0.0.1 - - [24/Dec/2025 00:16:40] "GET /api/logs HTTP/1.1" 200 -
+2025-12-24T00:16:41.1377358Z 127.0.0.1 - - [24/Dec/2025 00:16:41] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:16:42.1377640Z 127.0.0.1 - - [24/Dec/2025 00:16:42] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:16:42.1387325Z 127.0.0.1 - - [24/Dec/2025 00:16:42] "GET /api/logs HTTP/1.1" 200 -
+2025-12-24T00:16:43.1376102Z 127.0.0.1 - - [24/Dec/2025 00:16:43] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:16:44.1379407Z 127.0.0.1 - - [24/Dec/2025 00:16:44] "GET /api/logs HTTP/1.1" 200 -
+2025-12-24T00:16:44.1385677Z 127.0.0.1 - - [24/Dec/2025 00:16:44] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:16:45.1375664Z 127.0.0.1 - - [24/Dec/2025 00:16:45] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:16:46.1378196Z 127.0.0.1 - - [24/Dec/2025 00:16:46] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:16:46.1384441Z 127.0.0.1 - - [24/Dec/2025 00:16:46] "GET /api/logs HTTP/1.1" 200 -
+2025-12-24T00:16:47.1376341Z 127.0.0.1 - - [24/Dec/2025 00:16:47] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:16:48.1380150Z 127.0.0.1 - - [24/Dec/2025 00:16:48] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:16:48.1385756Z 127.0.0.1 - - [24/Dec/2025 00:16:48] "GET /api/logs HTTP/1.1" 200 -
+2025-12-24T00:16:49.1376899Z 127.0.0.1 - - [24/Dec/2025 00:16:49] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:16:50.1380055Z 127.0.0.1 - - [24/Dec/2025 00:16:50] "GET /api/logs HTTP/1.1" 200 -
+2025-12-24T00:16:50.1385751Z 127.0.0.1 - - [24/Dec/2025 00:16:50] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:16:51.1375103Z 127.0.0.1 - - [24/Dec/2025 00:16:51] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:16:52.1379068Z 127.0.0.1 - - [24/Dec/2025 00:16:52] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:16:52.1387238Z 127.0.0.1 - - [24/Dec/2025 00:16:52] "GET /api/logs HTTP/1.1" 200 -
+2025-12-24T00:16:53.1375940Z 127.0.0.1 - - [24/Dec/2025 00:16:53] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:16:54.1379125Z 127.0.0.1 - - [24/Dec/2025 00:16:54] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:16:54.1384486Z 127.0.0.1 - - [24/Dec/2025 00:16:54] "GET /api/logs HTTP/1.1" 200 -
+2025-12-24T00:16:55.1375501Z 127.0.0.1 - - [24/Dec/2025 00:16:55] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:16:56.1379323Z 127.0.0.1 - - [24/Dec/2025 00:16:56] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:16:56.1387446Z 127.0.0.1 - - [24/Dec/2025 00:16:56] "GET /api/logs HTTP/1.1" 200 -
+2025-12-24T00:16:57.1376306Z 127.0.0.1 - - [24/Dec/2025 00:16:57] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:16:58.1379109Z 127.0.0.1 - - [24/Dec/2025 00:16:58] "GET /api/logs HTTP/1.1" 200 -
+2025-12-24T00:16:58.1384716Z 127.0.0.1 - - [24/Dec/2025 00:16:58] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:16:59.1375362Z 127.0.0.1 - - [24/Dec/2025 00:16:59] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:17:00.1378487Z 127.0.0.1 - - [24/Dec/2025 00:17:00] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:17:00.1384681Z 127.0.0.1 - - [24/Dec/2025 00:17:00] "GET /api/logs HTTP/1.1" 200 -
+2025-12-24T00:17:00.4340751Z 127.0.0.1 - - [24/Dec/2025 00:17:00] "GET / HTTP/1.1" 200 -
+2025-12-24T00:17:00.4765052Z 127.0.0.1 - - [24/Dec/2025 00:17:00] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:17:00.4774888Z 127.0.0.1 - - [24/Dec/2025 00:17:00] "GET /api/market_status HTTP/1.1" 200 -
+2025-12-24T00:17:00.4776847Z 127.0.0.1 - - [24/Dec/2025 00:17:00] "GET /api/logs HTTP/1.1" 200 -
+2025-12-24T00:17:01.4758675Z 127.0.0.1 - - [24/Dec/2025 00:17:01] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:17:02.4760461Z 127.0.0.1 - - [24/Dec/2025 00:17:02] "GET /api/logs HTTP/1.1" 200 -
+2025-12-24T00:17:02.4766736Z 127.0.0.1 - - [24/Dec/2025 00:17:02] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:17:03.4758657Z 127.0.0.1 - - [24/Dec/2025 00:17:03] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:17:04.4761063Z 127.0.0.1 - - [24/Dec/2025 00:17:04] "GET /api/logs HTTP/1.1" 200 -
+2025-12-24T00:17:04.4767263Z 127.0.0.1 - - [24/Dec/2025 00:17:04] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:17:05.4757887Z 127.0.0.1 - - [24/Dec/2025 00:17:05] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:17:06.4761155Z 127.0.0.1 - - [24/Dec/2025 00:17:06] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:17:06.4765581Z 127.0.0.1 - - [24/Dec/2025 00:17:06] "GET /api/logs HTTP/1.1" 200 -
+2025-12-24T00:17:07.4758847Z 127.0.0.1 - - [24/Dec/2025 00:17:07] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:17:08.4760146Z 127.0.0.1 - - [24/Dec/2025 00:17:08] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:17:08.4766397Z 127.0.0.1 - - [24/Dec/2025 00:17:08] "GET /api/logs HTTP/1.1" 200 -
+2025-12-24T00:17:09.4758702Z 127.0.0.1 - - [24/Dec/2025 00:17:09] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:17:10.4760419Z 127.0.0.1 - - [24/Dec/2025 00:17:10] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:17:10.4766534Z 127.0.0.1 - - [24/Dec/2025 00:17:10] "GET /api/logs HTTP/1.1" 200 -
+2025-12-24T00:17:11.4758114Z 127.0.0.1 - - [24/Dec/2025 00:17:11] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:17:12.4761143Z 127.0.0.1 - - [24/Dec/2025 00:17:12] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:17:12.4766745Z 127.0.0.1 - - [24/Dec/2025 00:17:12] "GET /api/logs HTTP/1.1" 200 -
+2025-12-24T00:17:13.4759709Z 127.0.0.1 - - [24/Dec/2025 00:17:13] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:17:14.4761582Z 127.0.0.1 - - [24/Dec/2025 00:17:14] "GET /api/logs HTTP/1.1" 200 -
+2025-12-24T00:17:14.4767548Z 127.0.0.1 - - [24/Dec/2025 00:17:14] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:17:15.4758635Z 127.0.0.1 - - [24/Dec/2025 00:17:15] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:17:16.4761251Z 127.0.0.1 - - [24/Dec/2025 00:17:16] "GET /api/logs HTTP/1.1" 200 -
+2025-12-24T00:17:16.4766625Z 127.0.0.1 - - [24/Dec/2025 00:17:16] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:17:17.4759435Z 127.0.0.1 - - [24/Dec/2025 00:17:17] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:17:18.4760774Z 127.0.0.1 - - [24/Dec/2025 00:17:18] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:17:18.4766786Z 127.0.0.1 - - [24/Dec/2025 00:17:18] "GET /api/logs HTTP/1.1" 200 -
+2025-12-24T00:17:19.4759119Z 127.0.0.1 - - [24/Dec/2025 00:17:19] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:17:20.4761521Z 127.0.0.1 - - [24/Dec/2025 00:17:20] "GET /api/logs HTTP/1.1" 200 -
+2025-12-24T00:17:20.4767046Z 127.0.0.1 - - [24/Dec/2025 00:17:20] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:17:21.4758824Z 127.0.0.1 - - [24/Dec/2025 00:17:21] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:17:22.4762449Z 127.0.0.1 - - [24/Dec/2025 00:17:22] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:17:22.4767839Z 127.0.0.1 - - [24/Dec/2025 00:17:22] "GET /api/logs HTTP/1.1" 200 -
+2025-12-24T00:17:23.4759953Z 127.0.0.1 - - [24/Dec/2025 00:17:23] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:17:24.4762633Z 127.0.0.1 - - [24/Dec/2025 00:17:24] "GET /api/logs HTTP/1.1" 200 -
+2025-12-24T00:17:24.4768305Z 127.0.0.1 - - [24/Dec/2025 00:17:24] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:17:25.4759337Z 127.0.0.1 - - [24/Dec/2025 00:17:25] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:17:26.4763590Z 127.0.0.1 - - [24/Dec/2025 00:17:26] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:17:26.4768601Z 127.0.0.1 - - [24/Dec/2025 00:17:26] "GET /api/logs HTTP/1.1" 200 -
+2025-12-24T00:17:27.4758818Z 127.0.0.1 - - [24/Dec/2025 00:17:27] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:17:28.4763600Z 127.0.0.1 - - [24/Dec/2025 00:17:28] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:17:28.4769424Z 127.0.0.1 - - [24/Dec/2025 00:17:28] "GET /api/logs HTTP/1.1" 200 -
+2025-12-24T00:17:29.4758528Z 127.0.0.1 - - [24/Dec/2025 00:17:29] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:17:30.4762620Z 127.0.0.1 - - [24/Dec/2025 00:17:30] "GET /api/logs HTTP/1.1" 200 -
+2025-12-24T00:17:30.4770505Z 127.0.0.1 - - [24/Dec/2025 00:17:30] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:17:30.8057970Z 127.0.0.1 - - [24/Dec/2025 00:17:30] "GET / HTTP/1.1" 200 -
+2025-12-24T00:17:30.8495233Z 127.0.0.1 - - [24/Dec/2025 00:17:30] "GET /api/market_status HTTP/1.1" 200 -
+2025-12-24T00:17:30.8501152Z 127.0.0.1 - - [24/Dec/2025 00:17:30] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:17:30.8509868Z 127.0.0.1 - - [24/Dec/2025 00:17:30] "GET /api/logs HTTP/1.1" 200 -
+2025-12-24T00:17:30.9191880Z 127.0.0.1 - - [24/Dec/2025 00:17:30] "POST /api/simulate_data HTTP/1.1" 200 -
+2025-12-24T00:17:31.8494652Z 127.0.0.1 - - [24/Dec/2025 00:17:31] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:17:32.1234311Z 127.0.0.1 - - [24/Dec/2025 00:17:32] "POST /api/simulate_data HTTP/1.1" 200 -
+2025-12-24T00:17:32.8494873Z 127.0.0.1 - - [24/Dec/2025 00:17:32] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:17:32.8500201Z 127.0.0.1 - - [24/Dec/2025 00:17:32] "GET /api/logs HTTP/1.1" 200 -
+2025-12-24T00:17:33.3275019Z 127.0.0.1 - - [24/Dec/2025 00:17:33] "POST /api/simulate_data HTTP/1.1" 200 -
+2025-12-24T00:17:33.8491788Z 127.0.0.1 - - [24/Dec/2025 00:17:33] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:17:34.5316841Z 127.0.0.1 - - [24/Dec/2025 00:17:34] "POST /api/simulate_data HTTP/1.1" 200 -
+2025-12-24T00:17:34.8495387Z 127.0.0.1 - - [24/Dec/2025 00:17:34] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:17:34.8499888Z 127.0.0.1 - - [24/Dec/2025 00:17:34] "GET /api/logs HTTP/1.1" 200 -
+2025-12-24T00:17:35.7358250Z 127.0.0.1 - - [24/Dec/2025 00:17:35] "POST /api/simulate_data HTTP/1.1" 200 -
+2025-12-24T00:17:35.8491566Z 127.0.0.1 - - [24/Dec/2025 00:17:35] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:17:36.8495461Z 127.0.0.1 - - [24/Dec/2025 00:17:36] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:17:36.8500808Z 127.0.0.1 - - [24/Dec/2025 00:17:36] "GET /api/logs HTTP/1.1" 200 -
+2025-12-24T00:17:36.9401255Z 127.0.0.1 - - [24/Dec/2025 00:17:36] "POST /api/simulate_data HTTP/1.1" 200 -
+2025-12-24T00:17:37.8491570Z 127.0.0.1 - - [24/Dec/2025 00:17:37] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:17:38.1442046Z 127.0.0.1 - - [24/Dec/2025 00:17:38] "POST /api/simulate_data HTTP/1.1" 200 -
+2025-12-24T00:17:38.8493652Z 127.0.0.1 - - [24/Dec/2025 00:17:38] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:17:38.8501380Z 127.0.0.1 - - [24/Dec/2025 00:17:38] "GET /api/logs HTTP/1.1" 200 -
+2025-12-24T00:17:39.8531462Z 127.0.0.1 - - [24/Dec/2025 00:17:39] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:17:40.8494013Z 127.0.0.1 - - [24/Dec/2025 00:17:40] "GET /api/logs HTTP/1.1" 200 -
+2025-12-24T00:17:40.8499713Z 127.0.0.1 - - [24/Dec/2025 00:17:40] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:17:41.8493229Z 127.0.0.1 - - [24/Dec/2025 00:17:41] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:17:42.8496325Z 127.0.0.1 - - [24/Dec/2025 00:17:42] "GET /api/logs HTTP/1.1" 200 -
+2025-12-24T00:17:42.8502053Z 127.0.0.1 - - [24/Dec/2025 00:17:42] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:17:43.8492447Z 127.0.0.1 - - [24/Dec/2025 00:17:43] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:17:44.8496731Z 127.0.0.1 - - [24/Dec/2025 00:17:44] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:17:44.8503363Z 127.0.0.1 - - [24/Dec/2025 00:17:44] "GET /api/logs HTTP/1.1" 200 -
+2025-12-24T00:17:45.8494818Z 127.0.0.1 - - [24/Dec/2025 00:17:45] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:17:46.8496030Z 127.0.0.1 - - [24/Dec/2025 00:17:46] "GET /api/logs HTTP/1.1" 200 -
+2025-12-24T00:17:46.8501566Z 127.0.0.1 - - [24/Dec/2025 00:17:46] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:17:47.8492698Z 127.0.0.1 - - [24/Dec/2025 00:17:47] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:17:48.8496339Z 127.0.0.1 - - [24/Dec/2025 00:17:48] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:17:48.8501742Z 127.0.0.1 - - [24/Dec/2025 00:17:48] "GET /api/logs HTTP/1.1" 200 -
+2025-12-24T00:17:49.8492081Z 127.0.0.1 - - [24/Dec/2025 00:17:49] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:17:50.8496325Z 127.0.0.1 - - [24/Dec/2025 00:17:50] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:17:50.8501840Z 127.0.0.1 - - [24/Dec/2025 00:17:50] "GET /api/logs HTTP/1.1" 200 -
+2025-12-24T00:17:51.8493634Z 127.0.0.1 - - [24/Dec/2025 00:17:51] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:17:52.8495214Z 127.0.0.1 - - [24/Dec/2025 00:17:52] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:17:52.8502142Z 127.0.0.1 - - [24/Dec/2025 00:17:52] "GET /api/logs HTTP/1.1" 200 -
+2025-12-24T00:17:53.8494436Z 127.0.0.1 - - [24/Dec/2025 00:17:53] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:17:54.3887686Z 127.0.0.1 - - [24/Dec/2025 00:17:54] "GET / HTTP/1.1" 200 -
+2025-12-24T00:17:54.4309776Z 127.0.0.1 - - [24/Dec/2025 00:17:54] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:17:54.4315433Z 127.0.0.1 - - [24/Dec/2025 00:17:54] "GET /api/market_status HTTP/1.1" 200 -
+2025-12-24T00:17:54.4325853Z 127.0.0.1 - - [24/Dec/2025 00:17:54] "GET /api/logs HTTP/1.1" 200 -
+2025-12-24T00:17:55.4303055Z 127.0.0.1 - - [24/Dec/2025 00:17:55] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:17:56.4305978Z 127.0.0.1 - - [24/Dec/2025 00:17:56] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:17:56.4312841Z 127.0.0.1 - - [24/Dec/2025 00:17:56] "GET /api/logs HTTP/1.1" 200 -
+2025-12-24T00:17:57.4304412Z 127.0.0.1 - - [24/Dec/2025 00:17:57] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:17:58.4307087Z 127.0.0.1 - - [24/Dec/2025 00:17:58] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:17:58.4311981Z 127.0.0.1 - - [24/Dec/2025 00:17:58] "GET /api/logs HTTP/1.1" 200 -
+2025-12-24T00:17:59.4302891Z 127.0.0.1 - - [24/Dec/2025 00:17:59] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:18:00.4306870Z 127.0.0.1 - - [24/Dec/2025 00:18:00] "GET /api/logs HTTP/1.1" 200 -
+2025-12-24T00:18:00.4312803Z 127.0.0.1 - - [24/Dec/2025 00:18:00] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:18:01.4305316Z 127.0.0.1 - - [24/Dec/2025 00:18:01] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:18:02.4305539Z 127.0.0.1 - - [24/Dec/2025 00:18:02] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:18:02.4310872Z 127.0.0.1 - - [24/Dec/2025 00:18:02] "GET /api/logs HTTP/1.1" 200 -
+2025-12-24T00:18:03.4301986Z 127.0.0.1 - - [24/Dec/2025 00:18:03] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:18:04.4307540Z 127.0.0.1 - - [24/Dec/2025 00:18:04] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:18:04.4312846Z 127.0.0.1 - - [24/Dec/2025 00:18:04] "GET /api/logs HTTP/1.1" 200 -
+2025-12-24T00:18:05.4304531Z 127.0.0.1 - - [24/Dec/2025 00:18:05] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:18:06.4305188Z 127.0.0.1 - - [24/Dec/2025 00:18:06] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:18:06.4310679Z 127.0.0.1 - - [24/Dec/2025 00:18:06] "GET /api/logs HTTP/1.1" 200 -
+2025-12-24T00:18:07.4301620Z 127.0.0.1 - - [24/Dec/2025 00:18:07] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:18:08.4307398Z 127.0.0.1 - - [24/Dec/2025 00:18:08] "GET /api/logs HTTP/1.1" 200 -
+2025-12-24T00:18:08.4312979Z 127.0.0.1 - - [24/Dec/2025 00:18:08] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:18:08.4557854Z [00:16:15] 無法獲取 BTC-USD 股價 (市場休市或 API 異常)
+2025-12-24T00:18:08.4560522Z Binance WS Error: Handshake status 451 None -+-+- {'server': 'awselb/2.0', 'date': 'Wed, 24 Dec 2025 00:16:15 GMT', 'content-length': '224', 'connection': 'keep-alive', 'content-type': 'application/json'} -+-+- b'{\n  "code": 0,\n  "msg": "Service unavailable from a restricted location according to \'b. Eligibility\' in https://www.binance.com/en/terms. Please contact customer service if you believe you received this message in error."\n}'
+2025-12-24T00:18:08.4563009Z Binance WS Closed
+2025-12-24T00:18:08.4563442Z [00:16:25] 無法獲取 BTC-USD 股價 (市場休市或 API 異常)
+2025-12-24T00:18:08.4563752Z [00:16:35] 無法獲取 BTC-USD 股價 (市場休市或 API 異常)
+2025-12-24T00:18:08.4564039Z [00:16:45] 無法獲取 BTC-USD 股價 (市場休市或 API 異常)
+2025-12-24T00:18:08.4564656Z [00:16:55] 無法獲取 BTC-USD 股價 (市場休市或 API 異常)
+2025-12-24T00:18:08.4564979Z [00:17:05] 無法獲取 BTC-USD 股價 (市場休市或 API 異常)
+2025-12-24T00:18:08.4565470Z [00:17:15] 無法獲取 BTC-USD 股價 (市場休市或 API 異常)
+2025-12-24T00:18:08.4565925Z [00:17:25] 無法獲取 BTC-USD 股價 (市場休市或 API 異常)
+2025-12-24T00:18:08.4566323Z [00:17:35] 系統：正在使用模擬數據測試現價 100.00
+2025-12-24T00:18:08.4566619Z [00:17:35] 警報模式：設定為「等待漲破」 88000.0 (現價 100.00)
+2025-12-24T00:18:08.4566881Z [模擬模式] 點亮顏色: 黃色
+2025-12-24T00:18:08.4567146Z [00:17:35] BTC-USD: 100.00 (目標 88000.0 | 監控中)
+2025-12-24T00:18:08.4567417Z [00:17:36] 系統：正在使用模擬數據測試現價 100.00
+2025-12-24T00:18:08.4567645Z [模擬模式] 點亮顏色: 黃色
+2025-12-24T00:18:08.4567863Z [00:17:36] BTC-USD: 100.00 (目標 88000.0 | 監控中)
+2025-12-24T00:18:08.4568149Z [00:17:37] 系統：正在使用模擬數據測試現價 100.10
+2025-12-24T00:18:08.4568368Z [模擬模式] 點亮顏色: 黃色
+2025-12-24T00:18:08.4568608Z [00:17:37] BTC-USD: 100.10 (目標 88000.0 | 監控中)
+2025-12-24T00:18:08.4568880Z [00:17:38] 系統：正在使用模擬數據測試現價 90.00
+2025-12-24T00:18:08.4569098Z [模擬模式] 點亮顏色: 黃色
+2025-12-24T00:18:08.4569319Z [00:17:38] BTC-USD: 90.00 (目標 88000.0 | 監控中)
+2025-12-24T00:18:08.4569584Z [00:17:39] 系統：正在使用模擬數據測試現價 90.00
+2025-12-24T00:18:08.4569899Z DEBUG FlashCrash: Price=90.0, Mean=96.02, Std=5.50, Z=-1.10, Drop=10.0%
+2025-12-24T00:18:08.4570238Z [模擬模式] 點亮顏色: 黃色
+2025-12-24T00:18:08.4570463Z [00:17:39] BTC-USD: 90.00 (目標 88000.0 | 監控中)
+2025-12-24T00:18:08.4570728Z [00:17:40] 系統：正在使用模擬數據測試現價 90.00
+2025-12-24T00:18:08.4571036Z DEBUG FlashCrash: Price=90.0, Mean=95.02, Std=5.50, Z=-0.91, Drop=10.0%
+2025-12-24T00:18:08.4571375Z [模擬模式] 點亮顏色: 黃色
+2025-12-24T00:18:08.4571596Z [00:17:40] BTC-USD: 90.00 (目標 88000.0 | 監控中)
+2025-12-24T00:18:08.4571869Z [00:17:41] 系統：正在使用模擬數據測試現價 90.00
+2025-12-24T00:18:08.4572208Z DEBUG FlashCrash: Price=90.0, Mean=94.30, Std=5.36, Z=-0.80, Drop=10.0%
+2025-12-24T00:18:08.4572543Z [模擬模式] 點亮顏色: 黃色
+2025-12-24T00:18:08.4572766Z [00:17:41] BTC-USD: 90.00 (目標 88000.0 | 監控中)
+2025-12-24T00:18:08.4573034Z [00:17:42] 系統：正在使用模擬數據測試現價 90.00
+2025-12-24T00:18:08.4573325Z DEBUG FlashCrash: Price=90.0, Mean=93.76, Std=5.19, Z=-0.72, Drop=10.0%
+2025-12-24T00:18:08.4573662Z [模擬模式] 點亮顏色: 黃色
+2025-12-24T00:18:08.4573884Z [00:17:42] BTC-USD: 90.00 (目標 88000.0 | 監控中)
+2025-12-24T00:18:08.4574359Z [00:17:43] 系統：正在使用模擬數據測試現價 90.00
+2025-12-24T00:18:08.4574644Z DEBUG FlashCrash: Price=90.0, Mean=93.34, Std=5.02, Z=-0.67, Drop=10.0%
+2025-12-24T00:18:08.4574971Z [模擬模式] 點亮顏色: 黃色
+2025-12-24T00:18:08.4575184Z [00:17:43] BTC-USD: 90.00 (目標 88000.0 | 監控中)
+2025-12-24T00:18:08.4575463Z [00:17:44] 系統：正在使用模擬數據測試現價 90.00
+2025-12-24T00:18:08.4575737Z DEBUG FlashCrash: Price=90.0, Mean=93.01, Std=4.85, Z=-0.62, Drop=10.0%
+2025-12-24T00:18:08.4576055Z [模擬模式] 點亮顏色: 黃色
+2025-12-24T00:18:08.4576266Z [00:17:44] BTC-USD: 90.00 (目標 88000.0 | 監控中)
+2025-12-24T00:18:08.4576541Z [00:17:45] 系統：正在使用模擬數據測試現價 90.00
+2025-12-24T00:18:08.4576818Z DEBUG FlashCrash: Price=90.0, Mean=92.74, Std=4.69, Z=-0.58, Drop=10.0%
+2025-12-24T00:18:08.4577136Z [模擬模式] 點亮顏色: 黃色
+2025-12-24T00:18:08.4577349Z [00:17:45] BTC-USD: 90.00 (目標 88000.0 | 監控中)
+2025-12-24T00:18:08.4577610Z [00:17:46] 系統：正在使用模擬數據測試現價 90.00
+2025-12-24T00:18:08.4577889Z DEBUG FlashCrash: Price=90.0, Mean=92.51, Std=4.54, Z=-0.55, Drop=10.0%
+2025-12-24T00:18:08.4578203Z [模擬模式] 點亮顏色: 黃色
+2025-12-24T00:18:08.4578421Z [00:17:46] BTC-USD: 90.00 (目標 88000.0 | 監控中)
+2025-12-24T00:18:08.4578676Z [00:17:48] 系統：正在使用模擬數據測試現價 90.00
+2025-12-24T00:18:08.4578957Z DEBUG FlashCrash: Price=90.0, Mean=92.32, Std=4.40, Z=-0.53, Drop=10.0%
+2025-12-24T00:18:08.4579271Z [模擬模式] 點亮顏色: 黃色
+2025-12-24T00:18:08.4579662Z [00:17:48] BTC-USD: 90.00 (目標 88000.0 | 監控中)
+2025-12-24T00:18:08.4579934Z [00:17:49] 系統：正在使用模擬數據測試現價 90.00
+2025-12-24T00:18:08.4580209Z DEBUG FlashCrash: Price=90.0, Mean=92.15, Std=4.27, Z=-0.50, Drop=10.0%
+2025-12-24T00:18:08.4580646Z [模擬模式] 點亮顏色: 黃色
+2025-12-24T00:18:08.4580864Z [00:17:49] BTC-USD: 90.00 (目標 88000.0 | 監控中)
+2025-12-24T00:18:08.4581148Z [00:17:50] 系統：正在使用模擬數據測試現價 90.00
+2025-12-24T00:18:08.4581506Z DEBUG FlashCrash: Price=90.0, Mean=92.01, Std=4.15, Z=-0.48, Drop=10.0%
+2025-12-24T00:18:08.4581824Z [模擬模式] 點亮顏色: 黃色
+2025-12-24T00:18:08.4582045Z [00:17:50] BTC-USD: 90.00 (目標 88000.0 | 監控中)
+2025-12-24T00:18:08.4582302Z [00:17:51] 系統：正在使用模擬數據測試現價 90.00
+2025-12-24T00:18:08.4582581Z DEBUG FlashCrash: Price=90.0, Mean=91.88, Std=4.04, Z=-0.47, Drop=10.0%
+2025-12-24T00:18:08.4582899Z [模擬模式] 點亮顏色: 黃色
+2025-12-24T00:18:08.4583118Z [00:17:51] BTC-USD: 90.00 (目標 88000.0 | 監控中)
+2025-12-24T00:18:08.4583373Z [00:17:52] 系統：正在使用模擬數據測試現價 90.00
+2025-12-24T00:18:08.4583661Z DEBUG FlashCrash: Price=90.0, Mean=91.77, Std=3.94, Z=-0.45, Drop=10.0%
+2025-12-24T00:18:08.4583988Z [模擬模式] 點亮顏色: 黃色
+2025-12-24T00:18:08.4584423Z [00:17:52] BTC-USD: 90.00 (目標 88000.0 | 監控中)
+2025-12-24T00:18:08.4584691Z [00:17:53] 系統：正在使用模擬數據測試現價 90.00
+2025-12-24T00:18:08.4584977Z DEBUG FlashCrash: Price=90.0, Mean=91.67, Std=3.85, Z=-0.43, Drop=10.0%
+2025-12-24T00:18:08.4585296Z [模擬模式] 點亮顏色: 黃色
+2025-12-24T00:18:08.4585589Z [00:17:53] BTC-USD: 90.00 (目標 88000.0 | 監控中)
+2025-12-24T00:18:08.4585859Z [00:17:54] 系統：正在使用模擬數據測試現價 90.00
+2025-12-24T00:18:08.4586132Z DEBUG FlashCrash: Price=90.0, Mean=91.58, Std=3.76, Z=-0.42, Drop=10.0%
+2025-12-24T00:18:08.4586451Z [模擬模式] 點亮顏色: 黃色
+2025-12-24T00:18:08.4586667Z [00:17:54] BTC-USD: 90.00 (目標 88000.0 | 監控中)
+2025-12-24T00:18:08.4586921Z [00:17:55] 系統：正在使用模擬數據測試現價 90.00
+2025-12-24T00:18:08.4587196Z DEBUG FlashCrash: Price=90.0, Mean=91.50, Std=3.68, Z=-0.41, Drop=10.0%
+2025-12-24T00:18:08.4587515Z [模擬模式] 點亮顏色: 黃色
+2025-12-24T00:18:08.4587734Z [00:17:55] BTC-USD: 90.00 (目標 88000.0 | 監控中)
+2025-12-24T00:18:08.4588001Z [00:17:56] 系統：正在使用模擬數據測試現價 90.00
+2025-12-24T00:18:08.4588279Z DEBUG FlashCrash: Price=90.0, Mean=91.43, Std=3.60, Z=-0.40, Drop=10.0%
+2025-12-24T00:18:08.4588593Z [模擬模式] 點亮顏色: 黃色
+2025-12-24T00:18:08.4588810Z [00:17:56] BTC-USD: 90.00 (目標 88000.0 | 監控中)
+2025-12-24T00:18:08.4589089Z [00:17:57] 系統：正在使用模擬數據測試現價 90.00
+2025-12-24T00:18:08.4589369Z DEBUG FlashCrash: Price=90.0, Mean=91.37, Std=3.52, Z=-0.39, Drop=10.0%
+2025-12-24T00:18:08.4589689Z [模擬模式] 點亮顏色: 黃色
+2025-12-24T00:18:08.4589903Z [00:17:57] BTC-USD: 90.00 (目標 88000.0 | 監控中)
+2025-12-24T00:18:08.4590163Z [00:17:58] 系統：正在使用模擬數據測試現價 90.00
+2025-12-24T00:18:08.4590441Z DEBUG FlashCrash: Price=90.0, Mean=91.31, Std=3.46, Z=-0.38, Drop=10.0%
+2025-12-24T00:18:08.4590767Z [模擬模式] 點亮顏色: 黃色
+2025-12-24T00:18:08.4590981Z [00:17:58] BTC-USD: 90.00 (目標 88000.0 | 監控中)
+2025-12-24T00:18:08.4591246Z [00:17:59] 系統：正在使用模擬數據測試現價 90.00
+2025-12-24T00:18:08.4591526Z DEBUG FlashCrash: Price=90.0, Mean=91.25, Std=3.39, Z=-0.37, Drop=10.0%
+2025-12-24T00:18:08.4591986Z [模擬模式] 點亮顏色: 黃色
+2025-12-24T00:18:08.4592217Z [00:17:59] BTC-USD: 90.00 (目標 88000.0 | 監控中)
+2025-12-24T00:18:08.4592475Z [00:18:00] 系統：正在使用模擬數據測試現價 90.00
+2025-12-24T00:18:08.4592755Z DEBUG FlashCrash: Price=90.0, Mean=91.20, Std=3.33, Z=-0.36, Drop=10.0%
+2025-12-24T00:18:08.4593195Z [模擬模式] 點亮顏色: 黃色
+2025-12-24T00:18:08.4593413Z [00:18:00] BTC-USD: 90.00 (目標 88000.0 | 監控中)
+2025-12-24T00:18:08.4593671Z [00:18:01] 系統：正在使用模擬數據測試現價 90.00
+2025-12-24T00:18:08.4593946Z DEBUG FlashCrash: Price=90.0, Mean=91.16, Std=3.27, Z=-0.35, Drop=10.0%
+2025-12-24T00:18:08.4594449Z [模擬模式] 點亮顏色: 黃色
+2025-12-24T00:18:08.4594664Z [00:18:01] BTC-USD: 90.00 (目標 88000.0 | 監控中)
+2025-12-24T00:18:08.4594928Z [00:18:02] 系統：正在使用模擬數據測試現價 90.00
+2025-12-24T00:18:08.4595199Z DEBUG FlashCrash: Price=90.0, Mean=91.11, Std=3.21, Z=-0.35, Drop=10.0%
+2025-12-24T00:18:08.4595521Z [模擬模式] 點亮顏色: 黃色
+2025-12-24T00:18:08.4595732Z [00:18:02] BTC-USD: 90.00 (目標 88000.0 | 監控中)
+2025-12-24T00:18:08.4595992Z [00:18:03] 系統：正在使用模擬數據測試現價 90.00
+2025-12-24T00:18:08.4596277Z DEBUG FlashCrash: Price=90.0, Mean=91.08, Std=3.16, Z=-0.34, Drop=10.0%
+2025-12-24T00:18:08.4596607Z [模擬模式] 點亮顏色: 黃色
+2025-12-24T00:18:08.4596828Z [00:18:03] BTC-USD: 90.00 (目標 88000.0 | 監控中)
+2025-12-24T00:18:08.4597086Z [00:18:04] 系統：正在使用模擬數據測試現價 90.00
+2025-12-24T00:18:08.4597374Z DEBUG FlashCrash: Price=90.0, Mean=91.04, Std=3.11, Z=-0.33, Drop=10.0%
+2025-12-24T00:18:08.4597688Z [模擬模式] 點亮顏色: 黃色
+2025-12-24T00:18:08.4597904Z [00:18:04] BTC-USD: 90.00 (目標 88000.0 | 監控中)
+2025-12-24T00:18:08.4598162Z [00:18:05] 系統：正在使用模擬數據測試現價 90.00
+2025-12-24T00:18:08.4598439Z DEBUG FlashCrash: Price=90.0, Mean=91.00, Std=3.06, Z=-0.33, Drop=10.0%
+2025-12-24T00:18:08.4598789Z [模擬模式] 點亮顏色: 黃色
+2025-12-24T00:18:08.4599005Z [00:18:05] BTC-USD: 90.00 (目標 88000.0 | 監控中)
+2025-12-24T00:18:08.4599265Z [00:18:06] 系統：正在使用模擬數據測試現價 90.00
+2025-12-24T00:18:08.4599540Z DEBUG FlashCrash: Price=90.0, Mean=90.97, Std=3.02, Z=-0.32, Drop=10.0%
+2025-12-24T00:18:08.4599858Z [模擬模式] 點亮顏色: 黃色
+2025-12-24T00:18:08.4600082Z [00:18:06] BTC-USD: 90.00 (目標 88000.0 | 監控中)
+2025-12-24T00:18:08.4600344Z [00:18:07] 系統：正在使用模擬數據測試現價 90.00
+2025-12-24T00:18:08.4600629Z DEBUG FlashCrash: Price=90.0, Mean=90.94, Std=2.97, Z=-0.32, Drop=10.0%
+2025-12-24T00:18:08.4600957Z [模擬模式] 點亮顏色: 黃色
+2025-12-24T00:18:08.4601187Z [00:18:07] BTC-USD: 90.00 (目標 88000.0 | 監控中)
+2025-12-24T00:18:08.4601459Z [00:18:08] 系統：正在使用模擬數據測試現價 90.00
+2025-12-24T00:18:08.4601749Z DEBUG FlashCrash: Price=90.0, Mean=90.91, Std=2.93, Z=-0.31, Drop=10.0%
+2025-12-24T00:18:09.4303479Z 127.0.0.1 - - [24/Dec/2025 00:18:09] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:18:10.4310175Z 127.0.0.1 - - [24/Dec/2025 00:18:10] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:18:10.4317194Z 127.0.0.1 - - [24/Dec/2025 00:18:10] "GET /api/logs HTTP/1.1" 200 -
+2025-12-24T00:18:11.4303728Z 127.0.0.1 - - [24/Dec/2025 00:18:11] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:18:12.4307931Z 127.0.0.1 - - [24/Dec/2025 00:18:12] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:18:12.4315364Z 127.0.0.1 - - [24/Dec/2025 00:18:12] "GET /api/logs HTTP/1.1" 200 -
+2025-12-24T00:18:13.4303865Z 127.0.0.1 - - [24/Dec/2025 00:18:13] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:18:14.4309515Z 127.0.0.1 - - [24/Dec/2025 00:18:14] "GET /api/logs HTTP/1.1" 200 -
+2025-12-24T00:18:14.4314991Z 127.0.0.1 - - [24/Dec/2025 00:18:14] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:18:15.4304453Z 127.0.0.1 - - [24/Dec/2025 00:18:15] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:18:16.4308008Z 127.0.0.1 - - [24/Dec/2025 00:18:16] "GET /api/logs HTTP/1.1" 200 -
+2025-12-24T00:18:16.4314659Z 127.0.0.1 - - [24/Dec/2025 00:18:16] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:18:17.4305740Z 127.0.0.1 - - [24/Dec/2025 00:18:17] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:18:18.4306671Z 127.0.0.1 - - [24/Dec/2025 00:18:18] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:18:18.4312759Z 127.0.0.1 - - [24/Dec/2025 00:18:18] "GET /api/logs HTTP/1.1" 200 -
+2025-12-24T00:18:19.4303623Z 127.0.0.1 - - [24/Dec/2025 00:18:19] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:18:20.4307024Z 127.0.0.1 - - [24/Dec/2025 00:18:20] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:18:20.4312838Z 127.0.0.1 - - [24/Dec/2025 00:18:20] "GET /api/logs HTTP/1.1" 200 -
+2025-12-24T00:18:21.4305352Z 127.0.0.1 - - [24/Dec/2025 00:18:21] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:18:22.4307307Z 127.0.0.1 - - [24/Dec/2025 00:18:22] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:18:22.4312754Z 127.0.0.1 - - [24/Dec/2025 00:18:22] "GET /api/logs HTTP/1.1" 200 -
+2025-12-24T00:18:23.4305569Z 127.0.0.1 - - [24/Dec/2025 00:18:23] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:18:24.4306924Z 127.0.0.1 - - [24/Dec/2025 00:18:24] "GET /api/market_data HTTP/1.1" 200 -
+2025-12-24T00:18:24.4311952Z 127.0.0.1 - - [24/Dec/2025 00:18:24] "GET /api/logs HTTP/1.1" 200 -
+2025-12-24T00:18:24.7236446Z 127.0.0.1 - - [24/Dec/2025 00:18:24] "POST /api/simulate_data HTTP/1.1" 200 -
+2025-12-24T00:18:24.8247303Z 🚀 正在啟動伺服器進行端到端測試...
+2025-12-24T00:18:24.8248421Z 🧪 正在執行 Playwright UI 測試...
+2025-12-24T00:18:24.8248915Z ============================= test session starts ==============================
+2025-12-24T00:18:24.8249478Z platform linux -- Python 3.10.19, pytest-9.0.2, pluggy-1.6.0
+2025-12-24T00:18:24.8250099Z rootdir: /home/runner/work/Smart_Stock_Light/Smart_Stock_Light
+2025-12-24T00:18:24.8250619Z configfile: pyproject.toml
+2025-12-24T00:18:24.8251060Z plugins: base-url-2.1.0, playwright-0.7.2, mock-3.15.1
+2025-12-24T00:18:24.8251500Z collected 5 items
+2025-12-24T00:18:24.8251680Z 
+2025-12-24T00:18:24.8251918Z tests/test_ui.py FFFFF                                                   [100%]
+2025-12-24T00:18:24.8252287Z 
+2025-12-24T00:18:24.8252457Z =================================== FAILURES ===================================
+2025-12-24T00:18:24.8253017Z ____________________ test_ui_elements_visibility[chromium] _____________________
+2025-12-24T00:18:24.8253420Z 
+2025-12-24T00:18:24.8253632Z page = <Page url='http://localhost:5001/'>
+2025-12-24T00:18:24.8253952Z 
+2025-12-24T00:18:24.8254306Z     def test_ui_elements_visibility(page: Page):
+2025-12-24T00:18:24.8254848Z         """測試網頁核心元素是否正常顯示"""
+2025-12-24T00:18:24.8255181Z         page.goto(BASE_URL)
+2025-12-24T00:18:24.8255665Z >       expect(page.locator("text=监控設定")).to_be_visible()
+2025-12-24T00:18:24.8256164Z E       AssertionError: Locator expected to be visible
+2025-12-24T00:18:24.8256587Z E       Actual value: None
+2025-12-24T00:18:24.8256934Z E       Error: element(s) not found 
+2025-12-24T00:18:24.8257282Z E       Call log:
+2025-12-24T00:18:24.8257623Z E         - Expect "to_be_visible" with timeout 5000ms
+2025-12-24T00:18:24.8258149Z E         - waiting for locator("text=监控設定")
+2025-12-24T00:18:24.8258418Z 
+2025-12-24T00:18:24.8258553Z tests/test_ui.py:21: AssertionError
+2025-12-24T00:18:24.8259062Z _____________________ test_buttons_clickability[chromium] ______________________
+2025-12-24T00:18:24.8259466Z 
+2025-12-24T00:18:24.8259631Z page = <Page url='http://localhost:5001/'>
+2025-12-24T00:18:24.8260341Z 
+2025-12-24T00:18:24.8260524Z     def test_buttons_clickability(page: Page):
+2025-12-24T00:18:24.8261054Z         """測試各項功能按鈕是否可點擊並有回應 (Toast)"""
+2025-12-24T00:18:24.8261421Z         page.goto(BASE_URL)
+2025-12-24T00:18:24.8261919Z     
+2025-12-24T00:18:24.8262228Z         # 測試「全功能演示」
+2025-12-24T00:18:24.8262691Z >       page.click("text=全功能演示")
+2025-12-24T00:18:24.8285930Z 
+2025-12-24T00:18:24.8286091Z tests/test_ui.py:31: 
+2025-12-24T00:18:24.8286505Z _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+2025-12-24T00:18:24.8287234Z venv/lib/python3.10/site-packages/playwright/sync_api/_generated.py:9958: in click
+2025-12-24T00:18:24.8287877Z     self._sync(
+2025-12-24T00:18:24.8288345Z venv/lib/python3.10/site-packages/playwright/_impl/_page.py:854: in click
+2025-12-24T00:18:24.8289041Z     return await self._main_frame._click(**locals_to_params(locals()))
+2025-12-24T00:18:24.8289756Z venv/lib/python3.10/site-packages/playwright/_impl/_frame.py:566: in _click
+2025-12-24T00:18:24.8290531Z     await self._channel.send("click", self._timeout, locals_to_params(locals()))
+2025-12-24T00:18:24.8291310Z venv/lib/python3.10/site-packages/playwright/_impl/_connection.py:69: in send
+2025-12-24T00:18:24.8291951Z     return await self._connection.wrap_api_call(
+2025-12-24T00:18:24.8292435Z _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+2025-12-24T00:18:24.8292761Z 
+2025-12-24T00:18:24.8293076Z self = <playwright._impl._connection.Connection object at 0x7f8c742137c0>
+2025-12-24T00:18:24.8293765Z cb = <function Channel.send.<locals>.<lambda> at 0x7f8c72f48430>
+2025-12-24T00:18:24.8294442Z is_internal = False, title = None
+2025-12-24T00:18:24.8294693Z 
+2025-12-24T00:18:24.8294822Z     async def wrap_api_call(
+2025-12-24T00:18:24.8295321Z         self, cb: Callable[[], Any], is_internal: bool = False, title: str = None
+2025-12-24T00:18:24.8295843Z     ) -> Any:
+2025-12-24T00:18:24.8296122Z         if self._api_zone.get():
+2025-12-24T00:18:24.8296472Z             return await cb()
+2025-12-24T00:18:24.8296846Z         task = asyncio.current_task(self._loop)
+2025-12-24T00:18:24.8297297Z         st: List[inspect.FrameInfo] = getattr(
+2025-12-24T00:18:24.8297685Z             task, "__pw_stack__", None
+2025-12-24T00:18:24.8298058Z         ) or inspect.stack(0)
+2025-12-24T00:18:24.8298375Z     
+2025-12-24T00:18:24.8298812Z         parsed_st = _extract_stack_trace_information_from_stack(st, is_internal, title)
+2025-12-24T00:18:24.8299386Z         self._api_zone.set(parsed_st)
+2025-12-24T00:18:24.8299735Z         try:
+2025-12-24T00:18:24.8299995Z             return await cb()
+2025-12-24T00:18:24.8300329Z         except Exception as error:
+2025-12-24T00:18:24.8300843Z >           raise rewrite_error(error, f"{parsed_st['apiName']}: {error}") from None
+2025-12-24T00:18:24.8301621Z E           playwright._impl._errors.TimeoutError: Page.click: Timeout 30000ms exceeded.
+2025-12-24T00:18:24.8302215Z E           Call log:
+2025-12-24T00:18:24.8302689Z E             - waiting for locator("text=全功能演示")
+2025-12-24T00:18:24.8302984Z 
+2025-12-24T00:18:24.8303370Z venv/lib/python3.10/site-packages/playwright/_impl/_connection.py:559: TimeoutError
+2025-12-24T00:18:24.8304294Z ______________________ test_target_price_alert[chromium] _______________________
+2025-12-24T00:18:24.8304749Z 
+2025-12-24T00:18:24.8304927Z page = <Page url='http://localhost:5001/'>
+2025-12-24T00:18:24.8305232Z 
+2025-12-24T00:18:24.8305401Z     def test_target_price_alert(page: Page):
+2025-12-24T00:18:24.8305941Z         """測試到達目標價格時，日誌是否出現警報 (利用模擬數據)"""
+2025-12-24T00:18:24.8306322Z         page.goto(BASE_URL)
+2025-12-24T00:18:24.8306632Z     
+2025-12-24T00:18:24.8306937Z         # 設定目標價為 500
+2025-12-24T00:18:24.8307248Z         page.fill("#symbol", "2330.TW")
+2025-12-24T00:18:24.8307647Z         page.fill("#target", "500")
+2025-12-24T00:18:24.8308109Z >       page.click("text=更新智慧監控")
+2025-12-24T00:18:24.8308358Z 
+2025-12-24T00:18:24.8308480Z tests/test_ui.py:50: 
+2025-12-24T00:18:24.8309063Z _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+2025-12-24T00:18:24.8309770Z venv/lib/python3.10/site-packages/playwright/sync_api/_generated.py:9958: in click
+2025-12-24T00:18:24.8310410Z     self._sync(
+2025-12-24T00:18:24.8311024Z venv/lib/python3.10/site-packages/playwright/_impl/_page.py:854: in click
+2025-12-24T00:18:24.8311734Z     return await self._main_frame._click(**locals_to_params(locals()))
+2025-12-24T00:18:24.8312467Z venv/lib/python3.10/site-packages/playwright/_impl/_frame.py:566: in _click
+2025-12-24T00:18:24.8313242Z     await self._channel.send("click", self._timeout, locals_to_params(locals()))
+2025-12-24T00:18:24.8314036Z venv/lib/python3.10/site-packages/playwright/_impl/_connection.py:69: in send
+2025-12-24T00:18:24.8314825Z     return await self._connection.wrap_api_call(
+2025-12-24T00:18:24.8315309Z _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+2025-12-24T00:18:24.8315635Z 
+2025-12-24T00:18:24.8315942Z self = <playwright._impl._connection.Connection object at 0x7f8c742137c0>
+2025-12-24T00:18:24.8316630Z cb = <function Channel.send.<locals>.<lambda> at 0x7f8c74229c60>
+2025-12-24T00:18:24.8317143Z is_internal = False, title = None
+2025-12-24T00:18:24.8317390Z 
+2025-12-24T00:18:24.8317512Z     async def wrap_api_call(
+2025-12-24T00:18:24.8317966Z         self, cb: Callable[[], Any], is_internal: bool = False, title: str = None
+2025-12-24T00:18:24.8318442Z     ) -> Any:
+2025-12-24T00:18:24.8318713Z         if self._api_zone.get():
+2025-12-24T00:18:24.8319050Z             return await cb()
+2025-12-24T00:18:24.8319401Z         task = asyncio.current_task(self._loop)
+2025-12-24T00:18:24.8319819Z         st: List[inspect.FrameInfo] = getattr(
+2025-12-24T00:18:24.8320205Z             task, "__pw_stack__", None
+2025-12-24T00:18:24.8320561Z         ) or inspect.stack(0)
+2025-12-24T00:18:24.8320871Z     
+2025-12-24T00:18:24.8321334Z         parsed_st = _extract_stack_trace_information_from_stack(st, is_internal, title)
+2025-12-24T00:18:24.8321934Z         self._api_zone.set(parsed_st)
+2025-12-24T00:18:24.8322293Z         try:
+2025-12-24T00:18:24.8322569Z             return await cb()
+2025-12-24T00:18:24.8322915Z         except Exception as error:
+2025-12-24T00:18:24.8323430Z >           raise rewrite_error(error, f"{parsed_st['apiName']}: {error}") from None
+2025-12-24T00:18:24.8324299Z E           playwright._impl._errors.TimeoutError: Page.click: Timeout 30000ms exceeded.
+2025-12-24T00:18:24.8324873Z E           Call log:
+2025-12-24T00:18:24.8325289Z E             - waiting for locator("text=更新智慧監控")
+2025-12-24T00:18:24.8325576Z 
+2025-12-24T00:18:24.8325934Z venv/lib/python3.10/site-packages/playwright/_impl/_connection.py:559: TimeoutError
+2025-12-24T00:18:24.8326662Z _______________________ test_panic_drop_alert[chromium] ________________________
+2025-12-24T00:18:24.8327075Z 
+2025-12-24T00:18:24.8327233Z page = <Page url='http://localhost:5001/'>
+2025-12-24T00:18:24.8327510Z 
+2025-12-24T00:18:24.8327647Z     def test_panic_drop_alert(page: Page):
+2025-12-24T00:18:24.8328092Z         """測試閃崩偵測是否正常運作"""
+2025-12-24T00:18:24.8328409Z         page.goto(BASE_URL)
+2025-12-24T00:18:24.8328680Z     
+2025-12-24T00:18:24.8328906Z         # 模擬連續下跌數據 (引入些微波動以免標準差為 0)
+2025-12-24T00:18:24.8329172Z         prices = [100.1, 99.9, 100.2, 99.8, 100.0, 100.1, 90.0]
+2025-12-24T00:18:24.8329561Z         for p in prices:
+2025-12-24T00:18:24.8330066Z             requests.post(f"{BASE_URL}/api/simulate_data", json={"price": p})
+2025-12-24T00:18:24.8330596Z             time.sleep(1.2)
+2025-12-24T00:18:24.8330913Z     
+2025-12-24T00:18:24.8331285Z >       expect(page.locator("#log-content")).to_contain_text("偵測到閃崩", timeout=15000)
+2025-12-24T00:18:24.8331741Z E       AssertionError: Locator expected to contain text '偵測到閃崩'
+2025-12-24T00:18:24.8332038Z E       Actual value: None
+2025-12-24T00:18:24.8332239Z E       Error: element(s) not found 
+2025-12-24T00:18:24.8332454Z E       Call log:
+2025-12-24T00:18:24.8332664Z E         - Expect "to_contain_text" with timeout 15000ms
+2025-12-24T00:18:24.8333164Z E         - waiting for locator("#log-content")
+2025-12-24T00:18:24.8333383Z 
+2025-12-24T00:18:24.8333471Z tests/test_ui.py:73: AssertionError
+2025-12-24T00:18:24.8333772Z ________________________ test_stop_loss_alert[chromium] ________________________
+2025-12-24T00:18:24.8334289Z 
+2025-12-24T00:18:24.8334470Z page = <Page url='http://localhost:5001/'>
+2025-12-24T00:18:24.8334658Z 
+2025-12-24T00:18:24.8334749Z     def test_stop_loss_alert(page: Page):
+2025-12-24T00:18:24.8335027Z         """測試停損警報"""
+2025-12-24T00:18:24.8335214Z         page.goto(BASE_URL)
+2025-12-24T00:18:24.8335400Z     
+2025-12-24T00:18:24.8335567Z         page.fill("#symbol", "2330.TW")
+2025-12-24T00:18:24.8335804Z         page.fill("#stop_loss", "100")
+2025-12-24T00:18:24.8336072Z >       page.click("text=更新智慧監控")
+2025-12-24T00:18:24.8336216Z 
+2025-12-24T00:18:24.8336297Z tests/test_ui.py:81: 
+2025-12-24T00:18:24.8336510Z _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+2025-12-24T00:18:24.8336921Z venv/lib/python3.10/site-packages/playwright/sync_api/_generated.py:9958: in click
+2025-12-24T00:18:24.8337293Z     self._sync(
+2025-12-24T00:18:24.8337582Z venv/lib/python3.10/site-packages/playwright/_impl/_page.py:854: in click
+2025-12-24T00:18:24.8338013Z     return await self._main_frame._click(**locals_to_params(locals()))
+2025-12-24T00:18:24.8338432Z venv/lib/python3.10/site-packages/playwright/_impl/_frame.py:566: in _click
+2025-12-24T00:18:24.8338877Z     await self._channel.send("click", self._timeout, locals_to_params(locals()))
+2025-12-24T00:18:24.8339326Z venv/lib/python3.10/site-packages/playwright/_impl/_connection.py:69: in send
+2025-12-24T00:18:24.8339706Z     return await self._connection.wrap_api_call(
+2025-12-24T00:18:24.8339980Z _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+2025-12-24T00:18:24.8340171Z 
+2025-12-24T00:18:24.8340347Z self = <playwright._impl._connection.Connection object at 0x7f8c742137c0>
+2025-12-24T00:18:24.8340752Z cb = <function Channel.send.<locals>.<lambda> at 0x7f8c72e0e680>
+2025-12-24T00:18:24.8341049Z is_internal = False, title = None
+2025-12-24T00:18:24.8341196Z 
+2025-12-24T00:18:24.8341274Z     async def wrap_api_call(
+2025-12-24T00:18:24.8341563Z         self, cb: Callable[[], Any], is_internal: bool = False, title: str = None
+2025-12-24T00:18:24.8341861Z     ) -> Any:
+2025-12-24T00:18:24.8342033Z         if self._api_zone.get():
+2025-12-24T00:18:24.8342242Z             return await cb()
+2025-12-24T00:18:24.8342468Z         task = asyncio.current_task(self._loop)
+2025-12-24T00:18:24.8342726Z         st: List[inspect.FrameInfo] = getattr(
+2025-12-24T00:18:24.8342978Z             task, "__pw_stack__", None
+2025-12-24T00:18:24.8343294Z         ) or inspect.stack(0)
+2025-12-24T00:18:24.8343573Z     
+2025-12-24T00:18:24.8343844Z         parsed_st = _extract_stack_trace_information_from_stack(st, is_internal, title)
+2025-12-24T00:18:24.8344418Z         self._api_zone.set(parsed_st)
+2025-12-24T00:18:24.8344635Z         try:
+2025-12-24T00:18:24.8344803Z             return await cb()
+2025-12-24T00:18:24.8345010Z         except Exception as error:
+2025-12-24T00:18:24.8345323Z >           raise rewrite_error(error, f"{parsed_st['apiName']}: {error}") from None
+2025-12-24T00:18:24.8345777Z E           playwright._impl._errors.TimeoutError: Page.click: Timeout 30000ms exceeded.
+2025-12-24T00:18:24.8346116Z E           Call log:
+2025-12-24T00:18:24.8346388Z E             - waiting for locator("text=更新智慧監控")
+2025-12-24T00:18:24.8346562Z 
+2025-12-24T00:18:24.8346781Z venv/lib/python3.10/site-packages/playwright/_impl/_connection.py:559: TimeoutError
+2025-12-24T00:18:24.8347195Z =========================== short test summary info ============================
+2025-12-24T00:18:24.8347780Z FAILED tests/test_ui.py::test_ui_elements_visibility[chromium] - AssertionError: Locator expected to be visible
+2025-12-24T00:18:24.8348210Z Actual value: None
+2025-12-24T00:18:24.8348392Z Error: element(s) not found 
+2025-12-24T00:18:24.8348733Z Call log:
+2025-12-24T00:18:24.8348930Z   - Expect "to_be_visible" with timeout 5000ms
+2025-12-24T00:18:24.8349228Z   - waiting for locator("text=监控設定")
+2025-12-24T00:18:24.8349765Z FAILED tests/test_ui.py::test_buttons_clickability[chromium] - playwright._impl._errors.TimeoutError: Page.click: Timeout 30000ms exceeded.
+2025-12-24T00:18:24.8350387Z Call log:
+2025-12-24T00:18:24.8350594Z   - waiting for locator("text=全功能演示")
+2025-12-24T00:18:24.8351100Z FAILED tests/test_ui.py::test_target_price_alert[chromium] - playwright._impl._errors.TimeoutError: Page.click: Timeout 30000ms exceeded.
+2025-12-24T00:18:24.8351589Z Call log:
+2025-12-24T00:18:24.8351797Z   - waiting for locator("text=更新智慧監控")
+2025-12-24T00:18:24.8352322Z FAILED tests/test_ui.py::test_panic_drop_alert[chromium] - AssertionError: Locator expected to contain text '偵測到閃崩'
+2025-12-24T00:18:24.8352762Z Actual value: None
+2025-12-24T00:18:24.8352940Z Error: element(s) not found 
+2025-12-24T00:18:24.8353130Z Call log:
+2025-12-24T00:18:24.8353326Z   - Expect "to_contain_text" with timeout 15000ms
+2025-12-24T00:18:24.8353588Z   - waiting for locator("#log-content")
+2025-12-24T00:18:24.8354088Z FAILED tests/test_ui.py::test_stop_loss_alert[chromium] - playwright._impl._errors.TimeoutError: Page.click: Timeout 30000ms exceeded.
+2025-12-24T00:18:24.8354768Z Call log:
+2025-12-24T00:18:24.8354979Z   - waiting for locator("text=更新智慧監控")
+2025-12-24T00:18:24.8355244Z ======================== 5 failed in 120.91s (0:02:00) =========================
+2025-12-24T00:18:24.8355467Z 
+2025-12-24T00:18:24.8355560Z ❌ 測試失敗！
+2025-12-24T00:18:24.8355748Z 🛑 正在停止伺服器...
+2025-12-24T00:18:24.8379646Z ##[error]Process completed with exit code 1.
+2025-12-24T00:18:24.8480257Z Post job cleanup.
+2025-12-24T00:18:24.9407313Z [command]/usr/bin/git version
+2025-12-24T00:18:24.9443649Z git version 2.52.0
+2025-12-24T00:18:24.9485756Z Temporarily overriding HOME='/home/runner/work/_temp/0be45801-931a-41f1-ac57-056771f00fec' before making global git config changes
+2025-12-24T00:18:24.9486989Z Adding repository directory to the temporary git global config as a safe directory
+2025-12-24T00:18:24.9491294Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Smart_Stock_Light/Smart_Stock_Light
+2025-12-24T00:18:24.9525668Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2025-12-24T00:18:24.9558597Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2025-12-24T00:18:24.9787118Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-12-24T00:18:24.9807477Z http.https://github.com/.extraheader
+2025-12-24T00:18:24.9819881Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2025-12-24T00:18:24.9850378Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2025-12-24T00:18:25.0069264Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2025-12-24T00:18:25.0099397Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2025-12-24T00:18:25.0442695Z Cleaning up orphan processes

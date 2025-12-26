@@ -1,11 +1,24 @@
+import sys
+import os
 from flask import Flask, render_template, request, jsonify
 import threading
 from auto_updater import AutoUpdater
 
+def resource_path(relative_path):
+    """ Get absolute path to resource, works for dev and for PyInstaller """
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)
+
 class WebServer(threading.Thread):
     def __init__(self, shared_config, tapo_controller, stock_monitor):
         super().__init__()
-        self.app = Flask(__name__)
+        # Ensure Flask knows where to look for templates in the frozen app
+        template_dir = resource_path('templates')
+        self.app = Flask(__name__, template_folder=template_dir)
         self.shared_config = shared_config
         self.tapo = tapo_controller
         self.monitor = stock_monitor
@@ -17,6 +30,7 @@ class WebServer(threading.Thread):
         self.app.add_url_rule('/api/config', 'update_config', self.update_config, methods=['POST'])
         self.app.add_url_rule('/api/test_green', 'test_green', self.test_green, methods=['POST'])
         self.app.add_url_rule('/api/test_yellow', 'test_yellow', self.test_yellow, methods=['POST'])
+        self.app.add_url_rule('/api/test_purple', 'test_purple', self.test_purple, methods=['POST'])
         self.app.add_url_rule('/api/run_test', 'run_test', self.run_test, methods=['POST'])
         self.app.add_url_rule('/api/turn_off', 'turn_off', self.turn_off, methods=['POST'])
         self.app.add_url_rule('/api/market_status', 'market_status', self.market_status, methods=['GET'])
@@ -46,14 +60,24 @@ class WebServer(threading.Thread):
     def test_green(self):
         print("網頁請求: 測試亮綠燈")
         self.monitor.device_off = False
+        import time
+        self.monitor.test_mode_until = time.time() + 5 # 暫停監控 5 秒
         self.tapo.turn_on_green()
-        return jsonify({"status": "success", "message": "綠燈已開啟"})
+        return jsonify({"status": "success", "message": "綠燈已開啟 (維持5秒)"})
 
     def test_yellow(self):
         print("網頁請求: 測試亮黃燈")
         self.monitor.device_off = False
         self.tapo.turn_on_yellow()
         return jsonify({"status": "success", "message": "黃燈已開啟"})
+
+    def test_purple(self):
+        print("網頁請求: 測試亮紫燈 (閃崩)")
+        self.monitor.device_off = False
+        import time
+        self.monitor.test_mode_until = time.time() + 5 # 暫停監控 5 秒
+        self.tapo.turn_on_purple()
+        return jsonify({"status": "success", "message": "紫燈已開啟 (維持5秒)"})
 
     def run_test(self):
         print("網頁請求: 執行漸暗閃爍測試")
@@ -63,8 +87,9 @@ class WebServer(threading.Thread):
 
     def turn_off(self):
         print("網頁請求: 睡眠待命模式")
-        # 不設定 device_off，讓警報可以觸發
-        self.tapo.set_sleep_standby()  # 調暗至 1% 亮度
+        print("網頁請求: 睡眠待命模式")
+        self.monitor.device_off = True # 標記為睡眠模式，阻止自動亮黃燈
+        self.tapo.set_sleep_standby()  # 調暗至 0.01% 亮度
         # 語音通知
         import subprocess
         try:
