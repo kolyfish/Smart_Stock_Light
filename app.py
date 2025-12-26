@@ -10,7 +10,7 @@ def main():
     
     # Initialize Components
     shared_config = SharedConfig()
-    tapo = TapoController()
+    tapo = TapoController(shared_config)
     
     # Start Threads
     monitor = StockMonitor(shared_config, tapo)

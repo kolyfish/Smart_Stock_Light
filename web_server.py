@@ -51,9 +51,12 @@ class WebServer(threading.Thread):
         symbol = data.get('symbol')
         target = data.get('target_price')
         stop_loss = data.get('stop_loss_price')
+        tapo_email = data.get('tapo_email')
+        tapo_password = data.get('tapo_password')
+        tapo_ip = data.get('tapo_ip')
         
-        print(f"網頁更新請求: {symbol}, {target}, {stop_loss}")
-        self.shared_config.update_config(symbol, target, stop_loss)
+        print(f"網頁更新請求: {symbol}, {target}, {stop_loss}, Tapo: {tapo_email}@{tapo_ip}")
+        self.shared_config.update_config(symbol, target, stop_loss, tapo_email, tapo_password, tapo_ip)
         
         return jsonify({"status": "success", "config": self.shared_config.get_config()})
     

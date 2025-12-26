@@ -541,8 +541,30 @@
                         placeholder="900">
                 </div>
 
+                <div class="card-header" style="margin-top: 1.5rem; margin-bottom: 0.5rem; font-size: 0.8rem;">
+                    <i class="fas fa-plug"></i> 智慧插座設定 (Tapo)
+                </div>
+
+                <div class="input-group">
+                    <label>燈泡 IP 位址</label>
+                    <input type="text" id="tapo_ip" value="{{ config.get('tapo_ip', '192.168.100.150') }}"
+                        placeholder="192.168.100.150">
+                </div>
+
+                <div class="input-group">
+                    <label>Tapo 帳號 (Email)</label>
+                    <input type="email" id="tapo_email" value="{{ config.get('tapo_email', '') }}"
+                        placeholder="example@gmail.com">
+                </div>
+
+                <div class="input-group">
+                    <label>Tapo 密碼</label>
+                    <input type="password" id="tapo_password"
+                        placeholder="{{ '已設定 (若需更改請輸入)' if config.get('tapo_password_set') else '請輸入密碼' }}">
+                </div>
+
                 <button class="btn btn-primary" onclick="saveConfig()">
-                    <i class="fas fa-rotate"></i> 更新監控設定
+                    <i class="fas fa-rotate"></i> 更新設定
                 </button>
             </div>
 
@@ -702,7 +724,10 @@
             const data = {
                 symbol: document.getElementById('symbol').value,
                 target_price: document.getElementById('target').value,
-                stop_loss_price: document.getElementById('stop_loss').value
+                stop_loss_price: document.getElementById('stop_loss').value,
+                tapo_email: document.getElementById('tapo_email').value,
+                tapo_password: document.getElementById('tapo_password').value,
+                tapo_ip: document.getElementById('tapo_ip').value
             };
 
             const res = await apiCall('config', 'POST', data);

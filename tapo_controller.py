@@ -3,33 +3,48 @@ from plugp100.common.credentials import AuthCredential
 from plugp100.new.device_factory import connect, DeviceConnectConfiguration
 
 class TapoController:
-    def __init__(self):
-        # 使用者提供的憑據
-        self.username = "kolyfish2@gmail.com"
-        self.password = "WWuu0921"
-        self.ip_address = "192.168.100.150"
+    def __init__(self, shared_config):
+        self.shared_config = shared_config
         
-        # 使用 v5.x 推薦的連線配置
-        self.credentials = AuthCredential(self.username, self.password)
-        self.config = DeviceConnectConfiguration(
-            host=self.ip_address,
-            credentials=self.credentials,
-            device_type="SMART.TAPOBULB"
-        )
         import os
         self.simulation_mode = os.getenv("SIMULATION_MODE", "false").lower() == "true"
-        # 不再快取 self.device，因為每次 asyncio.run 都會建立新 loop
-        # 快取 device 會導致 aiohttp ClientSession Tied 到已關閉的 loop
         
         # 線程鎖：防止多個線程同時嘗試控制裝置 (Race Condition)
         import threading
         self._lock = threading.Lock()
         self.is_sleeping = False # 追蹤睡眠模式狀態
 
+    @property
+    def ip_address(self):
+        return self.shared_config.tapo_ip
+
+    def _get_connect_config(self):
+        """從 SharedConfig 讀取最新帳密並建立連線設定"""
+        username = self.shared_config.tapo_email
+        password = self.shared_config.tapo_password
+        ip = self.ip_address
+
+        if not username or not password:
+            if not self.simulation_mode:
+                # 只有在非模擬模式且嘗試連接時才印警告，避免啟動時刷屏
+                pass
+            return None
+
+        credentials = AuthCredential(username, password)
+        return DeviceConnectConfiguration(
+            host=ip,
+            credentials=credentials,
+            device_type="SMART.TAPOBULB"
+        )
+
     async def _get_connected_device(self):
         """建立並返回已連線的裝置實體。"""
+        config = self._get_connect_config()
+        if not config:
+            raise Exception("Tapo 帳號或密碼未設定")
+
         try:
-            device = await connect(self.config)
+            device = await connect(config)
             
             # 手動修正 KlapProtocol 類型問題
             client = device.client
@@ -37,8 +52,14 @@ class TapoController:
             if inspect.isclass(client.protocol) or client.protocol is None:
                 from plugp100.protocol.klap import klap_handshake_v2
                 from plugp100.protocol.klap.klap_protocol import KlapProtocol
+                
+                # Re-create credentials locally for protocol
+                username = self.shared_config.tapo_email
+                password = self.shared_config.tapo_password
+                creds = AuthCredential(username, password)
+
                 protocol = KlapProtocol(
-                    auth_credential=self.credentials,
+                    auth_credential=creds,
                     url=f"http://{self.ip_address}/app",
                     klap_strategy=klap_handshake_v2()
                 )
@@ -57,7 +78,11 @@ class TapoController:
             return
             
         try:
-            device = await connect(self.config)
+            config = self._get_connect_config()
+            if not config:
+                return
+
+            device = await connect(config)
             await device.set_brightness(level)
         except Exception as e:
             print(f"[{self.ip_address}] 設定亮度失敗: {e}")
@@ -71,21 +96,7 @@ class TapoController:
             return
 
         try:
-            device = await connect(self.config)
-            # 手動修正 KlapProtocol 類型問題
-            client = device.client
-            import inspect
-            if inspect.isclass(client.protocol) or client.protocol is None:
-                from plugp100.protocol.klap import klap_handshake_v2
-                from plugp100.protocol.klap.klap_protocol import KlapProtocol
-                protocol = KlapProtocol(
-                    auth_credential=self.credentials,
-                    url=f"http://{self.ip_address}/app",
-                    klap_strategy=klap_handshake_v2()
-                )
-                client._protocol = protocol
-            
-            await device.update()
+            device = await self._get_connected_device()
             
             color_map = {120: "綠色", 60: "黃色", 0: "紅色", 280: "紫色"}
             color_name = color_map.get(hue, f"未知 Hue:{hue}")
@@ -107,12 +118,14 @@ class TapoController:
                 
             print(f"[{self.ip_address}] 顏色切換成功 ({color_name})，亮度已恢復 100%。")
         except Exception as e:
-            print(f"[{self.ip_address}] 操控失敗: {e}")
+            # Silence auth errors to avoid spamming log if not configured
+            if "Tapo 帳號" not in str(e): 
+                print(f"[{self.ip_address}] 操控失敗: {e}")
 
     async def _test_sequence(self):
         """執行一鍵測試序列：漸暗 -> 關閉 -> 變色迴圈 -> 回歸黃色。"""
         try:
-            device = await connect(self.config)
+            device = await self._get_connected_device()
             print("開始執行燈光測試序列...")
             
             # 1. 漸暗效果
@@ -192,7 +205,7 @@ class TapoController:
     async def _turn_off(self):
         """關閉裝置。"""
         try:
-            device = await connect(self.config)
+            device = await self._get_connected_device()
             print(f"[{self.ip_address}] Web 請求：正在執行關閉指令...")
             await device.turn_off()
             print(f"[{self.ip_address}] 裝置已成功關閉。")
@@ -208,21 +221,7 @@ class TapoController:
     async def _set_sleep_standby(self):
         """睡眠待命模式：調暗至 1% 亮度（黃燈），但保持開啟。"""
         try:
-            device = await connect(self.config)
-            # 手動修正 KlapProtocol 類型問題
-            client = device.client
-            import inspect
-            if inspect.isclass(client.protocol) or client.protocol is None:
-                from plugp100.protocol.klap import klap_handshake_v2
-                from plugp100.protocol.klap.klap_protocol import KlapProtocol
-                protocol = KlapProtocol(
-                    auth_credential=self.credentials,
-                    url=f"http://{self.ip_address}/app",
-                    klap_strategy=klap_handshake_v2()
-                )
-                client._protocol = protocol
-            
-            await device.update()
+            device = await self._get_connected_device()
             
             self.is_sleeping = True # 標記為睡眠狀態
             print(f"[{self.ip_address}] 進入睡眠待命模式：調暗至 1% 亮度（黃燈）")
@@ -252,7 +251,10 @@ class TapoController:
         return False
 
 if __name__ == "__main__":
-    controller = TapoController()
+    # Mock config for testing
+    from shared_config import SharedConfig
+    config = SharedConfig()
+    controller = TapoController(config)
     print("測試紅燈...")
     controller.turn_on_red()
     import time
