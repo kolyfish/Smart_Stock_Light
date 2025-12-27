@@ -107,8 +107,11 @@ class TapoController:
             # 優化順序：先切換顏色，再調高亮度，避免出現「亮黃色閃爍」並確保顏色正確
             result = await device.set_hue_saturation(hue, saturation)
             if result.is_failure():
+                print(f"[{self.ip_address}] 主要顏色設定失敗: {result.get_error()}")
                 from plugp100.new.components.light_component import LightComponent
-                await device.get_component(LightComponent).set_hue_saturation(hue, saturation)
+                result = await device.get_component(LightComponent).set_hue_saturation(hue, saturation)
+                if result.is_failure():
+                     print(f"[{self.ip_address}] Fallback 顏色設定也失敗: {result.get_error()}")
             
             # 給予一點緩衝時間讓顏色生效
             await asyncio.sleep(0.05)
@@ -243,6 +246,32 @@ class TapoController:
         """啟動睡眠待命模式。"""
         with self._lock:
             asyncio.run(self._set_sleep_standby())
+
+    async def _scan_devices(self):
+        """掃描區域網路內的 Tapo/Kasa 裝置"""
+        try:
+            from kasa import Discover
+            print("正在掃描區域網路裝置...")
+            devices = await Discover.discover(timeout=3)
+            result = []
+            for ip, dev in devices.items():
+                await dev.update()
+                result.append({
+                    "ip": ip,
+                    "alias": dev.alias,
+                    "model": dev.model,
+                    "mac": dev.mac
+                })
+            print(f"掃描完成，找到 {len(result)} 個裝置")
+            return result
+        except Exception as e:
+            print(f"裝置掃描失敗: {e}")
+            return []
+
+    def scan_devices(self):
+        """同步包裝掃描功能"""
+        # 由於 Discover 也是 async，我們用 asyncio.run
+        return asyncio.run(self._scan_devices())
 
     def is_alerting_state(self):
         """檢查目前是否處於警報顏色狀態 (軟體紀錄)。"""

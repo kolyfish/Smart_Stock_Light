@@ -391,13 +391,19 @@
         /* Info Areas (Modal-like) */
         .info-panel {
             max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.4s ease;
+            overflow-y: hidden;
+            /* Changed from hidden to handle scroll when open */
+            transition: max-height 0.4s ease, margin-bottom 0.4s ease;
         }
 
         .info-panel.open {
-            max-height: 500px;
+            max-height: 400px;
+            /* Set a reasonable fixed height to force scroll if content is long */
+            overflow-y: auto;
+            /* Enable vertical scrolling */
             margin-bottom: 1.5rem;
+            padding-right: 0.5rem;
+            /* Add some padding for scrollbar */
         }
 
         .guide-grid {
@@ -517,6 +523,16 @@
                         點擊下方「睡眠模式」按鈕，燈光將調至 1% 亮度，不影響睡眠。<br>
                         一旦觸發上述任何警報，燈光會<strong>強制全亮</strong>並發出聲音，確保您不會錯過行情。
                     </p>
+                    <p style="font-size: 0.9rem; color: var(--text-dim); line-height: 1.6;">
+                        <strong>6. ⏳ 警報冷卻機制：</strong><br>
+                        為避免重複轟炸，觸發警報後系統會進入 5 分鐘冷卻時間。<br>
+                        冷卻期間若價格仍達標，日誌會顯示「冷卻中」與剩餘秒數，但不會重複發出語音或改變燈號。
+                    </p>
+                    <p style="font-size: 0.9rem; color: var(--text-dim); line-height: 1.6;">
+                        <strong>7. 🔄 更新設定：</strong><br>
+                        修改完上方的監控代號、目標價或 Tapo 設定後，必須點擊「更新設定」按鈕。<br>
+                        系統會立即套用新參數，並<strong>重置警報冷卻時間</strong>與警報狀態（例如從紅燈恢復為監控黃燈）。
+                    </p>
                 </div>
 
                 <!-- Config Form -->
@@ -547,8 +563,15 @@
 
                 <div class="input-group">
                     <label>燈泡 IP 位址</label>
-                    <input type="text" id="tapo_ip" value="{{ config.get('tapo_ip', '192.168.100.150') }}"
-                        placeholder="192.168.100.150">
+                    <div style="display: flex; gap: 0.5rem;">
+                        <input type="text" id="tapo_ip" value="{{ config.get('tapo_ip', '192.168.100.150') }}"
+                            placeholder="192.168.100.150">
+                        <button class="btn btn-ghost" onclick="scanTapo(event)"
+                            style="width: auto; white-space: nowrap; border: 1px solid var(--border);">
+                            <i class="fas fa-search"></i> 掃描
+                        </button>
+                    </div>
+                    <div id="scan-results" style="margin-top: 0.5rem; display: none;"></div>
                 </div>
 
                 <div class="input-group">
@@ -743,6 +766,94 @@
         function turnOff() { apiCall('turn_off').then(() => showToast('進入睡眠待命模式')); }
         function demoAlert() { apiCall('demo_alert').then(() => showToast('啟動全功能演示')); }
         function stopAlarm() { apiCall('stop_alarm').then(res => showToast(res.message)); }
+
+        async function scanTapo(event) {
+            const btn = event.currentTarget;
+            const originalContent = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            btn.disabled = true;
+
+            // Remove existing list if any
+            const oldList = document.getElementById('device-list');
+            if (oldList) oldList.remove();
+
+            try {
+                const res = await apiCall('scan_tapo', 'GET');
+                if (res && res.status === 'success') {
+                    const devices = res.devices;
+                    if (devices.length === 0) {
+                        showToast('未發現設備 (請確認設備已插電並在同網路)', 'warning');
+                    } else if (devices.length === 1) {
+                        document.getElementById('tapo_ip').value = devices[0].ip;
+                        showToast(`已自動填入發現的唯一設備: ${devices[0].ip}`, 'success');
+                    } else {
+                        // Multiple devices, show list selection
+                        showDeviceSelection(devices);
+                        showToast(`發現 ${devices.length} 個設備`, 'success');
+                    }
+                }
+            } finally {
+                btn.innerHTML = originalContent;
+                btn.disabled = false;
+            }
+        }
+
+        async function scanTapo(e) {
+            e.preventDefault();
+            const btn = e.currentTarget;
+            const icon = btn.querySelector('i');
+            const originalIcon = icon.className;
+
+            // Loading state
+            icon.className = 'fas fa-spinner fa-spin';
+            btn.disabled = true;
+            showToast('正在掃描區網裝置...', 'info');
+
+            const res = await apiCall('scan_devices', 'GET');
+
+            // Restore state
+            icon.className = originalIcon;
+            btn.disabled = false;
+
+            if (res && res.devices) {
+                if (res.devices.length === 0) {
+                    showToast('未找到裝置 (請確認都在同一 Wifi)', 'warning');
+                    return;
+                }
+                showToast(`找到 ${res.devices.length} 個裝置`, 'success');
+                showDeviceSelection(res.devices);
+            } else {
+                showToast('掃描失敗', 'danger');
+            }
+        }
+
+        function showDeviceSelection(devices) {
+            const container = document.getElementById('scan-results');
+            if (!container) return;
+
+            let listHtml = '<div style="background: var(--bg-card); border-radius: 8px; overflow: hidden; border: 1px solid var(--border); animation: slideDown 0.3s ease-out;">';
+            devices.forEach(d => {
+                listHtml += `
+                    <div onclick="selectDevice('${d.ip}')" style="padding: 0.75rem; cursor: pointer; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;" onmouseover="this.style.background='rgba(51, 65, 85, 0.8)'" onmouseout="this.style.background='transparent'">
+                        <div>
+                            <div style="font-weight: bold; font-size: 0.9rem; color: var(--primary);"><i class="fas fa-lightbulb"></i> ${d.alias || d.model || 'Smart Device'}</div>
+                            <div style="font-size: 0.75rem; color: var(--text-dim); font-family: monospace;">${d.mac}</div>
+                        </div>
+                        <div style="color: white; font-family: monospace; font-size: 0.9rem;">${d.ip}</div>
+                    </div>
+                `;
+            });
+            listHtml += '</div>';
+
+            container.innerHTML = listHtml;
+            container.style.display = 'block';
+        }
+
+        function selectDevice(ip) {
+            document.getElementById('tapo_ip').value = ip;
+            document.getElementById('scan-results').style.display = 'none';
+            showToast(`已填入 IP: ${ip}`, 'success');
+        }
 
         // Data Pooling
         function updateStatus() {

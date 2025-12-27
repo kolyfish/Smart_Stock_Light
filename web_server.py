@@ -3,6 +3,7 @@ import os
 from flask import Flask, render_template, request, jsonify
 import threading
 from auto_updater import AutoUpdater
+from tapo_scanner import get_tapo_devices_sync
 
 def resource_path(relative_path):
     """ Get absolute path to resource, works for dev and for PyInstaller """
@@ -14,7 +15,7 @@ def resource_path(relative_path):
     return os.path.join(base_path, relative_path)
 
 class WebServer(threading.Thread):
-    def __init__(self, shared_config, tapo_controller, stock_monitor):
+    def __init__(self, shared_config, tapo_controller, stock_monitor, open_browser=True):
         super().__init__()
         # Ensure Flask knows where to look for templates in the frozen app
         template_dir = resource_path('templates')
@@ -24,6 +25,7 @@ class WebServer(threading.Thread):
         self.monitor = stock_monitor
         self.updater = AutoUpdater()
         self.daemon = True
+        self.open_browser = open_browser
         
         # 定義路由
         self.app.add_url_rule('/', 'index', self.index)
@@ -41,6 +43,8 @@ class WebServer(threading.Thread):
         self.app.add_url_rule('/api/apply_update', 'apply_update', self.apply_update, methods=['POST'])
         self.app.add_url_rule('/api/stop_alarm', 'stop_alarm', self.stop_alarm, methods=['POST'])
         self.app.add_url_rule('/api/simulate_data', 'simulate_data', self.simulate_data, methods=['POST'])
+        self.app.add_url_rule('/api/scan_devices', 'scan_devices', self.scan_devices, methods=['GET'])
+        self.app.add_url_rule('/api/scan_tapo', 'scan_tapo', self.scan_tapo, methods=['GET'])
 
     def index(self):
         config = self.shared_config.get_config()
@@ -157,7 +161,25 @@ class WebServer(threading.Thread):
         success, msg = self.updater.apply_update()
         return jsonify({"status": "success" if success else "error", "message": msg})
 
+    def scan_tapo(self):
+        print("網頁請求: 掃描 Tapo 設備")
+        devices = get_tapo_devices_sync()
+        return jsonify({"status": "success", "devices": devices})
+    
+    def scan_devices(self):
+        print("網頁請求: 掃描區域網路裝置")
+        devices = self.tapo.scan_devices()
+        return jsonify({"status": "success", "devices": devices})
+
     def run(self):
+        if self.open_browser:
+            # 自動開啟瀏覽器
+            import webbrowser
+            try:
+                webbrowser.open('http://127.0.0.1:5001')
+            except Exception:
+                pass
+            
         # 使用 5001 連接埠以避開 Mac 系統衝突
         self.app.run(host='0.0.0.0', port=5001, debug=False, use_reloader=False)
 

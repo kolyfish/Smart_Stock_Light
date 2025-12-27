@@ -351,7 +351,7 @@ class StockMonitor(threading.Thread):
                             self._log_counter = 0 # 重置計數
 
                         if should_log:
-                            self.add_log(f"{symbol}: {current_price:.2f} (目標 {target} | 監控中)")
+                            self.add_log(f"{symbol}: {current_price:.2f} (目標 {target} | 停損 {stop_loss} | 監控中)")
 
                 except Exception as e:
                     self.add_log(f"數據抓取或警報診斷異常: {e}")
