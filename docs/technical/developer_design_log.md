@@ -48,6 +48,7 @@
 - **穩定性強化**: 完成 Smart Socket 與 Smart Bulb 的完全兼容，優化了前端顯示邏輯，根據裝置類型自動隱藏無效欄位。
 - **部署準備**: 整理了 `Release_MarketTradeAlertLight` 目錄，確保專案可供一般使用者透過 `setup_and_run.sh` 快速啟動。
 - **文件優化**: 在 `README.md` 中加入手動查詢 Tapo 裝置 IP 的教學實作，降低使用門檻。
+- **預設配置更新**: 將系統預設的 Tapo 裝置 IP 硬編碼為 `192.168.100.150`，優化特定使用者的初始體驗。
 
 ---
 *更新於 2025-12-30 by Antigravity*
