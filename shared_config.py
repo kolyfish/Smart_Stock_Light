@@ -11,6 +11,7 @@ class SharedConfig:
         self._tapo_email = ""
         self._tapo_password = ""
         self._tapo_ip = "192.168.100.150" # Default for current user
+        self._device_type = "bulb" # Default device type
         self._lock = threading.Lock()
         self._load_config() # 嘗試讀取存檔
 
@@ -26,6 +27,7 @@ class SharedConfig:
                     self._tapo_email = data.get("tapo_email", "")
                     self._tapo_password = data.get("tapo_password", "")
                     self._tapo_ip = data.get("tapo_ip", self._tapo_ip)
+                    self._device_type = data.get("device_type", "bulb")
                     print(f"✅ 已讀取設定檔: {self._symbol}, 目標 {self._target_price}")
             except Exception as e:
                 print(f"⚠️ 讀取設定檔失敗: {e}")
@@ -38,7 +40,8 @@ class SharedConfig:
             "stop_loss_price": self._stop_loss_price,
             "tapo_email": self._tapo_email,
             "tapo_password": self._tapo_password,
-            "tapo_ip": self._tapo_ip
+            "tapo_ip": self._tapo_ip,
+            "device_type": self._device_type
         }
         try:
             with open(self._config_file, 'w', encoding='utf-8') as f:
@@ -86,6 +89,11 @@ class SharedConfig:
         with self._lock:
             return self._tapo_ip
 
+    @property
+    def device_type(self):
+        with self._lock:
+            return self._device_type
+
     def get_config(self):
         with self._lock:
             return {
@@ -94,11 +102,12 @@ class SharedConfig:
                 "stop_loss_price": self._stop_loss_price,
                 "tapo_email": self._tapo_email,
                 "tapo_ip": self._tapo_ip,
+                "device_type": self._device_type,
                 # 為了安全，不回傳密碼到前端，或者只回傳是否有設定
                 "tapo_password_set": bool(self._tapo_password)
             }
 
-    def update_config(self, symbol, target_price, stop_loss_price=None, tapo_email=None, tapo_password=None, tapo_ip=None):
+    def update_config(self, symbol, target_price, stop_loss_price=None, tapo_email=None, tapo_password=None, tapo_ip=None, device_type=None):
         with self._lock:
             if symbol:
                 self._symbol = symbol.strip().upper()
@@ -118,6 +127,9 @@ class SharedConfig:
             
             if tapo_ip is not None:
                 self._tapo_ip = tapo_ip.strip()
+            
+            if device_type is not None:
+                self._device_type = device_type.strip().lower()
             
             # 只有當密碼不為空時才更新 (避免前端送空字串覆蓋掉舊密碼)
             if tapo_password and tapo_password.strip():

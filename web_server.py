@@ -44,8 +44,43 @@ class WebServer(threading.Thread):
         self.app.add_url_rule('/api/stop_alarm', 'stop_alarm', self.stop_alarm, methods=['POST'])
         self.app.add_url_rule('/api/simulate_data', 'simulate_data', self.simulate_data, methods=['POST'])
         self.app.add_url_rule('/api/scan_devices', 'scan_devices', self.scan_devices, methods=['GET'])
+        self.app.add_url_rule('/api/scan_devices', 'scan_devices', self.scan_devices, methods=['GET'])
         self.app.add_url_rule('/api/scan_tapo', 'scan_tapo', self.scan_tapo, methods=['GET'])
+        self.app.add_url_rule('/api/connect_qr', 'connect_qr', self.get_connect_qr, methods=['GET'])
 
+    def get_connect_qr(self):
+        import qrcode
+        import io
+        import base64
+        import socket
+        
+        # Get Local IP
+        try:
+            s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+            s.connect(("8.8.8.8", 80))
+            ip = s.getsockname()[0]
+            s.close()
+        except Exception:
+            ip = "127.0.0.1"
+            
+        url = f"http://{ip}:5001"
+        
+        # Generate QR
+        qr = qrcode.QRCode(box_size=10, border=4)
+        qr.add_data(url)
+        qr.make(fit=True)
+        img = qr.make_image(fill_color="black", back_color="white")
+        
+        # Save to buffer
+        buf = io.BytesIO()
+        img.save(buf, format="PNG")
+        img_str = base64.b64encode(buf.getvalue()).decode("utf-8")
+        
+        return jsonify({
+            "status": "success", 
+            "url": url,
+            "qr_image": f"data:image/png;base64,{img_str}"
+        })
     def index(self):
         config = self.shared_config.get_config()
         return render_template('index.html', config=config)
@@ -58,9 +93,10 @@ class WebServer(threading.Thread):
         tapo_email = data.get('tapo_email')
         tapo_password = data.get('tapo_password')
         tapo_ip = data.get('tapo_ip')
+        device_type = data.get('device_type')
         
-        print(f"網頁更新請求: {symbol}, {target}, {stop_loss}, Tapo: {tapo_email}@{tapo_ip}")
-        self.shared_config.update_config(symbol, target, stop_loss, tapo_email, tapo_password, tapo_ip)
+        print(f"網頁更新請求: {symbol}, {target}, {stop_loss}, Tapo: {tapo_email}@{tapo_ip}, Device: {device_type}")
+        self.shared_config.update_config(symbol, target, stop_loss, tapo_email, tapo_password, tapo_ip, device_type)
         
         return jsonify({"status": "success", "config": self.shared_config.get_config()})
     
@@ -181,5 +217,16 @@ class WebServer(threading.Thread):
                 pass
             
         # 使用 5001 連接埠以避開 Mac 系統衝突
+        import socket
+        try:
+            s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+            s.connect(("8.8.8.8", 80))
+            ip = s.getsockname()[0]
+            s.close()
+            print(f"\n📱 手機連線網址: http://{ip}:5001")
+            print("💡 提示: iOS Safari 可點擊分享 -> 加入主畫面，獲得 App 體驗\n")
+        except Exception:
+            pass
+            
         self.app.run(host='0.0.0.0', port=5001, debug=False, use_reloader=False)
 

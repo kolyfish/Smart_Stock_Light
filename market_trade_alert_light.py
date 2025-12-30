@@ -1,5 +1,9 @@
 import tkinter as tk
 from tkinter import ttk
+from dotenv import load_dotenv
+import os
+
+load_dotenv() # 載入 .env 設定
 from PIL import ImageTk
 import qrcode
 import socket
@@ -29,7 +33,7 @@ class SmartStockLight:
 
         # Initialize Components
         self.shared_config = SharedConfig()
-        self.tapo = TapoController()
+        self.tapo = TapoController(self.shared_config)
         
         # Start Threads
         self.monitor = StockMonitor(self.shared_config, self.tapo)
