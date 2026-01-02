@@ -15,26 +15,28 @@ class TapoController:
         self.is_sleeping = False # 追蹤睡眠模式狀態
 
     @property
-    def ip_address(self):
-        return self.shared_config.tapo_ip
+    def device_type(self):
+        return self.shared_config.device_type
 
     def _get_connect_config(self):
         """從 SharedConfig 讀取最新帳密並建立連線設定"""
         username = self.shared_config.tapo_email
         password = self.shared_config.tapo_password
         ip = self.ip_address
+        dtype = self.device_type
 
         if not username or not password:
-            if not self.simulation_mode:
-                # 只有在非模擬模式且嘗試連接時才印警告，避免啟動時刷屏
-                pass
             return None
 
         credentials = AuthCredential(username, password)
+        
+        # 依照裝置類型決定連線類別
+        tapo_type = "SMART.TAPOPLUG" if dtype == "plug" else "SMART.TAPOBULB"
+        
         return DeviceConnectConfiguration(
             host=ip,
             credentials=credentials,
-            device_type="SMART.TAPOBULB"
+            device_type=tapo_type
         )
 
     async def _get_connected_device(self):
@@ -74,37 +76,64 @@ class TapoController:
                 await device.client.close()
 
     async def _set_color_hs(self, hue: int, saturation: int):
-        """設定彩色燈泡顏色 (色相/飽和度)。"""
+        """設定彩色燈泡顏色 (色相/飽和度)。如果是插座則改為開啟指令。"""
         if self.simulation_mode:
             color_map = {120: "綠色", 60: "黃色", 0: "紅色", 280: "紫色"}
             color_name = color_map.get(hue, f"未知 Hue:{hue}")
-            print(f"[模擬模式] 點亮顏色: {color_name}")
+            if self.device_type == "plug":
+                print(f"[模擬模式] 智慧插座：{ '開啟 (警報)' if hue != 60 else '關閉 (監控中)' }")
+            else:
+                print(f"[模擬模式] 點亮顏色: {color_name}")
             return
 
         device = None
         try:
+            # 如果是插座，邏輯不同
+            if self.device_type == "plug":
+                # 優先嘗試使用 Kasa 協議 (適用於 HS103 等老牌 Kasa 設備)
+                try:
+                    from kasa import SmartPlug
+                    import asyncio
+                    plug = SmartPlug(self.ip_address)
+                    await plug.update()
+                    if hue == 60:
+                        print(f"[{self.ip_address}] Kasa 插座：監控狀態，關閉插座。")
+                        await plug.turn_off()
+                    else:
+                        print(f"[{self.ip_address}] Kasa 插座：警報觸發，開啟插座！")
+                        await plug.turn_on()
+                    return
+                except Exception as kasa_e:
+                    print(f"[{self.ip_address}] Kasa 協議嘗試失敗，轉向 Tapo 協議: {kasa_e}")
+
+                # 如果 Kasa 失敗，嘗試 Tapo 協議 (P100 等系列)
+                device = await self._get_connected_device()
+                if hue == 60: # 黃色代表監控、非警報狀態
+                    print(f"[{self.ip_address}] Tapo 插座：目前為監控狀態，維持關閉。")
+                    await device.turn_off()
+                else:
+                    print(f"[{self.ip_address}] Tapo 插座：偵測到警報，執行開啟！")
+                    await device.turn_on()
+                return
+
+            # 以下為燈泡邏輯 (Tapo L530 系列)
             device = await self._get_connected_device()
-            
             color_map = {120: "綠色", 60: "黃色", 0: "紅色", 280: "紫色"}
             color_name = color_map.get(hue, f"未知 Hue:{hue}")
             print(f"[{self.ip_address}] 正在切換顏色為: {color_name}")
             
             await device.turn_on()
             
-            # 優化順序：先切換顏色，再調高亮度，避免出現「亮黃色閃爍」並確保顏色正確
+            # 優化順序：先切換顏色，再調高亮度
             result = await device.set_hue_saturation(hue, saturation)
             if result.is_failure():
-                print(f"[{self.ip_address}] 顏色關鍵指令失敗: {result.get_error()}")
+                from plugp100.new.components.light_component import LightComponent
+                result = await device.get_component(LightComponent).set_hue_saturation(hue, saturation)
             
-            # 給予一點緩衝時間讓顏色生效
             await asyncio.sleep(0.05)
-            
-            # 最後才將亮度全開
             await device.set_brightness(100)
-                
-            print(f"[{self.ip_address}] 顏色切換成功 ({color_name})，亮度已恢復 100%。")
+            print(f"[{self.ip_address}] 顏色切換成功 ({color_name})")
         except Exception as e:
-            # Silence auth errors to avoid spamming log if not configured
             if "Tapo 帳號" not in str(e): 
                 print(f"[{self.ip_address}] 操控失敗: {e}")
         finally:
@@ -143,26 +172,26 @@ class TapoController:
                 await device.client.close()
 
     def turn_on_green(self):
-        """觸發警報：轉為綠色。"""
-        if self._lock.acquire(blocking=False):
+        """觸發警報：轉為綠色或開啟插座。"""
+        if self._lock.acquire(blocking=True, timeout=1.0):
             try:
                 self.is_sleeping = False # 警報強制喚醒
                 asyncio.run(self._set_color_hs(120, 100))
             finally:
                 self._lock.release()
         else:
-            print("TapoController: 裝置忙線中，跳過綠燈指令")
+            print("TapoController: 獲取鎖超時，跳過綠燈指令")
 
     def turn_on_red(self):
-        """監控中：轉為紅色。"""
-        if self._lock.acquire(blocking=False):
+        """監控中：轉為紅色或開啟插座。"""
+        if self._lock.acquire(blocking=True, timeout=1.0):
             try:
                 self.is_sleeping = False # 警報強制喚醒
                 asyncio.run(self._set_color_hs(0, 100))
             finally:
                 self._lock.release()
         else:
-            print("TapoController: 裝置忙線中，跳過紅燈指令")
+            print("TapoController: 獲取鎖超時，跳過紅燈指令")
 
     def turn_on_yellow(self):
         """常態/待機：轉為黃色。"""
@@ -179,15 +208,15 @@ class TapoController:
             print("TapoController: 裝置忙線中，跳過黃燈指令")
 
     def turn_on_purple(self):
-        """閃崩警報：轉為紫色。"""
-        if self._lock.acquire(blocking=False):
+        """閃崩警報：轉為紫色或開啟插座。"""
+        if self._lock.acquire(blocking=True, timeout=1.0):
             try:
                 self.is_sleeping = False # 警報強制喚醒
                 asyncio.run(self._set_color_hs(280, 100))
             finally:
                 self._lock.release()
         else:
-            print("TapoController: 裝置忙線中，跳過紫色指令")
+            print("TapoController: 獲取鎖超時，跳過紫色指令")
 
     def run_test_sequence(self):
         """執行完整測試序列。"""

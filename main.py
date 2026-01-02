@@ -1,5 +1,9 @@
 import tkinter as tk
 from tkinter import ttk
+from dotenv import load_dotenv
+import os
+
+load_dotenv() # 載入 .env 設定
 from PIL import ImageTk
 import qrcode
 import socket

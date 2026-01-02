@@ -3,8 +3,15 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#0f172a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>SmartStockLight | Premium Dashboard</title>
+    <link rel="manifest" href="/static/manifest.json">
+    <link rel="icon" type="image/svg+xml" href="/static/icon.svg">
+    <link rel="apple-touch-icon" href="/static/icon.svg">
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -454,10 +461,17 @@
                 <div class="pulse"></div>
                 <span id="market-status-text">系統連線中...</span>
             </div>
-            <button id="btn-sound-toggle" class="btn-ghost" onclick="toggleSound()"
-                style="padding: 0.4rem 0.8rem; font-size: 0.875rem; border-radius: 99px; margin-left: 1rem;">
-                <i class="fas fa-volume-mute"></i>
-            </button>
+            <div style="display: flex; gap: 0.5rem; align-items: center;">
+                <button onclick="showQRCode()" class="btn-ghost"
+                    style="padding: 0.4rem 0.8rem; font-size: 0.875rem; border-radius: 99px; margin-left: 1rem; border: 1px solid rgba(255,255,255,0.1);">
+                    <i class="fas fa-qrcode"></i> <span
+                        style="display: none; @media(min-width: 600px){display:inline;}">手機連線</span>
+                </button>
+                <button id="btn-sound-toggle" class="btn-ghost" onclick="toggleSound()"
+                    style="padding: 0.4rem 0.8rem; font-size: 0.875rem; border-radius: 99px;">
+                    <i class="fas fa-volume-mute"></i>
+                </button>
+            </div>
         </header>
 
         <!-- Left Column: Controls & Config -->
@@ -533,6 +547,15 @@
                         修改完上方的監控代號、目標價或 Tapo 設定後，必須點擊「更新設定」按鈕。<br>
                         系統會立即套用新參數，並<strong>重置警報冷卻時間</strong>與警報狀態（例如從紅燈恢復為監控黃燈）。
                     </p>
+                    <p style="font-size: 0.9rem; color: var(--text-dim); line-height: 1.6;">
+                        <strong>8. 📱 手機 App 模式 (PWA)：</strong><br>
+                        確保手機與電腦在同一 Wi-Fi 下。<br>
+                        1. 查看電腦終端機顯示的網址 (例如 <code>http://192.168.x.x:5001</code>) 並在手機打開。<br>
+                        2. <strong>iOS Safari</strong>: 點擊下方「分享」按鈕 <i class="fas fa-share-square"></i> &rarr;
+                        選擇「加入主畫面」。<br>
+                        3. <strong>Android Chrome</strong>: 點擊選單 &rarr; 選擇「安裝應用程式」或「加入主畫面」。<br>
+                        完成後即可擁有全螢幕 App 體驗，隨時隨地監控與切換模式。
+                    </p>
                 </div>
 
                 <!-- Config Form -->
@@ -558,7 +581,31 @@
                 </div>
 
                 <div class="card-header" style="margin-top: 1.5rem; margin-bottom: 0.5rem; font-size: 0.8rem;">
-                    <i class="fas fa-plug"></i> 智慧插座設定 (Tapo)
+                    <i class="fas fa-plug"></i> 智慧硬體設定 (Tapo)
+                </div>
+
+                <div class="input-group">
+                    <label>裝置類型</label>
+                    <div style="display: flex; gap: 1rem; margin-top: 0.5rem;">
+                        <label
+                            style="flex: 1; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem; background: rgba(255,255,255,0.05); border-radius: 10px; border: 1px solid var(--border);"
+                            id="label-type-bulb">
+                            <input type="radio" name="device_type" value="bulb" style="width: auto;" {{ 'checked' if
+                                config.device_type=='bulb' else '' }} onchange="updateDeviceTypeUI()">
+                            <i class="fas fa-lightbulb"></i> 彩色燈泡
+                        </label>
+                        <label
+                            style="flex: 1; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem; background: rgba(255,255,255,0.05); border-radius: 10px; border: 1px solid var(--border);"
+                            id="label-type-plug">
+                            <input type="radio" name="device_type" value="plug" style="width: auto;" {{ 'checked' if
+                                config.device_type=='plug' else '' }} onchange="updateDeviceTypeUI()">
+                            <i class="fas fa-plug"></i> 智慧插座
+                        </label>
+                    </div>
+                    <small id="device-type-hint"
+                        style="color: var(--text-dim); display: block; margin-top: 0.5rem; font-size: 0.75rem; opacity: 0.8;">
+                        * 彩色燈泡支援紅/綠/黃/紫變色；插座僅支援警報時開啟。
+                    </small>
                 </div>
 
                 <div class="input-group">
@@ -583,7 +630,7 @@
                 <div class="input-group">
                     <label>Tapo 密碼</label>
                     <input type="password" id="tapo_password"
-                        placeholder="{{ '已設定 (若需更改請輸入)' if config.get('tapo_password_set') else '請輸入密碼' }}">
+                        placeholder="{{ '已設定 (不再顯示)' if config.tapo_password_set else '請輸入密碼' }}">
                 </div>
 
                 <button class="btn btn-primary" onclick="saveConfig()">
@@ -667,6 +714,24 @@
     <!-- Notifications -->
     <div class="toast-container" id="toast-area"></div>
 
+    <!-- QR Code Modal -->
+    <div id="qr-modal"
+        style="display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center; backdrop-filter: blur(5px);">
+        <div style="background: white; padding: 2rem; border-radius: 20px; text-align: center; max-width: 90%;">
+            <h3 style="color: #0f172a; margin: 0 0 1rem 0; font-family: 'Outfit', sans-serif;">📱 手機掃描連線</h3>
+            <div id="qr-image-container" style="margin-bottom: 1rem;">
+                <i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: #0f172a;"></i>
+            </div>
+            <div id="qr-url"
+                style="color: #64748b; font-family: monospace; font-size: 0.9rem; margin-bottom: 1.5rem; word-break: break-all;">
+            </div>
+            <button onclick="document.getElementById('qr-modal').style.display='none'"
+                style="background: #0f172a; color: white; border: none; padding: 0.8rem 2rem; border-radius: 99px; font-weight: 600; cursor: pointer;">
+                關閉
+            </button>
+        </div>
+    </div>
+
     <script>
         // Sound Management
         let isSoundEnabled = false;
@@ -744,18 +809,21 @@
 
         // Actions
         async function saveConfig() {
+            const deviceType = document.querySelector('input[name="device_type"]:checked').value;
             const data = {
                 symbol: document.getElementById('symbol').value,
                 target_price: document.getElementById('target').value,
                 stop_loss_price: document.getElementById('stop_loss').value,
                 tapo_email: document.getElementById('tapo_email').value,
                 tapo_password: document.getElementById('tapo_password').value,
-                tapo_ip: document.getElementById('tapo_ip').value
+                tapo_ip: document.getElementById('tapo_ip').value,
+                device_type: deviceType
             };
 
             const res = await apiCall('config', 'POST', data);
             if (res) {
                 showToast('監控設定已更新', 'success');
+                updateDeviceTypeUI();
                 updateData(); // Refresh immediately
             }
         }
@@ -864,6 +932,25 @@
             });
         }
 
+        async function showQRCode() {
+            const modal = document.getElementById('qr-modal');
+            const container = document.getElementById('qr-image-container');
+            const urlText = document.getElementById('qr-url');
+
+            modal.style.display = 'flex';
+            container.innerHTML = '<i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: #0f172a;"></i>';
+            urlText.textContent = '生成中...';
+
+            const res = await apiCall('connect_qr', 'GET');
+            if (res && res.status === 'success') {
+                container.innerHTML = `<img src="${res.qr_image}" style="width: 250px; height: 250px; border-radius: 8px;">`;
+                urlText.innerHTML = `請用手機掃描或輸入網址:<br><strong>${res.url}</strong>`;
+            } else {
+                container.innerHTML = '<i class="fas fa-exclamation-triangle" style="font-size: 2rem; color: #ef4444;"></i>';
+                urlText.textContent = '無法生成 QR Code，請確認後端連線';
+            }
+        }
+
         function updateData() {
             apiCall('market_data', 'GET').then(data => {
                 if (!data) return;
@@ -919,6 +1006,71 @@
             });
         }
 
+        async function scanTapo(e) {
+            e.preventDefault();
+            const btn = e.target.closest('button');
+            const originalHtml = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 掃描中';
+            btn.disabled = true;
+
+            const res = await apiCall('scan_devices', 'GET');
+            btn.innerHTML = originalHtml;
+            btn.disabled = false;
+
+            const resultArea = document.getElementById('scan-results');
+            if (res && res.devices && res.devices.length > 0) {
+                resultArea.style.display = 'block';
+                resultArea.innerHTML = '<div style="font-size: 0.8rem; margin-bottom: 0.5rem; color: var(--primary);">找到以下裝置 (點擊填入 IP):</div>';
+                res.devices.forEach(dev => {
+                    const item = document.createElement('div');
+                    item.style = "padding: 0.5rem; background: rgba(255,255,255,0.05); border-radius: 8px; margin-bottom: 0.4rem; cursor: pointer; font-size: 0.85rem; border: 1px solid transparent; transition: all 0.2s;";
+                    item.innerHTML = `<div style="display:flex; justify-content:space-between;"><strong>${dev.alias}</strong> <span style="opacity:0.6;">${dev.model}</span></div><div style="font-family:monospace; opacity:0.8;">${dev.ip}</div>`;
+                    item.onclick = () => {
+                        document.getElementById('tapo_ip').value = dev.ip;
+                        showToast(`已填入 ${dev.alias} 的 IP`);
+                    };
+                    item.onmouseover = () => item.style.borderColor = 'var(--primary)';
+                    item.onmouseout = () => item.style.borderColor = 'transparent';
+                    resultArea.appendChild(item);
+                });
+            } else {
+                showToast('未找到 Tapo 裝置，請確認在同一網路', 'warning');
+            }
+        }
+
+        function updateDeviceTypeUI() {
+            const radio = document.querySelector('input[name="device_type"]:checked');
+            if (!radio) return;
+            const deviceType = radio.value;
+            const hint = document.getElementById('device-type-hint');
+            const grid = document.querySelector('.btn-grid');
+            if (!grid) return;
+            const btns = grid.querySelectorAll('.btn-ghost');
+
+            if (deviceType === 'plug') {
+                hint.innerHTML = '<i class="fas fa-info-circle"></i> 智慧插座模式：僅支援「開啟」與「關閉」。警報觸發時將開啟插座。';
+                // Update test buttons text
+                if (btns.length >= 3) {
+                    btns[0].innerHTML = '<i class="fas fa-power-off"></i> 測試關閉';
+                    btns[2].innerHTML = '<i class="fas fa-bolt"></i> 測試開啟';
+                }
+                if (btns.length >= 5) {
+                    btns[3].style.display = 'none'; // Hide purple test
+                    btns[4].style.display = 'none'; // Hide demo
+                }
+            } else {
+                hint.innerHTML = '<i class="fas fa-lightbulb"></i> 彩色燈泡模式：支援紅/綠/黃/紫變色提醒。';
+                if (btns.length >= 3) {
+                    btns[0].innerHTML = '<i class="fas fa-sun"></i> 測試黃燈';
+                    btns[2].innerHTML = '<i class="fas fa-check-circle"></i> 測試綠燈';
+                }
+                if (btns.length >= 5) {
+                    btns[3].style.display = 'flex';
+                    btns[4].style.display = 'flex';
+                }
+            }
+        }
+
         // Init
         setInterval(updateStatus, 60000); // 1 min
         setInterval(updateData, 1000);   // 1 sec for real-time feel
@@ -927,6 +1079,7 @@
         updateStatus();
         updateData();
         updateLogs();
+        updateDeviceTypeUI();
 
     </script>
 </body>

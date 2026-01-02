@@ -97,6 +97,7 @@ class StockMonitor(threading.Thread):
 
     def speak(self, text):
         """朗讀文字，優先使用 pyttsx3，失敗則調用 Mac 原生 say 指令。"""
+        self.add_log(f"🔊 準備執行語音播報: {text}")
         if self.engine:
             try:
                 self.engine.say(text)
