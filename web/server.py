@@ -43,8 +43,6 @@ class WebServer(threading.Thread):
         self.app.add_url_rule('/api/apply_update', 'apply_update', self.apply_update, methods=['POST'])
         self.app.add_url_rule('/api/stop_alarm', 'stop_alarm', self.stop_alarm, methods=['POST'])
         self.app.add_url_rule('/api/simulate_data', 'simulate_data', self.simulate_data, methods=['POST'])
-        self.app.add_url_rule('/api/scan_devices', 'scan_devices', self.scan_devices, methods=['GET'])
-        self.app.add_url_rule('/api/scan_devices', 'scan_devices', self.scan_devices, methods=['GET'])
         self.app.add_url_rule('/api/scan_tapo', 'scan_tapo', self.scan_tapo, methods=['GET'])
         self.app.add_url_rule('/api/connect_qr', 'connect_qr', self.get_connect_qr, methods=['GET'])
 
@@ -93,10 +91,9 @@ class WebServer(threading.Thread):
         tapo_email = data.get('tapo_email')
         tapo_password = data.get('tapo_password')
         tapo_ip = data.get('tapo_ip')
-        device_type = data.get('device_type')
         
-        print(f"網頁更新請求: {symbol}, {target}, {stop_loss}, Tapo: {tapo_email}@{tapo_ip}, Device: {device_type}")
-        self.shared_config.update_config(symbol, target, stop_loss, tapo_email, tapo_password, tapo_ip, device_type)
+        print(f"網頁更新請求: {symbol}, {target}, {stop_loss}, Tapo: {tapo_email}@{tapo_ip}")
+        self.shared_config.update_config(symbol, target, stop_loss, tapo_email, tapo_password, tapo_ip)
         
         return jsonify({"status": "success", "config": self.shared_config.get_config()})
     
@@ -200,11 +197,6 @@ class WebServer(threading.Thread):
     def scan_tapo(self):
         print("網頁請求: 掃描 Tapo 設備")
         devices = get_tapo_devices_sync()
-        return jsonify({"status": "success", "devices": devices})
-    
-    def scan_devices(self):
-        print("網頁請求: 掃描區域網路裝置")
-        devices = self.tapo.scan_devices()
         return jsonify({"status": "success", "devices": devices})
 
     def run(self):

@@ -15,28 +15,25 @@ class TapoController:
         self.is_sleeping = False # 追蹤睡眠模式狀態
 
     @property
-    def device_type(self):
-        return self.shared_config.device_type
+    def ip_address(self):
+        return self.shared_config.tapo_ip
 
     def _get_connect_config(self):
         """從 SharedConfig 讀取最新帳密並建立連線設定"""
         username = self.shared_config.tapo_email
         password = self.shared_config.tapo_password
         ip = self.ip_address
-        dtype = self.device_type
 
         if not username or not password:
             return None
 
         credentials = AuthCredential(username, password)
         
-        # 依照裝置類型決定連線類別
-        tapo_type = "SMART.TAPOPLUG" if dtype == "plug" else "SMART.TAPOBULB"
-        
+        # 固定為 Tapo 燈泡
         return DeviceConnectConfiguration(
             host=ip,
             credentials=credentials,
-            device_type=tapo_type
+            device_type="SMART.TAPOBULB"
         )
 
     async def _get_connected_device(self):
@@ -76,47 +73,16 @@ class TapoController:
                 await device.client.close()
 
     async def _set_color_hs(self, hue: int, saturation: int):
-        """設定彩色燈泡顏色 (色相/飽和度)。如果是插座則改為開啟指令。"""
+        """設定彩色燈泡顏色 (色相/飽和度)。"""
         if self.simulation_mode:
             color_map = {120: "綠色", 60: "黃色", 0: "紅色", 280: "紫色"}
             color_name = color_map.get(hue, f"未知 Hue:{hue}")
-            if self.device_type == "plug":
-                print(f"[模擬模式] 智慧插座：{ '開啟 (警報)' if hue != 60 else '關閉 (監控中)' }")
-            else:
-                print(f"[模擬模式] 點亮顏色: {color_name}")
+            print(f"[模擬模式] 點亮顏色: {color_name}")
             return
 
         device = None
         try:
-            # 如果是插座，邏輯不同
-            if self.device_type == "plug":
-                # 優先嘗試使用 Kasa 協議 (適用於 HS103 等老牌 Kasa 設備)
-                try:
-                    from kasa import SmartPlug
-                    import asyncio
-                    plug = SmartPlug(self.ip_address)
-                    await plug.update()
-                    if hue == 60:
-                        print(f"[{self.ip_address}] Kasa 插座：監控狀態，關閉插座。")
-                        await plug.turn_off()
-                    else:
-                        print(f"[{self.ip_address}] Kasa 插座：警報觸發，開啟插座！")
-                        await plug.turn_on()
-                    return
-                except Exception as kasa_e:
-                    print(f"[{self.ip_address}] Kasa 協議嘗試失敗，轉向 Tapo 協議: {kasa_e}")
-
-                # 如果 Kasa 失敗，嘗試 Tapo 協議 (P100 等系列)
-                device = await self._get_connected_device()
-                if hue == 60: # 黃色代表監控、非警報狀態
-                    print(f"[{self.ip_address}] Tapo 插座：目前為監控狀態，維持關閉。")
-                    await device.turn_off()
-                else:
-                    print(f"[{self.ip_address}] Tapo 插座：偵測到警報，執行開啟！")
-                    await device.turn_on()
-                return
-
-            # 以下為燈泡邏輯 (Tapo L530 系列)
+            # 燈泡邏輯 (Tapo L530 系列)
             device = await self._get_connected_device()
             color_map = {120: "綠色", 60: "黃色", 0: "紅色", 280: "紫色"}
             color_name = color_map.get(hue, f"未知 Hue:{hue}")
@@ -172,7 +138,7 @@ class TapoController:
                 await device.client.close()
 
     def turn_on_green(self):
-        """觸發警報：轉為綠色或開啟插座。"""
+        """觸發警報：轉為綠色。"""
         if self._lock.acquire(blocking=True, timeout=1.0):
             try:
                 self.is_sleeping = False # 警報強制喚醒
@@ -183,7 +149,7 @@ class TapoController:
             print("TapoController: 獲取鎖超時，跳過綠燈指令")
 
     def turn_on_red(self):
-        """監控中：轉為紅色或開啟插座。"""
+        """監控中：轉為紅色。"""
         if self._lock.acquire(blocking=True, timeout=1.0):
             try:
                 self.is_sleeping = False # 警報強制喚醒
@@ -208,7 +174,7 @@ class TapoController:
             print("TapoController: 裝置忙線中，跳過黃燈指令")
 
     def turn_on_purple(self):
-        """閃崩警報：轉為紫色或開啟插座。"""
+        """閃崩警報：轉為紫色。"""
         if self._lock.acquire(blocking=True, timeout=1.0):
             try:
                 self.is_sleeping = False # 警報強制喚醒
@@ -273,32 +239,6 @@ class TapoController:
         """啟動睡眠待命模式。"""
         with self._lock:
             asyncio.run(self._set_sleep_standby())
-
-    async def _scan_devices(self):
-        """掃描區域網路內的 Tapo/Kasa 裝置"""
-        try:
-            from kasa import Discover
-            print("正在掃描區域網路裝置...")
-            devices = await Discover.discover(timeout=3)
-            result = []
-            for ip, dev in devices.items():
-                await dev.update()
-                result.append({
-                    "ip": ip,
-                    "alias": dev.alias,
-                    "model": dev.model,
-                    "mac": dev.mac
-                })
-            print(f"掃描完成，找到 {len(result)} 個裝置")
-            return result
-        except Exception as e:
-            print(f"裝置掃描失敗: {e}")
-            return []
-
-    def scan_devices(self):
-        """同步包裝掃描功能"""
-        # 由於 Discover 也是 async，我們用 asyncio.run
-        return asyncio.run(self._scan_devices())
 
     def is_alerting_state(self):
         """檢查目前是否處於警報顏色狀態 (軟體紀錄)。"""

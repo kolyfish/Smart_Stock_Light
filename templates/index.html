@@ -584,29 +584,7 @@
                     <i class="fas fa-plug"></i> 智慧硬體設定 (Tapo)
                 </div>
 
-                <div class="input-group">
-                    <label>裝置類型</label>
-                    <div style="display: flex; gap: 1rem; margin-top: 0.5rem;">
-                        <label
-                            style="flex: 1; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem; background: rgba(255,255,255,0.05); border-radius: 10px; border: 1px solid var(--border);"
-                            id="label-type-bulb">
-                            <input type="radio" name="device_type" value="bulb" style="width: auto;" {{ 'checked' if
-                                config.device_type=='bulb' else '' }} onchange="updateDeviceTypeUI()">
-                            <i class="fas fa-lightbulb"></i> 彩色燈泡
-                        </label>
-                        <label
-                            style="flex: 1; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem; background: rgba(255,255,255,0.05); border-radius: 10px; border: 1px solid var(--border);"
-                            id="label-type-plug">
-                            <input type="radio" name="device_type" value="plug" style="width: auto;" {{ 'checked' if
-                                config.device_type=='plug' else '' }} onchange="updateDeviceTypeUI()">
-                            <i class="fas fa-plug"></i> 智慧插座
-                        </label>
-                    </div>
-                    <small id="device-type-hint"
-                        style="color: var(--text-dim); display: block; margin-top: 0.5rem; font-size: 0.75rem; opacity: 0.8;">
-                        * 彩色燈泡支援紅/綠/黃/紫變色；插座僅支援警報時開啟。
-                    </small>
-                </div>
+                <!-- Device Type Removed -->
 
                 <div class="input-group">
                     <label>燈泡 IP 位址</label>
@@ -809,21 +787,16 @@
 
         // Actions
         async function saveConfig() {
-            const deviceType = document.querySelector('input[name="device_type"]:checked').value;
             const data = {
                 symbol: document.getElementById('symbol').value,
-                target_price: document.getElementById('target').value,
+                target_price: document.getElementById('target_price') ? document.getElementById('target_price').value : document.getElementById('target').value,
                 stop_loss_price: document.getElementById('stop_loss').value,
                 tapo_email: document.getElementById('tapo_email').value,
                 tapo_password: document.getElementById('tapo_password').value,
-                tapo_ip: document.getElementById('tapo_ip').value,
-                device_type: deviceType
-            };
-
-            const res = await apiCall('config', 'POST', data);
+                tapo_ip: document.getElementById('tapo_ip').value
+            }; const res = await apiCall('config', 'POST', data);
             if (res) {
                 showToast('監控設定已更新', 'success');
-                updateDeviceTypeUI();
                 updateData(); // Refresh immediately
             }
         }
@@ -866,210 +839,9 @@
             }
         }
 
-        async function scanTapo(e) {
-            e.preventDefault();
-            const btn = e.currentTarget;
-            const icon = btn.querySelector('i');
-            const originalIcon = icon.className;
 
-            // Loading state
-            icon.className = 'fas fa-spinner fa-spin';
-            btn.disabled = true;
-            showToast('正在掃描區網裝置...', 'info');
 
-            const res = await apiCall('scan_devices', 'GET');
 
-            // Restore state
-            icon.className = originalIcon;
-            btn.disabled = false;
-
-            if (res && res.devices) {
-                if (res.devices.length === 0) {
-                    showToast('未找到裝置 (請確認都在同一 Wifi)', 'warning');
-                    return;
-                }
-                showToast(`找到 ${res.devices.length} 個裝置`, 'success');
-                showDeviceSelection(res.devices);
-            } else {
-                showToast('掃描失敗', 'danger');
-            }
-        }
-
-        function showDeviceSelection(devices) {
-            const container = document.getElementById('scan-results');
-            if (!container) return;
-
-            let listHtml = '<div style="background: var(--bg-card); border-radius: 8px; overflow: hidden; border: 1px solid var(--border); animation: slideDown 0.3s ease-out;">';
-            devices.forEach(d => {
-                listHtml += `
-                    <div onclick="selectDevice('${d.ip}')" style="padding: 0.75rem; cursor: pointer; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;" onmouseover="this.style.background='rgba(51, 65, 85, 0.8)'" onmouseout="this.style.background='transparent'">
-                        <div>
-                            <div style="font-weight: bold; font-size: 0.9rem; color: var(--primary);"><i class="fas fa-lightbulb"></i> ${d.alias || d.model || 'Smart Device'}</div>
-                            <div style="font-size: 0.75rem; color: var(--text-dim); font-family: monospace;">${d.mac}</div>
-                        </div>
-                        <div style="color: white; font-family: monospace; font-size: 0.9rem;">${d.ip}</div>
-                    </div>
-                `;
-            });
-            listHtml += '</div>';
-
-            container.innerHTML = listHtml;
-            container.style.display = 'block';
-        }
-
-        function selectDevice(ip) {
-            document.getElementById('tapo_ip').value = ip;
-            document.getElementById('scan-results').style.display = 'none';
-            showToast(`已填入 IP: ${ip}`, 'success');
-        }
-
-        // Data Pooling
-        function updateStatus() {
-            apiCall('market_status', 'GET').then(data => {
-                if (data) {
-                    document.getElementById('market-status-text').textContent = data.status;
-                }
-            });
-        }
-
-        async function showQRCode() {
-            const modal = document.getElementById('qr-modal');
-            const container = document.getElementById('qr-image-container');
-            const urlText = document.getElementById('qr-url');
-
-            modal.style.display = 'flex';
-            container.innerHTML = '<i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: #0f172a;"></i>';
-            urlText.textContent = '生成中...';
-
-            const res = await apiCall('connect_qr', 'GET');
-            if (res && res.status === 'success') {
-                container.innerHTML = `<img src="${res.qr_image}" style="width: 250px; height: 250px; border-radius: 8px;">`;
-                urlText.innerHTML = `請用手機掃描或輸入網址:<br><strong>${res.url}</strong>`;
-            } else {
-                container.innerHTML = '<i class="fas fa-exclamation-triangle" style="font-size: 2rem; color: #ef4444;"></i>';
-                urlText.textContent = '無法生成 QR Code，請確認後端連線';
-            }
-        }
-
-        function updateData() {
-            apiCall('market_data', 'GET').then(data => {
-                if (!data) return;
-
-                // Index
-                if (data.market_index) {
-                    document.getElementById('index-val').textContent = data.market_index.toLocaleString(undefined, { maximumFractionDigits: 2 });
-                }
-
-                // Stock
-                document.getElementById('stock-name').textContent = `${data.stock_name} (${data.symbol})`;
-                document.getElementById('current-monitor-price').textContent = `現價: ${data.stock_price || '--'}`;
-
-                const timeStr = data.update_time || '--:--';
-                document.getElementById('update-time').textContent = timeStr.split(' ')[1] || timeStr;
-
-                if (data.stock_price) {
-                    document.getElementById('stock-price').textContent = data.stock_price.toFixed(2);
-                }
-
-                // Trend (using market_change if available, or just a placeholder logic if not)
-                // Note: The backend 'market_change' is currently mostly for Index, but let's visualize it.
-                if (data.market_change !== undefined) {
-                    const change = data.market_change;
-                    const trendEl = document.getElementById('trend-indicator');
-                    const trendVal = document.getElementById('trend-val');
-
-                    // In Taiwan, Red is UP (+), Green is DOWN (-)
-                    const isPositive = change >= 0;
-                    trendEl.className = `trend-badge ${isPositive ? 'trend-up' : 'trend-down'}`;
-                    trendVal.textContent = (isPositive ? '+' : '') + change.toFixed(2);
-                }
-
-                // Check for Alert
-                if (data.alert_active === true) {
-                    const now = Date.now();
-                    // Debounce sound to every 5 seconds locally to avoid chaos
-                    if (now - lastAlertTime > 5000) {
-                        speak(`警報！${data.stock_name} 價格 ${data.stock_price}`);
-                        lastAlertTime = now;
-                    }
-                }
-            });
-        }
-
-        function updateLogs() {
-            apiCall('logs', 'GET').then(data => {
-                if (data && data.logs) {
-                    const container = document.getElementById('log-container');
-                    container.innerHTML = data.logs.map(l => `<div class="log-entry">> ${l}</div>`).join('');
-                    container.scrollTop = container.scrollHeight;
-                }
-            });
-        }
-
-        async function scanTapo(e) {
-            e.preventDefault();
-            const btn = e.target.closest('button');
-            const originalHtml = btn.innerHTML;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 掃描中';
-            btn.disabled = true;
-
-            const res = await apiCall('scan_devices', 'GET');
-            btn.innerHTML = originalHtml;
-            btn.disabled = false;
-
-            const resultArea = document.getElementById('scan-results');
-            if (res && res.devices && res.devices.length > 0) {
-                resultArea.style.display = 'block';
-                resultArea.innerHTML = '<div style="font-size: 0.8rem; margin-bottom: 0.5rem; color: var(--primary);">找到以下裝置 (點擊填入 IP):</div>';
-                res.devices.forEach(dev => {
-                    const item = document.createElement('div');
-                    item.style = "padding: 0.5rem; background: rgba(255,255,255,0.05); border-radius: 8px; margin-bottom: 0.4rem; cursor: pointer; font-size: 0.85rem; border: 1px solid transparent; transition: all 0.2s;";
-                    item.innerHTML = `<div style="display:flex; justify-content:space-between;"><strong>${dev.alias}</strong> <span style="opacity:0.6;">${dev.model}</span></div><div style="font-family:monospace; opacity:0.8;">${dev.ip}</div>`;
-                    item.onclick = () => {
-                        document.getElementById('tapo_ip').value = dev.ip;
-                        showToast(`已填入 ${dev.alias} 的 IP`);
-                    };
-                    item.onmouseover = () => item.style.borderColor = 'var(--primary)';
-                    item.onmouseout = () => item.style.borderColor = 'transparent';
-                    resultArea.appendChild(item);
-                });
-            } else {
-                showToast('未找到 Tapo 裝置，請確認在同一網路', 'warning');
-            }
-        }
-
-        function updateDeviceTypeUI() {
-            const radio = document.querySelector('input[name="device_type"]:checked');
-            if (!radio) return;
-            const deviceType = radio.value;
-            const hint = document.getElementById('device-type-hint');
-            const grid = document.querySelector('.btn-grid');
-            if (!grid) return;
-            const btns = grid.querySelectorAll('.btn-ghost');
-
-            if (deviceType === 'plug') {
-                hint.innerHTML = '<i class="fas fa-info-circle"></i> 智慧插座模式：僅支援「開啟」與「關閉」。警報觸發時將開啟插座。';
-                // Update test buttons text
-                if (btns.length >= 3) {
-                    btns[0].innerHTML = '<i class="fas fa-power-off"></i> 測試關閉';
-                    btns[2].innerHTML = '<i class="fas fa-bolt"></i> 測試開啟';
-                }
-                if (btns.length >= 5) {
-                    btns[3].style.display = 'none'; // Hide purple test
-                    btns[4].style.display = 'none'; // Hide demo
-                }
-            } else {
-                hint.innerHTML = '<i class="fas fa-lightbulb"></i> 彩色燈泡模式：支援紅/綠/黃/紫變色提醒。';
-                if (btns.length >= 3) {
-                    btns[0].innerHTML = '<i class="fas fa-sun"></i> 測試黃燈';
-                    btns[2].innerHTML = '<i class="fas fa-check-circle"></i> 測試綠燈';
-                }
-                if (btns.length >= 5) {
-                    btns[3].style.display = 'flex';
-                    btns[4].style.display = 'flex';
-                }
-            }
-        }
 
         // Init
         setInterval(updateStatus, 60000); // 1 min
@@ -1079,7 +851,7 @@
         updateStatus();
         updateData();
         updateLogs();
-        updateDeviceTypeUI();
+
 
     </script>
 </body>
