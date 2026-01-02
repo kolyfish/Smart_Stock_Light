@@ -8,5 +8,5 @@ venv/
 tests/.pytest_cache/
 dist/
 build/
-*.spec
+
 .app.lock
