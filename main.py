@@ -85,12 +85,27 @@ class SmartStockLight:
 from system.license import check_license
 
 if __name__ == "__main__":
-    # 確保只有一個執行實體
-    instance_lock = SingleInstance()
-    
-    if not check_license():
-        sys.exit(1)
+    try:
+        # 確保只有一個執行實體
+        instance_lock = SingleInstance()
         
-    root = tk.Tk()
-    app = SmartStockLight(root)
-    root.mainloop()
+        if not check_license():
+            sys.exit(1)
+            
+        root = tk.Tk()
+        app = SmartStockLight(root)
+        root.mainloop()
+    except Exception as e:
+        import traceback
+        import datetime
+        
+        error_msg = f"[{datetime.datetime.now()}] Critical Error:\n{traceback.format_exc()}\n"
+        print(error_msg)
+        
+        # 寫入 crash log
+        with open("crash_log.txt", "a", encoding="utf-8") as f:
+            f.write(error_msg)
+            
+        print("程式發生嚴重錯誤，已記錄至 crash_log.txt")
+        input("請按 Enter 鍵離開... (Press Enter to exit)")
+
