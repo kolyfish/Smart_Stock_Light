@@ -3,10 +3,10 @@ import threading
 import time
 import sys
 import os
-from shared_config import SharedConfig
-from tapo_controller import TapoController
-from stock_monitor import StockMonitor
-from web_server import WebServer
+from core.config import SharedConfig
+from devices.controller import TapoController
+from core.monitor import StockMonitor
+from web.server import WebServer
 import subprocess
 
 def cleanup_port(port=5001):

@@ -46,26 +46,8 @@ class TapoController:
         try:
             device = await connect(config)
             
-            # 手動修正 KlapProtocol 類型問題
-            client = device.client
-            import inspect
-            if inspect.isclass(client.protocol) or client.protocol is None:
-                from plugp100.protocol.klap import klap_handshake_v2
-                from plugp100.protocol.klap.klap_protocol import KlapProtocol
-                
-                # Re-create credentials locally for protocol
-                username = self.shared_config.tapo_email
-                password = self.shared_config.tapo_password
-                creds = AuthCredential(username, password)
-
-                protocol = KlapProtocol(
-                    auth_credential=creds,
-                    url=f"http://{self.ip_address}/app",
-                    klap_strategy=klap_handshake_v2()
-                )
-                client._protocol = protocol
-            
             await device.update()
+            return device
             return device
         except Exception as e:
             print(f"[{self.ip_address}] 連線或初始化失敗: {e}")
@@ -77,6 +59,7 @@ class TapoController:
             print(f"[模擬模式] 設定亮度為: {level}")
             return
             
+        device = None
         try:
             config = self._get_connect_config()
             if not config:
@@ -86,6 +69,9 @@ class TapoController:
             await device.set_brightness(level)
         except Exception as e:
             print(f"[{self.ip_address}] 設定亮度失敗: {e}")
+        finally:
+            if device:
+                await device.client.close()
 
     async def _set_color_hs(self, hue: int, saturation: int):
         """設定彩色燈泡顏色 (色相/飽和度)。"""
@@ -95,6 +81,7 @@ class TapoController:
             print(f"[模擬模式] 點亮顏色: {color_name}")
             return
 
+        device = None
         try:
             device = await self._get_connected_device()
             
@@ -107,11 +94,7 @@ class TapoController:
             # 優化順序：先切換顏色，再調高亮度，避免出現「亮黃色閃爍」並確保顏色正確
             result = await device.set_hue_saturation(hue, saturation)
             if result.is_failure():
-                print(f"[{self.ip_address}] 主要顏色設定失敗: {result.get_error()}")
-                from plugp100.new.components.light_component import LightComponent
-                result = await device.get_component(LightComponent).set_hue_saturation(hue, saturation)
-                if result.is_failure():
-                     print(f"[{self.ip_address}] Fallback 顏色設定也失敗: {result.get_error()}")
+                print(f"[{self.ip_address}] 顏色關鍵指令失敗: {result.get_error()}")
             
             # 給予一點緩衝時間讓顏色生效
             await asyncio.sleep(0.05)
@@ -124,9 +107,13 @@ class TapoController:
             # Silence auth errors to avoid spamming log if not configured
             if "Tapo 帳號" not in str(e): 
                 print(f"[{self.ip_address}] 操控失敗: {e}")
+        finally:
+            if device:
+                await device.client.close()
 
     async def _test_sequence(self):
         """執行一鍵測試序列：漸暗 -> 關閉 -> 變色迴圈 -> 回歸黃色。"""
+        device = None
         try:
             device = await self._get_connected_device()
             print("開始執行燈光測試序列...")
@@ -151,6 +138,9 @@ class TapoController:
             print("測試序列執行完畢。")
         except Exception as e:
             print(f"測試序列出錯: {e}")
+        finally:
+            if device:
+                await device.client.close()
 
     def turn_on_green(self):
         """觸發警報：轉為綠色。"""
@@ -207,6 +197,7 @@ class TapoController:
 
     async def _turn_off(self):
         """關閉裝置。"""
+        device = None
         try:
             device = await self._get_connected_device()
             print(f"[{self.ip_address}] Web 請求：正在執行關閉指令...")
@@ -214,6 +205,9 @@ class TapoController:
             print(f"[{self.ip_address}] 裝置已成功關閉。")
         except Exception as e:
             print(f"[{self.ip_address}] 關閉執行失敗: {e}")
+        finally:
+            if device:
+                await device.client.close()
 
     def turn_off(self):
         """手動關閉。"""
@@ -223,6 +217,7 @@ class TapoController:
     
     async def _set_sleep_standby(self):
         """睡眠待命模式：調暗至 1% 亮度（黃燈），但保持開啟。"""
+        device = None
         try:
             device = await self._get_connected_device()
             
@@ -241,6 +236,9 @@ class TapoController:
             print(f"[{self.ip_address}] 睡眠待命模式已啟動（亮度 1%）")
         except Exception as e:
             print(f"[{self.ip_address}] 設定睡眠待命模式失敗: {e}")
+        finally:
+            if device:
+                await device.client.close()
     
     def set_sleep_standby(self):
         """啟動睡眠待命模式。"""
@@ -281,7 +279,7 @@ class TapoController:
 
 if __name__ == "__main__":
     # Mock config for testing
-    from shared_config import SharedConfig
+    from core.config import SharedConfig
     config = SharedConfig()
     controller = TapoController(config)
     print("測試紅燈...")

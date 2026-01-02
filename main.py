@@ -5,10 +5,11 @@ import qrcode
 import socket
 import sys
 
-from shared_config import SharedConfig
-from tapo_controller import TapoController
-from stock_monitor import StockMonitor
-from web_server import WebServer
+from core.config import SharedConfig
+from devices.controller import TapoController
+from core.monitor import StockMonitor
+from web.server import WebServer
+from system.instance import SingleInstance
 
 def get_local_ip():
     try:
@@ -29,7 +30,7 @@ class SmartStockLight:
 
         # Initialize Components
         self.shared_config = SharedConfig()
-        self.tapo = TapoController()
+        self.tapo = TapoController(self.shared_config)
         
         # Start Threads
         self.monitor = StockMonitor(self.shared_config, self.tapo)
@@ -77,9 +78,12 @@ class SmartStockLight:
         self.root.destroy()
         sys.exit(0)
 
-from license_manager import check_license
+from system.license import check_license
 
 if __name__ == "__main__":
+    # 確保只有一個執行實體
+    instance_lock = SingleInstance()
+    
     if not check_license():
         sys.exit(1)
         

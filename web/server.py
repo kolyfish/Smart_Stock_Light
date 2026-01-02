@@ -2,8 +2,8 @@ import sys
 import os
 from flask import Flask, render_template, request, jsonify
 import threading
-from auto_updater import AutoUpdater
-from tapo_scanner import get_tapo_devices_sync
+from system.updater import AutoUpdater
+from devices.scanner import get_tapo_devices_sync
 
 def resource_path(relative_path):
     """ Get absolute path to resource, works for dev and for PyInstaller """

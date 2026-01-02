@@ -3,7 +3,7 @@ import threading
 import yfinance as yf
 import subprocess
 from datetime import datetime
-from market_data_agent import MarketDataAgent
+from core.data_agent import MarketDataAgent
 
 class StockMonitor(threading.Thread):
     def __init__(self, shared_config, tapo_controller):
@@ -33,6 +33,7 @@ class StockMonitor(threading.Thread):
         self.alarm_thread = None   # 警報播報執行緒
         self.mock_current_price = None  # 用於自動化測試模擬數據
         self.data_agent = MarketDataAgent() # 新增：行情監控代理
+        self.last_color_state = None # 新增：追蹤上次發送的燈光顏色
         
         # 初始化 TTS 元件
         try:
@@ -261,6 +262,7 @@ class StockMonitor(threading.Thread):
                     self.last_stock_price = current_price
                     self.last_update_time = datetime.now().strftime("%H:%M:%S")
                     self.last_stock_name = market_data.get('name', symbol)
+                    self.current_light_state = "idle" if not self.device_off else "sleep"
 
                     # --- 閃崩偵測 (Purple Light) ---
                     drop_rate = self.data_agent.detect_flash_crash(symbol, current_price)
@@ -268,6 +270,7 @@ class StockMonitor(threading.Thread):
                         self.add_log(f"⚠️ 偵測到閃崩！實質跌幅 {drop_rate*100:.1f}%")
                         self.device_off = False # 強制喚醒
                         self.tapo.turn_on_purple()
+                        self.last_color_state = "purple"
                         self.speak(f"警告，{self.last_stock_name} 偵測到恐慌性閃崩，目前跌幅百分之 {drop_rate*100:.1f}。")
                         time.sleep(5)
 
@@ -303,6 +306,7 @@ class StockMonitor(threading.Thread):
                             self.add_log(f"🆘 觸發停損警報: {symbol} 跌破停損價 {stop_loss} ({current_price:.2f})")
                             self.device_off = False
                             self.tapo.turn_on_red()
+                            self.last_color_state = "red"
                             
                             # 啟動持續警報播報 (帶入 is_stop_loss=True)
                             if not self.alarm_active:
@@ -322,6 +326,7 @@ class StockMonitor(threading.Thread):
                             self.add_log(f"!!! 觸發警報: {symbol} 已達標 ({current_price:.2f}) !!!")
                             self.device_off = False # 強制喚醒
                             self.tapo.turn_on_green()  # 直接亮綠燈，不管是否在睡眠模式
+                            self.last_color_state = "green"
                             
                             # 啟動持續警報播報
                             if not self.alarm_active:
@@ -337,7 +342,17 @@ class StockMonitor(threading.Thread):
                     else:
                         # 未達標時，若裝置未關閉（非睡眠模式）且無持續警報中，才維持黃燈
                         if not self.device_off and not self.alarm_active:
-                            self.tapo.turn_on_yellow()
+                            if self.last_color_state != "yellow":
+                                self.tapo.turn_on_yellow()
+                                self.last_color_state = "yellow"
+                        elif self.device_off and not hasattr(self, '_sleep_logged'):
+                            self.add_log("💤 偵測到睡眠模式，已暫停自動亮黃燈。")
+                            self._sleep_logged = True
+                            self.last_color_state = "sleep"
+                        
+                        if not self.device_off:
+                            self._sleep_logged = False # 重置標記以便下次重新進入睡眠時紀錄
+                            
                         # 降低日誌頻率：只有當價格變動，或每隔 20 次迴圈 (約 10秒) 才顯示一次
                         if not hasattr(self, '_log_counter'): self._log_counter = 0
                         self._log_counter += 1
@@ -349,7 +364,7 @@ class StockMonitor(threading.Thread):
                         elif self.last_stock_price != current_price:
                             should_log = True
                             self._log_counter = 0 # 重置計數
-
+    
                         if should_log:
                             self.add_log(f"{symbol}: {current_price:.2f} (目標 {target} | 停損 {stop_loss} | 監控中)")
 
