@@ -21,6 +21,7 @@
 - `.license_key`: 授權憑證存檔。
 - `MarketTradeAlertLight.spec`: 打包發布用的規格定義檔。
 - `pyproject.toml` / `poetry.lock`: Python 生態系標準的相依套件管理。
+- `run_windows.bat`: Windows 環境下的一鍵執行腳本（自動建立 venv 並安裝套件）。
 
 ### 2. 分層模組化架構 (Categorized Architecture)
 - **核心設計**: 為了提升代碼的可維護性，我們將單一目錄結構重構為分群路徑。
